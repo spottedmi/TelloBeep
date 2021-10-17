@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+#by RandomGuy90 A.D.2021
+
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
@@ -6,7 +9,7 @@ class Make_img(object):
 	def __init__(self):
 
 		#img config
-		self.text = """jebać disa kurwa jebać disa kurwa jebać disa kurwa jebać disa kurwa jebać disa kurwa jebać disa kurwa  """
+		self.text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum  """
 		self.imageName = "image.png"
 		self.margin = {
 			"top":20,
@@ -19,6 +22,8 @@ class Make_img(object):
 		
 		#fonts
 		self.fontname = "/usr/share/fonts/TTF/Arial.TTF"
+		# self.fontname = "./Anton.ttf"
+
 		self.fontsize = 31
 		self.font = None
 
@@ -120,5 +125,5 @@ class Make_img(object):
 
 if __name__ == '__main__':
 
-	asd = MakeImg()
+	asd = Make_img()
 	asd.gen()
