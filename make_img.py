@@ -10,7 +10,7 @@ class Make_img(object):
 
 		#img config
 		self.text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum  """
-		self.text_footer = """#KASPRZAK_SPOTTED_AUTO"""
+		self.text_footer = """#FOOTER_TEXT"""
 
 		self.imageName = "image.png"
 		self.margin = {
@@ -21,19 +21,21 @@ class Make_img(object):
 		}
 		self.height = 0
 		self.width = 0
-		
+		self.img_object = None
+
 		#fonts
 		self.fontname = "/usr/share/fonts/TTF/Arial.TTF"
+		self.fontsize = 31
+		self.font = None
 
 		#footer config
 		self.font_footer_name = "./Anton.ttf"
-		self.font_footer_size = 55
+		self.font_footer_size = 65
 		self.font_footer = None
 		self.footer_height = 100
-
-
-		self.fontsize = 31
-		self.font = None
+		#footer image config
+		self.image_path = "./LogoTemplate.png"
+		self.image_size = (250, 250)
 
 		#colors
 		self.colorBackground= "#1C1936"
@@ -43,7 +45,6 @@ class Make_img(object):
 		#text config
 		self.word_break = 10
 
-		self.header = "KASPRZAK SPOTTED"
 
 		#outline
 		self.outline_thickness = 4
@@ -63,22 +64,28 @@ class Make_img(object):
 		self.set_margins()
 
 		# img = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.colorBackground))
-		img = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.colorBackground))
-		d = ImageDraw.Draw(img)
+		self.img_object = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.colorBackground))
+		d = ImageDraw.Draw(self.img_object)
 		
 		coords =(self.margin["left"] ,self.margin["top"])
 		
 		d.text(coords, self.text, fill=self.hex_to_rgb(self.colorText), font=self.font)
 		d.rectangle((0, 0, self.width-self.outline_thickness, self.height-self.outline_thickness),width= self.outline_thickness, fill=None, outline=self.hex_to_rgb(self.colorOutline))
 
-		ftr = ImageDraw.Draw(img)
-		footer_coords = (self.margin["left"], self.insta_res[1]*0.75)
-		print(footer_coords)
-		ftr.text(footer_coords, self.text_footer, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
+		self.create_footer()
 
-		# img.save("image.png", quality=20, optimize=True)
-		img = img.resize(self.insta_res, Image.ANTIALIAS)
-		img.save("image.png")
+		img = Image.open(self.image_path, "r")
+		img = img.resize(self.image_size, Image.ANTIALIAS)
+		img = img.convert("RGBA")
+
+		coords = (int(self.insta_res[1]*0.7), int(self.insta_res[0]*0.63))
+
+		self.img_object.paste(img, coords, img)
+
+		self.img_object = self.img_object.resize(self.insta_res, Image.ANTIALIAS)
+		self.img_object.save("image.png")
+
+
 
 	def get_size_txt(self)-> None:
 		"get size of text object"
@@ -113,6 +120,14 @@ class Make_img(object):
 		
 		self.width = int(self.width+(self.margin["left"]*2))
 	
+	def create_footer(self) -> None:
+		"creating image's footer"
+
+		ftr = ImageDraw.Draw(self.img_object)
+		footer_coords = (self.margin["left"], self.insta_res[1]*0.75)
+		# print(footer_coords)
+		ftr.text(footer_coords, self.text_footer, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
+
 	def prepare_text(self) -> str:
 		"cut text and prepare to show"
 
