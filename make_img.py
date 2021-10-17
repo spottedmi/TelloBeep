@@ -10,6 +10,8 @@ class Make_img(object):
 
 		#img config
 		self.text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum  """
+		self.text_footer = """FOOTER_INFO"""
+
 		self.imageName = "image.png"
 		self.margin = {
 			"top":20,
@@ -22,7 +24,13 @@ class Make_img(object):
 		
 		#fonts
 		self.fontname = "/usr/share/fonts/TTF/Arial.TTF"
-		# self.fontname = "./Anton.ttf"
+
+		#footer config
+		self.font_footer_name = "./Anton.ttf"
+		self.font_footer_size = 55
+		self.font_footer = None
+		self.footer_height = 100
+
 
 		self.fontsize = 31
 		self.font = None
@@ -63,6 +71,11 @@ class Make_img(object):
 		d.text(coords, self.text, fill=self.hex_to_rgb(self.colorText), font=self.font)
 		d.rectangle((0, 0, self.width-self.outline_thickness, self.height-self.outline_thickness),width= self.outline_thickness, fill=None, outline=self.hex_to_rgb(self.colorOutline))
 
+		ftr = ImageDraw.Draw(img)
+		footer_coords = (self.margin["left"], self.insta_res[1]*0.75)
+		print(footer_coords)
+		ftr.text(footer_coords, self.text_footer, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
+
 		# img.save("image.png", quality=20, optimize=True)
 		img = img.resize(self.insta_res, Image.ANTIALIAS)
 		img.save("image.png")
@@ -90,11 +103,12 @@ class Make_img(object):
 		"import fonts"
 		
 		self.font = ImageFont.truetype(self.fontname, self.fontsize)
+		self.font_footer = ImageFont.truetype(self.font_footer_name, self.font_footer_size)
 
 	def set_margins(self) -> None:
 		"margins"
 
-		self.margin["top"] = (self.height - self.heightTXT) / 2  -100
+		self.margin["top"] = (self.height - self.heightTXT) / 2 - self.footer_height
 		self.margin["left"] = (self.width * 5) / 100
 		
 		self.width = int(self.width+(self.margin["left"]*2))
