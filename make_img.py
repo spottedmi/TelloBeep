@@ -1,16 +1,27 @@
 #!/usr/bin/python3
 #by RandomGuy90 A.D.2021
 
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
+from PIL import Image, ImageDraw, ImageFont
+import random
 
 class Make_img(object):
 	def __init__(self):
 
 		#img config
-		self.text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum  """
-		self.text_footer = """#FOOTER_TEXT"""
+		self.text_tmp = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum """
+		self.text_tmp = self.text_tmp.split(" ")
+		self.text = ""
+		for elem in range(random.randrange(0, 100)):
+			self.text +=f" {self.text_tmp[elem]}"
+		print(self.text)
+		print(F"LENGHT {len(self.text)}")
+		# if len(self.text) <300:
+		# 	self.text += (400-len(self.text))*" "
+		print(self.text)
+		print(F"LENGHT {len(self.text)}")
+
+
+		self.text_footer = """#FOOTER_TEXT_FOOTER_TEXT"""
 
 		self.imageName = "image.png"
 		self.margin = {
@@ -78,7 +89,7 @@ class Make_img(object):
 		img = img.resize(self.image_size, Image.ANTIALIAS)
 		img = img.convert("RGBA")
 
-		coords = (int(self.insta_res[1]*0.7), int(self.insta_res[0]*0.63))
+		coords = (int(self.insta_res[1]*0.82), int(self.insta_res[0]*0.73))
 
 		self.img_object.paste(img, coords, img)
 
@@ -96,8 +107,11 @@ class Make_img(object):
 		self.heightTXT = height
 		self.widthTXT = width
 		
-		self.width = height if height > width else width
-		self.height = width if width > height else height
+		# self.width = height if height > width else width
+		# self.height = width if width > height else height
+
+		self.width = self.insta_res[0]
+		self.height = self.insta_res[1]
 
 	def hex_to_rgb(self, value) -> tuple:
 		"convert hex value to rgb"
@@ -124,7 +138,7 @@ class Make_img(object):
 		"creating image's footer"
 
 		ftr = ImageDraw.Draw(self.img_object)
-		footer_coords = (self.margin["left"], self.insta_res[1]*0.75)
+		footer_coords = (self.margin["left"], self.insta_res[1]*0.85)
 		# print(footer_coords)
 		ftr.text(footer_coords, self.text_footer, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
 
