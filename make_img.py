@@ -2,23 +2,19 @@
 #by RandomGuy90 A.D.2021
 
 from PIL import Image, ImageDraw, ImageFont
-import random
+import random, time
 
 class Make_img(object):
 	def __init__(self):
 
 		#img config
-		self.text_tmp = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum """
-		self.text_tmp = self.text_tmp.split(" ")
+		#max text lenght = circa 1100 chars
+		self.text_tmp = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum """
+		
 		self.text = ""
-		for elem in range(random.randrange(0, 100)):
-			self.text +=f" {self.text_tmp[elem]}"
-		print(self.text)
-		print(F"LENGHT {len(self.text)}")
-		# if len(self.text) <300:
-		# 	self.text += (400-len(self.text))*" "
-		print(self.text)
-		print(F"LENGHT {len(self.text)}")
+		self.text = self.text_tmp[0: random.randrange(0, 1100)]
+		print(f"LEGHT {len(self.text)}")
+
 
 
 		self.text_footer = """#FOOTER_TEXT_FOOTER_TEXT"""
@@ -47,6 +43,9 @@ class Make_img(object):
 		#footer image config
 		self.image_path = "./LogoTemplate.png"
 		self.image_size = (250, 250)
+
+		#header 
+		self.DATE = None
 
 		#colors
 		self.colorBackground= "#1C1936"
@@ -78,11 +77,16 @@ class Make_img(object):
 		self.img_object = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.colorBackground))
 		d = ImageDraw.Draw(self.img_object)
 		
+		#text 
 		coords =(self.margin["left"] ,self.margin["top"])
 		
 		d.text(coords, self.text, fill=self.hex_to_rgb(self.colorText), font=self.font)
 		d.rectangle((0, 0, self.width-self.outline_thickness, self.height-self.outline_thickness),width= self.outline_thickness, fill=None, outline=self.hex_to_rgb(self.colorOutline))
 
+		#header
+		self.create_header()
+
+		#footer
 		self.create_footer()
 
 		img = Image.open(self.image_path, "r")
@@ -93,6 +97,7 @@ class Make_img(object):
 
 		self.img_object.paste(img, coords, img)
 
+		#resizing and prepare to save
 		self.img_object = self.img_object.resize(self.insta_res, Image.ANTIALIAS)
 		self.img_object.save("image.png")
 
@@ -141,6 +146,28 @@ class Make_img(object):
 		footer_coords = (self.margin["left"], self.insta_res[1]*0.85)
 		# print(footer_coords)
 		ftr.text(footer_coords, self.text_footer, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
+
+	def create_header(self) -> None:
+		"creating footer with posting date"
+		self.create_data()
+		header = ImageDraw.Draw(self.img_object)
+		header_coords = (self.margin["left"], self.insta_res[1]*0.04)
+		header.text(header_coords, self.DATE, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
+
+		
+	def create_data(self) -> None:
+		"create data if not specified for header"
+		if self.DATE == None:
+			date = time.localtime()
+			yr = date.tm_year
+			month  = str(date.tm_mon) if len(str(date.tm_mon)) == 2 else f"0{date.tm_mon}"
+			day  = str(date.tm_mday) if len(str(date.tm_mday)) == 2 else f"0{date.tm_mday}"
+			hour  = str(date.tm_hour) if len(str(date.tm_hour)) == 2 else f"0{date.tm_hour}"
+			minutes  = str(date.tm_min) if len(str(date.tm_min)) == 2 else f"0{date.tm_min}"
+			self.DATE = f"{hour}:{minutes} {day}/{month}/{yr}"
+			print(self.DATE)
+
+
 
 	def prepare_text(self) -> str:
 		"cut text and prepare to show"
