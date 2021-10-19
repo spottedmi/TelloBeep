@@ -4,20 +4,24 @@
 from PIL import Image, ImageDraw, ImageFont
 import random, time
 
-class Make_img(object):
+from censorship import Censorship
+
+class Make_img(Censorship):
 	def __init__(self):
+		super().__init__()
 
 		#img config
 		#max text lenght = circa 1100 chars
-		self.text_tmp = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum """
+		self.TEXT_tmp = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum """
 		
-		self.text = ""
-		self.text = self.text_tmp[0: random.randrange(0, 1100)]
-		print(f"LEGHT {len(self.text)}")
+		self.TEXT = ""
+		#randomizer
+		self.TEXT = self.TEXT_tmp[0: random.randrange(0, 1100)]
+		#print(f"LEGHT {len(self.TEXT)}")
 
 
 
-		self.text_footer = """#FOOTER_TEXT_FOOTER_TEXT"""
+		self.TEXT_footer = """#FOOTER_TEXT_FOOTER_TEXT"""
 
 		self.imageName = "image.png"
 		self.margin = {
@@ -64,6 +68,8 @@ class Make_img(object):
 		# self.insta_res = (1350, 1080)
 		# self.insta_res = (1608, 1080)
 
+		self.BAD_WORDS = './swears_list.txt'
+
 
 	def gen(self) -> None:
 		"generate image"
@@ -80,7 +86,7 @@ class Make_img(object):
 		#text 
 		coords =(self.margin["left"] ,self.margin["top"])
 		
-		d.text(coords, self.text, fill=self.hex_to_rgb(self.colorText), font=self.font)
+		d.text(coords, self.TEXT, fill=self.hex_to_rgb(self.colorText), font=self.font)
 		d.rectangle((0, 0, self.width-self.outline_thickness, self.height-self.outline_thickness),width= self.outline_thickness, fill=None, outline=self.hex_to_rgb(self.colorOutline))
 
 		#header
@@ -108,7 +114,7 @@ class Make_img(object):
 
 		testImg = Image.new('RGB', (1, 1))
 		testDraw = ImageDraw.Draw(testImg)
-		width, height = testDraw.textsize(self.text, self.font)
+		width, height = testDraw.textsize(self.TEXT, self.font)
 		self.heightTXT = height
 		self.widthTXT = width
 		
@@ -145,7 +151,7 @@ class Make_img(object):
 		ftr = ImageDraw.Draw(self.img_object)
 		footer_coords = (self.margin["left"], self.insta_res[1]*0.85)
 		# print(footer_coords)
-		ftr.text(footer_coords, self.text_footer, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
+		ftr.text(footer_coords, self.TEXT_footer, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
 
 	def create_header(self) -> None:
 		"creating footer with posting date"
@@ -172,7 +178,7 @@ class Make_img(object):
 	def prepare_text(self) -> str:
 		"cut text and prepare to show"
 
-		txt = self.text.rsplit(" ")
+		txt = self.TEXT.rsplit(" ")
 		res_txt = ""
 		words = self.word_break
 		i = 0 
@@ -184,7 +190,9 @@ class Make_img(object):
 			if not i%words:
 				res_txt = res_txt + "\n"
 
-		self.text = str(res_txt)
+		self.TEXT = str(res_txt)
+
+		self.censure_txt()
 
 
 
