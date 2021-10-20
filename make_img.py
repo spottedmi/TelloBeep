@@ -195,12 +195,6 @@ class Make_img(Censorship):
 		self.censure_txt()
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
 
 	asd = Make_img()
