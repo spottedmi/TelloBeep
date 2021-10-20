@@ -207,6 +207,7 @@ class Make_img(Censorship):
 		while 1:
 			q = self.q_list.get("flask2gen")
 			data = q.get()
+			print(f"recv ->  {data[-10:-1]}")
 			self.TEXT_tmp = data
 			time.sleep(0.01)
 			if data:
