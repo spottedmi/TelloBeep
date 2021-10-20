@@ -1,8 +1,9 @@
 from queue import Queue
 from threading import Thread
-import time, random
+import time, random, json
+
 from make_img import Make_img
-import json
+from backend import back_server
 
 class Connect_api(object):
 	def __init__(self, q_list):
@@ -20,7 +21,6 @@ class Connect_api(object):
 				self.TEXT = self.TEXT_tmp[0: random.randrange(0, 1100)]
 				q = q_list.get("flask2gen")
 				q.put(self.TEXT)
-				print(f"send -> {self.TEXT[-10:-1]}")
 			
 			time.sleep(1)
 
@@ -39,6 +39,9 @@ if __name__ == "__main__":
 
 	#pushing text
 	t2 = Thread(target = Connect_api, kwargs={"q_list":q_list}).start()
+	
+	#backend server
+	t2 = Thread(target = back_server, kwargs={"q_list":q_list}).start()
 
 
 	while 1 :		
