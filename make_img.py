@@ -199,3 +199,4 @@ if __name__ == '__main__':
 
 	asd = Make_img()
 	asd.gen()
+	print("asdf")
