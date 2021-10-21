@@ -3,7 +3,7 @@ from threading import Thread
 import time, random, json
 
 from make_img import Make_img
-from backend import back_server
+from backend.server import back_server
 
 class Connect_api(object):
 	def __init__(self, q_list):
