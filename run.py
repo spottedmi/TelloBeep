@@ -34,7 +34,7 @@ class Connect_api(object):
 				"text": self.TEXT,
 				"title": title
 			}
-			q.put(req)
+			#q.put(req)
 			
 			time.sleep(1)
 
