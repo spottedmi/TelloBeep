@@ -1,3 +1,4 @@
+#! /usr/bin/python3
 from queue import Queue
 from threading import Thread
 import time, random, json

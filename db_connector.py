@@ -20,6 +20,25 @@ class Db_connector(object):
 		con.close()
 
 
+	def if_logged(self,user=None, db_name=None, password=""):
+
+		con = connect("db.sqlite")
+
+		curs = con.cursor()
+		curs.execute(""" 
+			SELECT password from users WHERE username=?;
+			""",(user, ))
+		try:
+			passwd = curs.fetchall()[0][0]
+		except:
+			return False
+			
+		con.close()
+		if password == passwd:
+			return True
+		else:
+			return False
+
 
 # create table posts (
 #   id integer PRIMARY key AUTOINCREMENT,
@@ -32,9 +51,14 @@ class Db_connector(object):
 
 #   )
   
+# create table users (
+#   id integer PRIMARY key AUTOINCREMENT,
+#   added dateTime DEFAULT 'now',
+#   username text Not NULL,
+#   password text not null,
+#   permissions integer DEFAULT 10
+#   )
   
- 
-
 
 
 
