@@ -14,6 +14,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
+import sys, datetime
 
 app = Flask(__name__)
 
@@ -27,6 +28,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -35,6 +37,20 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
+    added = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
+
+class Posts(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    added_date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
+    content = db.Column(db.String(5000), nullable=False)
+    title = db.Column(db.String(100), nullable=False, unique=True)
+    approved = db.Column(db.Boolean(), nullable=False, default=False)
+    approved_by = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+    approved_date = db.Column(db.DateTime(timezone=True), nullable=True)
+    
+
+# db.create_all()
+# sys.exit()
 
 class LoginForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=0, max=100)], render_kw={"placeholder":"Username"})
@@ -51,6 +67,7 @@ class RegisterForm(FlaskForm):
         if existing_user_username:
             raise ValidationError("user already exists")
 
+
 @app.route("/")
 @login_required
 def hello_world():
@@ -58,6 +75,7 @@ def hello_world():
     username = current_user.username
 
     return f"<p>Hello, World! ---> {username}</p>"
+
 
 @app.route("/restricted")
 @login_required
