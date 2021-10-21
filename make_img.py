@@ -8,26 +8,16 @@ from queue import Queue
 import _thread
 
 from censorship import Censorship
+from db_connector import Db_connector
 
-class Make_img(Censorship):
+class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
 		super().__init__()
 
-
-
-		#img config
-		#max text lenght = circa 1100 chars
-		#self.TEXT_tmp = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum """
-		
-		#self.TEXT = ""
-		#randomizer
-		#self.TEXT = self.TEXT_tmp[0: random.randrange(0, 1100)]
-		#print(f"LEGHT {len(self.TEXT)}")
-
-
-
+		#footer
 		self.TEXT_footer = """#FOOTER_TEXT_FOOTER_TEXT"""
 
+		#metadata
 		self.out_image_name = "image.png"
 		self.out_image_path = "imgs"
 		self.extension = "png"
@@ -36,6 +26,7 @@ class Make_img(Censorship):
 		self.thumb_path = "backend/thumbnails"
 		self.thumb_res = [300, 300]
 
+		#margins
 		self.margin = {
 			"top":20,
 			"right":20,
@@ -80,6 +71,13 @@ class Make_img(Censorship):
 		# self.insta_res = (1350, 1080)
 		# self.insta_res = (1608, 1080)
 
+		#db config
+		self.db_name = "db.sqlite"
+		self.db_tables = {
+			"posts": "posts",
+			"users": "users"
+		}
+
 		self.BAD_WORDS = './swears_list.txt'
 
 		if q_list:
@@ -121,6 +119,7 @@ class Make_img(Censorship):
 		#resizing and prepare to save
 		self.save_img()
 		self.save_tumbnail()
+		self.db_add_img()
 
 	def save_img(self):
 		self.img_object = self.img_object.resize(self.insta_res, Image.ANTIALIAS)
