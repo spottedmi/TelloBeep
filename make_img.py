@@ -28,7 +28,14 @@ class Make_img(Censorship):
 
 		self.TEXT_footer = """#FOOTER_TEXT_FOOTER_TEXT"""
 
-		self.imageName = "image.png"
+		self.out_image_name = "image.png"
+		self.out_image_path = "imgs"
+		self.extension = "png"
+
+		#thumbnails
+		self.thumb_path = "backend/thumbnails"
+		self.thumb_res = [300, 300]
+
 		self.margin = {
 			"top":20,
 			"right":20,
@@ -112,11 +119,17 @@ class Make_img(Censorship):
 		self.img_object.paste(img, coords, img)
 
 		#resizing and prepare to save
+		self.save_img()
+		self.save_tumbnail()
+
+	def save_img(self):
 		self.img_object = self.img_object.resize(self.insta_res, Image.ANTIALIAS)
-		self.img_object.save("image.png")
+		self.img_object.save(f"{self.out_image_path}/{self.out_image_name}.{self.extension}")
 
-
-
+	def save_tumbnail(self):
+		self.img_object = self.img_object.resize(self.thumb_res, Image.ANTIALIAS)
+		self.img_object.save(f"{self.thumb_path}/{self.out_image_name}_thumbnail.{self.extension}")
+		
 	def get_size_txt(self)-> None:
 		"get size of text object"
 
@@ -206,7 +219,11 @@ class Make_img(Censorship):
 
 		while 1:
 			q = self.q_list.get("flask2gen")
-			data = q.get()
+			res = q.get()
+			data = res["text"]
+			self.out_image_name = res["title"]
+
+
 			self.TEXT_tmp = data
 			time.sleep(0.01)
 			if data:
