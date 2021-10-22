@@ -27,9 +27,12 @@ a > button{
 
 
 content{
-	height: auto;
-	width: 100vw;
+	height: 40vh;
+	/*width: 100vw;*/
 	background: white;
+	flex-grow: 1;
+	transition: all 0.5s linear;
+
 }
 br{
 	width: 90%;
@@ -67,4 +70,19 @@ form > textarea{
 
 .accReject > [name="reject"]{
 	background-color: red;
+}
+
+
+
+.accept {
+	z-index: -1;    
+    margin-top:  -40vh;
+    background: linear-gradient(0deg, #90ff758f, white);
+}
+
+
+.remove {
+	z-index: -1;    
+    margin-top:  -40vh;
+    background: linear-gradient(0deg, #ff00008f, white);
 }

@@ -137,6 +137,27 @@ def accept(id_post):
 
     return "<p>restricted area!</p>"
 
+@app.route("/reject/<int:id_post>", methods=["POST"])
+@login_required
+def reject(id_post):
+    txt = request.data.decode("utf-8")
+
+    post = Posts.query.filter_by(id=id_post).one()
+    data = json.loads(txt)
+    title = data.get("title")
+
+    post.title = post.title
+    post.content= post.content
+    post.approved = False
+    post.approved_date = datetime.datetime.now()
+    user = User.query.filter_by(username=current_user.username).one()
+    post.approved_by =user.id 
+
+    db.session.commit()
+
+
+    return "<p>restricted area!</p>"
+
 
 @app.route("/login", methods=["GET","POST"])
 def login():
@@ -173,10 +194,6 @@ def dashboard():
     res = []
     for elem in qr:
         res.append(elem.as_dict())
-        #res.append(json_parser(["id", "added_date", "title","content"], res))
-
-    # return jsonify(res)
-    # return Response(f"{res}")
     return render_template("mainpage.html", posts=res)
 
 
@@ -185,10 +202,8 @@ def json_parser(headers, txt):
     tmp = {}
     for elem in txt:
         for col in headers:
-            # print(elem.content)
             if col == "content":
                 x = eval(f"elem.{col}")
-                # x = base64.b64decode(x)
                 x = x.decode("utf-8")
                 tmp[col] = str(x)
             elif col == "title":
