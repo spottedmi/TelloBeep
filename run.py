@@ -25,22 +25,24 @@ class Insta_api(object):
 			q = q_list.get("2gen")
 			
 			t = time.localtime()
+
 			y = f"{t.tm_year}"if len(str(t.tm_year)) == 4 else f"0{t.tm_year}"
 			M = f"{t.tm_mon}" if len(str(t.tm_mon)) == 2 else f"0{t.tm_mon}"
 			d = f"{t.tm_mday}"if len(str(t.tm_mday)) == 2 else f"0{t.tm_mday}"
 			h = f"{t.tm_hour}"if len(str(t.tm_hour)) == 2 else f"0{t.tm_hour}"
 			m = f"{t.tm_min}" if len(str(t.tm_min)) == 2 else f"0{t.tm_min}"
 			s = f"{t.tm_sec}" if len(str(t.tm_sec)) == 2 else f"0{t.tm_sec}"
-
-			title = f"{y}{M}{d}{h}{m}{s}"
+			mil = int(round(time.time() * 1000))
+			
+			title = f"{y}{M}{d}{h}{m}{s}{mil}"
 
 			req = {
 				"text": self.TEXT,
 				"title": title
 			}
-			q.put(req)
+			# q.put(req)
 			
-			time.sleep(1)
+			time.sleep(0.5)
 
 
 
