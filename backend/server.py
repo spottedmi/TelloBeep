@@ -10,6 +10,8 @@ from flask import (
 import logging
 from queue import Queue
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import joinedload, sessionmaker
+
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -195,6 +197,40 @@ def dashboard():
     for elem in qr:
         res.append(elem.as_dict())
     return render_template("mainpage.html", posts=res)
+
+
+
+@app.route("/accepted", methods=["GET"])
+@login_required
+def accepted():
+    qr = Posts.query.filter(Posts.approved == True).order_by(Posts.id.desc()).all()
+    # Session = sessionmaker(bind = engine)
+    # session = Session()
+
+    # session.query(Posts).filter(Posts.approved == True).all():
+
+
+    res = []
+    for elem in qr:
+        res.append(elem.as_dict())
+    return render_template("accepted.html", posts=res)
+
+
+@app.route("/rejected", methods=["GET"])
+@login_required
+def rejected():
+    qr = Posts.query.filter(Posts.approved == False).order_by(Posts.id.desc()).all()
+    # Session = sessionmaker(bind = engine)
+    # session = Session()
+
+    # session.query(Posts).filter(Posts.approved == True).all():
+
+
+    res = []
+    for elem in qr:
+        res.append(elem.as_dict())
+    return render_template("rejected.html", posts=res)
+
 
 
 def json_parser(headers, txt):

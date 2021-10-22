@@ -27,7 +27,7 @@ a > button{
 
 
 content{
-	height: 40vh;
+	height: 45vh;
 	/*width: 100vw;*/
 	background: white;
 	flex-grow: 1;
@@ -42,7 +42,7 @@ form{
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
-	margin: 5vh 0 ;
+	margin: 2vh 0 ;
 }
 form > div{
 	display: flex;
@@ -85,4 +85,9 @@ form > textarea{
 	z-index: -1;    
     margin-top:  -40vh;
     background: linear-gradient(0deg, #ff00008f, white);
+}
+
+img{
+	height: 400px;
+	width: 400px;
 }
