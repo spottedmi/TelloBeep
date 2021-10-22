@@ -4,17 +4,18 @@ from flask import (
     request, 
     redirect,
     session,
+    Response,
+    jsonify
     )
 import logging
 from queue import Queue
-from db_connector import Db_connector
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
-import sys, datetime
+import sys, datetime, json, base64
 
 app = Flask(__name__)
 
@@ -45,8 +46,10 @@ class Posts(db.Model, UserMixin):
     content = db.Column(db.String(5000), nullable=False)
     title = db.Column(db.String(100), nullable=False, unique=True)
     approved = db.Column(db.Boolean(), nullable=False, default=False)
-    approved_by = db.Column(db.Integer, db.ForeignKey(User.id), primary_key=True)
+    approved_by = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True)
     approved_date = db.Column(db.DateTime(timezone=True), nullable=True)
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
 
 # db.create_all()
@@ -75,6 +78,16 @@ def hello_world():
     username = current_user.username
 
     return f"<p>Hello, World! ---> {username}</p>"
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    if session.get('session'):
+        # prevent flashing automatically logged out message
+        del session['was_once_logged_in']
+    return redirect('/login')
+    #return render_template("mainpage.html")
 
 
 @app.route("/restricted")
@@ -108,6 +121,45 @@ def register():
    
     return render_template("register.html", form=form)
 
+
+@app.route("/dashboard", methods=["GET"])
+@login_required
+def dashboard():
+    qr = Posts.query.filter(Posts.approved != True)
+    res = []
+    print(qr)
+    for elem in qr:
+        res.append(elem.as_dict())
+        #res.append(json_parser(["id", "added_date", "title","content"], res))
+    print(qr)
+
+
+    # return jsonify(res)
+    # return Response(f"{res}")
+    return render_template("mainpage.html", posts=res)
+
+
+def json_parser(headers, txt):
+    dct = list()
+    tmp = {}
+    for elem in txt:
+        for col in headers:
+            # print(elem.content)
+            if col == "content":
+                x = eval(f"elem.{col}")
+                # x = base64.b64decode(x)
+                x = x.decode("utf-8")
+                tmp[col] = str(x)
+            elif col == "title":
+                tmp[col] = str(eval(f"elem.{col}"))
+                tmp["thumb"] = str("thumbnails/"+eval(f"elem.{col}")+ "_thumbnails.png")
+
+            else:
+                tmp[col] = str(eval(f"elem.{col}"))
+
+        #dct.append(tmp)
+    return tmp
+        #return json.dumps(dct)
 
 def back_server(q_list, host="0.0.0.0", port=12345):
     global queue_list
