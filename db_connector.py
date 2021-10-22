@@ -26,8 +26,8 @@ class Db_connector(object):
 			db.session.commit()
 		except exc.IntegrityError as e:
 			db.session.rollback()
-
-
+			self.TEXT = None
+			print(e)
 			print("___XDDD___")
 
 

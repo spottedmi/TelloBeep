@@ -6,7 +6,7 @@ import time, random, json
 from make_img import Make_img
 from backend.server import back_server
 
-class Connect_api(object):
+class Insta_api(object):
 	def __init__(self, q_list):
 		"this is only a makeshift"
 		"fetching api function's going to replace this"
@@ -14,9 +14,10 @@ class Connect_api(object):
 		
 		self.TEXT_tmp = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum """
 
-		self.send_msg()
+		self.recv_mgs()
 
-	def send_msg(self):
+
+	def recv_mgs(self):
 		while 1 :
 
 			self.TEXT = self.TEXT_tmp[0: random.randrange(0, 1100)]
@@ -39,14 +40,35 @@ class Connect_api(object):
 			}
 			q.put(req)
 			
-			time.sleep(5)
+			time.sleep(1)
+
+
+
+
+class Tello_api(object):
+	def __init__(self, q_list):
+		"this is only a makeshift"
+		"fetching api function's going to replace this"
+		self.q_list = q_list
+
+		
+
+		self.send_msg()
+
+	def send_msg(self):
+		while 1:
+			q = q_list.get("2insta")
+			send_content = q.get()
+			print(f"SENDING TO API {send_content}")
+
 
 
 if __name__ == "__main__":
 	q_list = {
 		"2gen": Queue(),
 		"2flask": Queue(),
-		"2api": Queue(),
+		"2tello": Queue(),
+		"2insta": Queue(),
 	}
 
 	
@@ -54,11 +76,14 @@ if __name__ == "__main__":
 	#generating images
 	t1 = Thread(target = Make_img, kwargs={"q_list":q_list}).start()
 
-	#pushing text
-	t2 = Thread(target = Connect_api, kwargs={"q_list":q_list}).start()
-	
-	#backend server
+	#backend
 	t2 = Thread(target = back_server, kwargs={"q_list":q_list}).start()
+	
+	#insta thread
+	t3 = Thread(target = Insta_api, kwargs={"q_list":q_list}).start()
+	
+	#teloym thread
+	t4 = Thread(target = Tello_api, kwargs={"q_list":q_list}).start()
 
 
 	while 1 :		

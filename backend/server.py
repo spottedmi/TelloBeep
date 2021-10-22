@@ -43,7 +43,7 @@ class User(db.Model, UserMixin):
 class Posts(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     added_date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
-    content = db.Column(db.String(5000), nullable=False)
+    content = db.Column(db.String(5000))
     title = db.Column(db.String(100), nullable=False, unique=True)
     approved = db.Column(db.Boolean(), nullable=False, default=False)
     approved_by = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True)
@@ -100,25 +100,40 @@ def restricted():
 def accept(id_post):
     txt = request.data.decode("utf-8")
 
-    if txt != "{}":
-        data = json.loads(txt)
+    post = Posts.query.filter_by(id=id_post).one()
+    data = json.loads(txt)
+    title = data.get("title")
+
+    if data.get("text") != None:
         txt = data.get("text")
-        title = data.get("title")
-        a_user = Posts.query.filter_by(id=id_post).one()
-        a_user.content = txt
-        db.session.commit()
+        post.content = txt
+
         
         q = queue_list.get("2gen")
         req = {
         "text": txt,
         "title": title
         }
-        print(req)
-        print(q)
         q.put(req)
+    else:
+        print("____GET___")
+        content = Posts.query.filter_by(id=id_post).one().content
+        post.content = content
+        pass
 
+    post.approved = True
+    post.approved_date = datetime.datetime.now()
 
+    user = User.query.filter_by(username=current_user.username).one()
+    post.approved_by =user.id 
+    db.session.commit()
 
+    api = queue_list.get("2insta")
+    info = {
+        "id":title
+    }
+
+    api.put(info)
 
     return "<p>restricted area!</p>"
 
@@ -153,14 +168,12 @@ def register():
 @app.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
+
     qr = Posts.query.filter(Posts.approved != True).order_by(Posts.id.desc())
     res = []
-    print(qr)
     for elem in qr:
         res.append(elem.as_dict())
         #res.append(json_parser(["id", "added_date", "title","content"], res))
-    print(qr)
-
 
     # return jsonify(res)
     # return Response(f"{res}")

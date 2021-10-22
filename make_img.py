@@ -218,7 +218,7 @@ class Make_img(Censorship, Db_connector):
 		while 1:
 			q1 = self.q_list.get("2gen")
 			q2 = self.q_list.get("2flask")
-			q2 = self.q_list.get("2api")
+			q2 = self.q_list.get("2tello")
 			res = q1.get() 
 
 			
