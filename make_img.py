@@ -216,8 +216,9 @@ class Make_img(Censorship, Db_connector):
 	def load_from_threads(self):
 
 		while 1:
-			q1 = self.q_list.get("api2gen")
-			q2 = self.q_list.get("flask2gen")
+			q1 = self.q_list.get("2gen")
+			q2 = self.q_list.get("2flask")
+			q2 = self.q_list.get("2api")
 			res = q1.get() 
 
 			

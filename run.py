@@ -21,7 +21,7 @@ class Connect_api(object):
 
 			self.TEXT = self.TEXT_tmp[0: random.randrange(0, 1100)]
 			
-			q = q_list.get("api2gen")
+			q = q_list.get("2gen")
 			
 			t = time.localtime()
 			y = f"{t.tm_year}"if len(str(t.tm_year)) == 4 else f"0{t.tm_year}"
@@ -44,9 +44,9 @@ class Connect_api(object):
 
 if __name__ == "__main__":
 	q_list = {
-		"api2gen": Queue(),
-		"api2flask": Queue(),
-		"flask2gen": Queue(),
+		"2gen": Queue(),
+		"2flask": Queue(),
+		"2api": Queue(),
 	}
 
 	

@@ -108,7 +108,7 @@ def accept(id_post):
         a_user.content = txt
         db.session.commit()
         
-        q = queue_list.get("api2gen")
+        q = queue_list.get("2gen")
         req = {
         "text": txt,
         "title": title
