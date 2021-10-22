@@ -20,7 +20,9 @@ class Connect_api(object):
 		while 1 :
 
 			self.TEXT = self.TEXT_tmp[0: random.randrange(0, 1100)]
-			q = q_list.get("flask2gen")
+			
+			q = q_list.get("api2gen")
+			
 			t = time.localtime()
 			y = f"{t.tm_year}"if len(str(t.tm_year)) == 4 else f"0{t.tm_year}"
 			M = f"{t.tm_mon}" if len(str(t.tm_mon)) == 2 else f"0{t.tm_mon}"
@@ -35,9 +37,9 @@ class Connect_api(object):
 				"text": self.TEXT,
 				"title": title
 			}
-			#q.put(req)
+			q.put(req)
 			
-			time.sleep(1)
+			time.sleep(5)
 
 
 if __name__ == "__main__":

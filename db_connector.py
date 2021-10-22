@@ -1,23 +1,34 @@
 from sqlite3 import connect
 from  base64  import b64encode
-
+from backend.server import User, Posts, db
+from sqlalchemy import exc
 
 class Db_connector(object):
 
 	def db_add_img(self):
 		
-		txt = b64encode(bytes(self.TEXT, 'utf-8'))
+		# txt = b64encode(bytes(self.TEXT, 'utf-8'))
+		txt = self.TEXT
+		# con = connect(self.db_name)
+		# curs = con.cursor()
+		# curs.execute(""" 
+		# 	INSERT INTO posts 
+		# 	(content, title, approved)
+		# 	VALUES 
+		# 	(?,?,?)
+		# 	""",(txt, self.out_image_name, False))
+		# con.commit()
+		# con.close()
+		
+		try:
+			post = Posts(content=txt, title=self.out_image_name)
+			db.session.add(post)
+			db.session.commit()
+		except exc.IntegrityError as e:
+			db.session.rollback()
 
-		con = connect(self.db_name)
-		curs = con.cursor()
-		curs.execute(""" 
-			INSERT INTO posts 
-			(content, title, approved)
-			VALUES 
-			(?,?,?)
-			""",(txt, self.out_image_name, False))
-		con.commit()
-		con.close()
+
+			print("___XDDD___")
 
 
 	def if_logged(self,user=None, db_name=None, password=""):
@@ -32,7 +43,7 @@ class Db_connector(object):
 			passwd = curs.fetchall()[0][0]
 		except:
 			return False
-			
+
 		con.close()
 		if password == passwd:
 			return True

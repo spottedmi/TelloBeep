@@ -23,7 +23,7 @@ class Make_img(Censorship, Db_connector):
 		self.extension = "png"
 
 		#thumbnails
-		self.thumb_path = "backend/thumbnails"
+		self.thumb_path = "backend/static/thumbnails"
 		self.thumb_res = [300, 300]
 
 		#margins
@@ -191,7 +191,6 @@ class Make_img(Censorship, Db_connector):
 			hour  = str(date.tm_hour) if len(str(date.tm_hour)) == 2 else f"0{date.tm_hour}"
 			minutes  = str(date.tm_min) if len(str(date.tm_min)) == 2 else f"0{date.tm_min}"
 			self.DATE = f"{hour}:{minutes} {day}/{month}/{yr}"
-			print(self.DATE)
 
 
 
@@ -217,17 +216,28 @@ class Make_img(Censorship, Db_connector):
 	def load_from_threads(self):
 
 		while 1:
-			q = self.q_list.get("flask2gen")
-			res = q.get()
+			q1 = self.q_list.get("api2gen")
+			q2 = self.q_list.get("flask2gen")
+			res = q1.get() 
+
+			
+			#res =  q2.get()
+
 			data = res["text"]
 			self.out_image_name = res["title"]
-
+			t = res["title"]
+			#2021 10 22 11 03 53
+			self.DATE = f"{t[8]}{t[9]}:{t[10]}{t[11]} {t[6]}{t[7]}/{t[4]}{t[5]}/{t[0:4]}"
+			print(f"make_img date  ---->  {self.DATE}")
+			print(f"make_img title ---->  {self.out_image_name}")
+			print()
 
 			self.TEXT_tmp = data
 			time.sleep(0.01)
 			if data:
 				self.TEXT = data
 				self.gen()
+			
 
 
 

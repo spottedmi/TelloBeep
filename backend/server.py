@@ -95,6 +95,34 @@ def logout():
 def restricted():
     return "<p>restricted area!</p>"
 
+@app.route("/accept/<int:id_post>", methods=["POST"])
+@login_required
+def accept(id_post):
+    txt = request.data.decode("utf-8")
+
+    if txt != "{}":
+        data = json.loads(txt)
+        txt = data.get("text")
+        title = data.get("title")
+        a_user = Posts.query.filter_by(id=id_post).one()
+        a_user.content = txt
+        db.session.commit()
+        
+        q = queue_list.get("api2gen")
+        req = {
+        "text": txt,
+        "title": title
+        }
+        print(req)
+        print(q)
+        q.put(req)
+
+
+
+
+    return "<p>restricted area!</p>"
+
+
 @app.route("/login", methods=["GET","POST"])
 def login():
     form = LoginForm()
@@ -125,7 +153,7 @@ def register():
 @app.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
-    qr = Posts.query.filter(Posts.approved != True)
+    qr = Posts.query.filter(Posts.approved != True).order_by(Posts.id.desc())
     res = []
     print(qr)
     for elem in qr:
@@ -160,6 +188,7 @@ def json_parser(headers, txt):
         #dct.append(tmp)
     return tmp
         #return json.dumps(dct)
+
 
 def back_server(q_list, host="0.0.0.0", port=12345):
     global queue_list
