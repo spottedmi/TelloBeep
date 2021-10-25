@@ -21,7 +21,7 @@ header{
 }
 
 a > button{
-	height: 7vh;
+	height: auto;
 	width: 10vw;
 }
 
@@ -90,4 +90,44 @@ form > textarea{
 img{
 	height: 400px;
 	width: 400px;
+}
+
+header{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	/*height:  auto;*/
+	height: 15vh;
+
+}
+header > div{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+}
+h1{
+	height: 1em;
+}
+
+header > nav {
+    display: flex;
+    flex-direction: row;
+
+    height: 100%;
+    margin-top: 3vh;
+
+
+}
+header > div > p{
+	margin: 0;
+	font-size: 5vh;
+}
+a{
+	height: 4vh;
+	margin:  0 5vw;
+	display:  flex;
+	font-size:  5vh;
 }
