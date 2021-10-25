@@ -12,10 +12,10 @@ class Censorship(object):
 	swears_list = None
 
 	def __init__(self, bad_words="", text=""):
-		if not "BAD_WORDS" in globals():
-			self.BAD_WORDS = bad_words
-		if not "TEXT" in globals():
-			self.TEXT = text
+		# if not "BAD_WORDS" in globals():
+		# 	self.BAD_WORDS = bad_words
+		# if not "TEXT" in globals():
+		# 	self.TEXT = text
 
 		self.load_file(self.BAD_WORDS)
 		
