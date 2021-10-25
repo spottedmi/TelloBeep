@@ -42,13 +42,14 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(100), nullable=False)
     added = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
 
+
 class Posts(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     added_date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
     content = db.Column(db.String(5000))
     title = db.Column(db.String(100), nullable=False, unique=True)
     approved = db.Column(db.Boolean(), nullable=False, default=False)
-    approved_by = db.Column(db.Integer, db.ForeignKey(User.id), nullable=True)
+    approved_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     approved_date = db.Column(db.DateTime(timezone=True), nullable=True)
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -223,7 +224,8 @@ def rejected():
     # Session = sessionmaker(bind = engine)
     # session = Session()
 
-    # session.query(Posts).filter(Posts.approved == True).all():
+    # qr =  db.session.query(Posts).filter(Posts.approved == True).all
+    qr =  db.session.query(Posts).join(User).filter(Posts.approved == True).all()
 
 
     res = []

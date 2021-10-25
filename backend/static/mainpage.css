@@ -27,7 +27,7 @@ a > button{
 
 
 content{
-	height: 45vh;
+	/*height: 45vh;*/
 	/*width: 100vw;*/
 	background: white;
 	flex-grow: 1;
