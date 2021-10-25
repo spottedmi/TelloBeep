@@ -40,7 +40,7 @@ class Insta_api(object):
 				"text": self.TEXT,
 				"title": title
 			}
-			#q.put(req)
+			# q.put(req)
 			
 			time.sleep(0.1)
 

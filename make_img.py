@@ -12,7 +12,6 @@ from db_connector import Db_connector
 
 class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
-		super().__init__()
 
 		#footer
 		self.TEXT_footer = """#FOOTER_TEXT_FOOTER_TEXT"""
@@ -78,7 +77,10 @@ class Make_img(Censorship, Db_connector):
 			"users": "users"
 		}
 
-		self.BAD_WORDS = './swears_list.txt'
+		self.BAD_WORDS = 'swears_list.txt'
+
+		super().__init__()
+		
 
 		if q_list:
 			self.q_list = q_list
