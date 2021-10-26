@@ -3,110 +3,31 @@ body{
 	flex-direction: column;
 	height: auto;
 	width: 100vw;
-	background: purple;
+	background: white;
 	overflow-x: hidden;
 	box-sizing: border-box;
 	padding: 0;
 	margin: 0;
 }
+
+
 header{
-	height: 20vh;
 	width: 100vw;
 	background: #1C1936;
 	color:  white;
 	font-size: 5em;
 	display: flex;
-	flex-direction: row;
 	justify-content: space-around;
-}
-
-a > button{
-	height: auto;
-	width: 10vw;
-}
-
-
-content{
-	/*height: 45vh;*/
-	/*width: 100vw;*/
-	background: white;
-	flex-grow: 1;
-	transition: all 0.5s linear;
-
-}
-br{
-	width: 90%;
-	background-color:  black;
-}
-form{
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	margin: 2vh 0 ;
-}
-form > div{
-	display: flex;
 	flex-direction: column;
-}
-form > textarea{
-	width: 30vw;
-}
-
-.accReject{
-	width: 10vw;
-
-}
-
-.accReject > input{
-	height: 40%;
-	margin:  10%;
-	color:  white;
-	font-size:  1.5em;
-}
-
-.accReject > [name="accept"]{
-	background-color: green;
-}
-
-.accReject > [name="reject"]{
-	background-color: red;
-}
-
-
-
-.accept {
-	z-index: -1;    
-    margin-top:  -40vh;
-    background: linear-gradient(0deg, #90ff758f, white);
-}
-
-
-.remove {
-	z-index: -1;    
-    margin-top:  -40vh;
-    background: linear-gradient(0deg, #ff00008f, white);
-}
-
-img{
-	height: 400px;
-	width: 400px;
-}
-
-header{
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
 	align-items: center;
-	/*height:  auto;*/
-	height: 15vh;
-
 }
+
 header > div{
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	margin: 0;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		margin: 0;
 }
 h1{
 	height: 1em;
@@ -125,9 +46,147 @@ header > div > p{
 	margin: 0;
 	font-size: 5vh;
 }
-a{
-	height: 4vh;
-	margin:  0 5vw;
-	display:  flex;
-	font-size:  5vh;
+
+content{
+		transition: all 0.5s linear;
+}
+
+@media  (orientation:landscape){
+	header{
+		height: 20vh;
+	}
+
+	a > button{
+		height: auto;
+		width: 10vw;
+	}
+
+
+	content{
+		/*height: 45vh;*/
+		/*width: 100vw;*/
+		background: white;
+		flex-grow: 1;
+
+
+	}
+	br{
+		width: 90%;
+		background-color:  black;
+	}
+	form{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		margin: 2vh 0 ;
+	}
+	form > div{
+		display: flex;
+		flex-direction: column;
+	}
+	form > textarea{
+		width: 30vw;
+	}
+
+	.accReject{
+		width: 10vw;
+
+	}
+
+	.accReject > input{
+		height: 40%;
+		margin:  10%;
+		color:  white;
+		font-size:  1.5em;
+	}
+
+	.accReject > [name="accept"]{
+		background-color: green;
+	}
+
+	.accReject > [name="reject"]{
+		background-color: red;
+	}
+
+
+
+	.accept {
+		z-index: -1;    
+	    margin-top:  -40vh;
+	    background: linear-gradient(0deg, #90ff758f, white);
+	}
+
+
+	.remove {
+		z-index: -1;    
+	    margin-top:  -40vh;
+	    background: linear-gradient(0deg, #ff00008f, white);
+	}
+
+
+	
+	img{
+		height: 400px;
+		width: 400px;
+	}
+
+	
+	a{
+		height: 4vh;
+		margin:  0 5vw;
+		display:  flex;
+		font-size:  5vh;
+	}
+
+
+}
+@media (orientation:portrait){
+
+	header{
+		font-size: 2em;
+		height: 7vh;
+	}
+
+	content{
+	    position: absolute;
+	    height: 93vh;
+	    width: 100vw;
+	    background: white;
+	    width: 100vw;
+	    bottom: 0;
+		transition: all 0.5s linear;
+
+	}
+	form{
+		height: auto;
+		width: 100vw;
+		display:  flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	form > textarea { 
+		height: 40vh;
+		width: 90vw;
+		font-size:  2.5em;
+ }
+ form > img {
+ 	width: 100vw;
+ 	margin-bottom: 1vh;
+ }
+ .accReject{
+ 	width: 100vw;
+ 	height: 20vh;
+ 	display: flex;
+ 	justify-content: space-around;
+ 	align-items: center;
+ 	display: none;
+ }
+ .accReject > input{
+ 	height: 10vh;
+ 	width: 40vw;
+
+ }
+
+
 }
