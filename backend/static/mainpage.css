@@ -12,7 +12,7 @@ body{
 header{
 	height: 20vh;
 	width: 100vw;
-	background: blue;
+	background: #1C1936;
 	color:  white;
 	font-size: 5em;
 	display: flex;
