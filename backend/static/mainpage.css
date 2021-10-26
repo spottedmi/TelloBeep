@@ -67,6 +67,7 @@ content{
 		/*width: 100vw;*/
 		background: white;
 		flex-grow: 1;
+		z-index: 4;
 
 
 	}
@@ -112,14 +113,14 @@ content{
 
 	.accept {
 		z-index: -1;    
-	    margin-top:  -40vh;
+	    margin-top:  -75vh;
 	    background: linear-gradient(0deg, #90ff758f, white);
 	}
 
 
 	.remove {
 		z-index: -1;    
-	    margin-top:  -40vh;
+	    margin-top:  -75vh;
 	    background: linear-gradient(0deg, #ff00008f, white);
 	}
 
@@ -157,6 +158,10 @@ content{
 		transition: all 0.5s linear;
 
 	}
+	content:last-of-type{
+	 	z-index: 10;
+	 }
+
 	form{
 		height: auto;
 		width: 100vw;
@@ -169,24 +174,25 @@ content{
 		height: 40vh;
 		width: 90vw;
 		font-size:  2.5em;
- }
- form > img {
- 	width: 100vw;
- 	margin-bottom: 1vh;
- }
- .accReject{
- 	width: 100vw;
- 	height: 20vh;
- 	display: flex;
- 	justify-content: space-around;
- 	align-items: center;
- 	display: none;
- }
- .accReject > input{
- 	height: 10vh;
- 	width: 40vw;
+	 }
+	 form > img {
+	 	width: 100vw;
+	 	margin-bottom: 1vh;
+	 }
+	 .accReject{
+	 	width: 100vw;
+	 	height: 20vh;
+	 	display: flex;
+	 	justify-content: space-around;
+	 	align-items: center;
+	 	display: none;
+	 }
+	 .accReject > input{
+	 	height: 10vh;
+	 	width: 40vw;
 
- }
+	 }
+	 
 
 
 }

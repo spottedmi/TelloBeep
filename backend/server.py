@@ -80,7 +80,9 @@ def hello_world():
     print(queue_list)
     username = current_user.username
 
-    return f"<p>Hello, World! ---> {username}</p>"
+    # return f"<p>Hello, World! ---> {username}</p>"
+    return redirect("/dashboard")
+    
 
 @app.route("/logout")
 @login_required
@@ -160,6 +162,7 @@ def reject(id_post):
 
 
     return "<p>restricted area!</p>"
+    return redirect("/dashboard")
 
 
 @app.route("/login", methods=["GET","POST"])
@@ -256,7 +259,7 @@ def json_parser(headers, txt):
         #return json.dumps(dct)
 
 
-def back_server(q_list, host="0.0.0.0", port=12345):
+def back_server(q_list, host="localhost", port=12345):
     global queue_list
     queue_list = q_list
 
