@@ -156,10 +156,13 @@ content{
 	    width: 100vw;
 	    bottom: 0;
 		transition: all 0.5s linear;
+		visibility: hidden;
 
 	}
 	content:last-of-type{
 	 	z-index: 10;
+		visibility: visible;
+
 	 }
 
 	form{

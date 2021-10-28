@@ -163,19 +163,23 @@ $(document).ready(function() {
       var x = e.pageX || e.originalEvent.touches[0].pageX;
       pullDeltaX = (x - startX);
       if (pullDeltaX > 0){
+            e.target.parentNode.style.backgroundColor = `green`
             if (pullDeltaX > 250){
                   accept = true;
                   reject = false;
-            e.target.parentNode.style.backgroundColor = `green`
             }
 
       }else if (pullDeltaX < 0){
+            e.target.parentNode.style.backgroundColor = `red`
             if (pullDeltaX < -250){
                   accept = false
                   reject = true
-                  e.target.parentNode.style.backgroundColor = `red`
 
             }
+
+      }
+      else{
+            e.target.parentNode.style.backgroundColor = `transparent`
 
       }
       if (!pullDeltaX) return;
