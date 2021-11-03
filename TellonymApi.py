@@ -2,6 +2,10 @@ import cloudscraper
 
 class TellonymTell():
 	def __init__(self, tellJSON):
+		# for elem in tellJSON:
+		# 	x = eval(f"tellJSON['{elem}']")
+		# 	print(f"{elem} :  {x}")
+
 		self.question = tellJSON["tell"]
 		self.answer = tellJSON["answer"]
 		self.createdAt = tellJSON["createdAt"]
@@ -57,8 +61,13 @@ class TellonymApi():
 		else:
 			return TellonymUser(None)
 
-user = TellonymApi().GetUser("spotted_kasprzak_auto")
-user.FetchTells()
 
-for tell in user.tells:
-	print(tell.question)
+class Get_questions(TellonymApi):
+	def __init__(self):
+		super().__init__()
+		user = self.GetUser("spotted_kasprzak_auto")
+		user.FetchTells()
+
+		for tell in user.tells:
+			print(tell.question)
+

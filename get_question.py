@@ -1,9 +1,4 @@
-import tellonym_api
-
-class Get_questions(object):
-    def __init__(self):
-        print('test')
-
+from TellonymApi import Get_questions
 
 if __name__ == '__main__':
     get_questions = Get_questions()
