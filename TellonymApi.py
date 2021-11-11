@@ -1,64 +1,43 @@
-import cloudscraper
+import requests
+import json
 
 class TellonymTell():
 	def __init__(self, tellJSON):
-		self.question = tellJSON["tell"]
-		self.answer = tellJSON["answer"]
+		self.id = tellJSON["id"]
+		self.tell = tellJSON["tell"]
 		self.createdAt = tellJSON["createdAt"]
-		self.likeCount = tellJSON["likesCount"]
-
-class TellonymUser():
-	def __init__(self, profileJson):
-		self.profielPropeties = profileJson
-
-		self.cSession = cloudscraper.create_scraper()
-		self.display_name = profileJson["displayName"]
-		self.username = profileJson["username"]
-		self.bio = profileJson["aboutMe"]
-		self.avatar_url = profileJson["avatarFileName"]
-		self.user_id = profileJson["id"]
-		self.followersCount = profileJson["followerCount"]
-		self.anonymousFollowerCount = profileJson["anonymousFollowerCount"]
-		self.isFollowingcount = profileJson["followingCount"]
-		self.active = profileJson["isActive"]
-		self.tellsCount = profileJson["tellCount"]
-		self.tells = []
-		self.followers = []
-		self.followings = []
-
-	def FetchTells(self):
-		self.tells = []
-		tellsUrl = "https://api.tellonym.me/answers/{}?&userId={}&limit=25&pos={}"
-		posX = 0
-		while True:
-			tellReq = self.cSession.get(tellsUrl.format(str(self.user_id), str(self.user_id), str(posX)))
-			respJs = tellReq.json()
-			if len(respJs["answers"]) == 0:
-				break
-	
-			for xT in respJs["answers"]:
-				if xT["type"] == "AD":
-					continue
-				else:
-					self.tells.append(TellonymTell(xT))
-	
-			self.tells.reverse()
-			posX += 25
 
 class TellonymApi():
-	def __init__(self):
-		self.api_url = "https://api.tellonym.me"
-		self.cSession = cloudscraper.create_scraper()
+	def RemoveTell(self, tellId):
+		print('delete ' + str(tellId))
 
-	def GetUser(self, username):
-		request = self.cSession.get("{}/profiles/name/{}".format(self.api_url, username))
-		if request.status_code == 200:
-			return TellonymUser(request.json())
-		else:
-			return TellonymUser(None)
+	def GetTells(self, token):
+		headers = {
+		  'Accept': 'application/json',
+		  'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3',
+		  'Connection': 'keep-alive',
+		  'content-type': 'application/json;charset=utf-8',
+		  'Host': 'api.tellonym.me',
+		  'Origin': 'https://tellonym.me',
+		  'Sec-Fetch-Dest': 'empty',
+		  'Sec-Fetch-Mode': 'cors',
+		  'Sec-Fetch-Site': 'same-site',
+		  'Sec-GPC': '1',
+		  'TE': 'trailers',
+		  'tellonym-client': 'web:0.59.4',
+		  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0',
+		  'authorization': 'Bearer {}'.format(token)
+		}
 
-user = TellonymApi().GetUser("spotted_kasprzak_auto")
-user.FetchTells()
+		request = requests.get("https://api.tellonym.me/tells?limit=25", headers=headers)
+		data = json.loads(request.text)
 
-for tell in user.tells:
-	print(tell.question)
+		tells = []
+
+		for x in data["tells"]:
+			tell = TellonymTell(x)
+
+			tells.append(tell)
+			self.RemoveTell(tell.id)
+
+		return tells
