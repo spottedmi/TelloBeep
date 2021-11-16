@@ -1,4 +1,7 @@
 import requests, json, sys
+from queue import Queue
+from threading import Thread
+
 
 class TokenInvalid(Exception):
 	pass
@@ -20,22 +23,25 @@ class Tellonym_api():
 	tells = []
 	token_file = "token.txt"
 
-	LOGIN = None
-	PASSWORD = None
+	# LOGIN = None
+	# PASSWORD = None
+
+	LOGIN = "spotted_kasprzak_auto"
+	PASSWORD = "8f79akZ6"
 
 
 	headers = {
-		    'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3',
-		    'content-type': 'application/json;charset=utf-8',
-		    'Host': 'api.tellonym.me',
-		    'Origin': 'https://tellonym.me',
-		    'Sec-Fetch-Dest': 'empty',
-		    'Sec-Fetch-Mode': 'cors',
-		    'Sec-Fetch-Site': 'same-site',
-		    'Sec-GPC': '1',
-		    'TE': 'trailers',
-		    'tellonym-client': 'web:0.59.4',
-		    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0',
+			'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3',
+			'content-type': 'application/json;charset=utf-8',
+			'Host': 'api.tellonym.me',
+			'Origin': 'https://tellonym.me',
+			'Sec-Fetch-Dest': 'empty',
+			'Sec-Fetch-Mode': 'cors',
+			'Sec-Fetch-Site': 'same-site',
+			'Sec-GPC': '1',
+			'TE': 'trailers',
+			'tellonym-client': 'web:0.59.4',
+			'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0',
 		}
 
 	def run(self):
@@ -47,9 +53,9 @@ class Tellonym_api():
 			self.get_token()
 			tells = self.get_tells(self.user.token)
 
-		# print("\n"*4)
-		# for elem in tells:
-		# 	print(f"{elem.id}  {elem.created_at}  {elem.tell}  ")
+		for elem in tells:
+			self.remove_tell(elem.id)
+
 		return tells
 
 
@@ -82,24 +88,21 @@ class Tellonym_api():
 		url = "https://api.tellonym.me/tokens/create"
 
 		self.get_login_credentials()
-
 		data_login = {
-            "deviceName": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.11",
-            "deviceType": "web",
-            "lang": "en",
-            "captcha": "",#m3gon
-            "email": self.LOGIN,
-            "password": self.PASSWORD,
-            "limit": "25"
+			"deviceName": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.11",
+			"deviceType": "web",
+			"lang": "en",
+			"captcha": "",#m3gon
+			"email": self.LOGIN,
+			"password": self.PASSWORD,
+			"limit": "25"
 		}
 
 		headers = self.headers
 		self.headers["Content-Length"] = f"{len(str(data_login))}"
 
 		response = requests.post(url, headers=headers, json=data_login, timeout=5000)
-		# data = json.loads(response.text)
 		data = response.json()
-		# print(data)
 
 		try:
 			if data["code"] == "CAPTCHA_REQUIRED":
@@ -112,21 +115,22 @@ class Tellonym_api():
 
 		
 		return self.user
-	
-	
 
+	def remove_tell(self, tell_id, limit=25):
 
-	def remove_tell(self, token, tellId):
-		url = "https://api.tellonym.me/tells/destroy"
+		url = f"https://api.tellonym.me/"
+		url = url + "tells/destroy"
+		data = {
+				"tellId": tell_id,
+				"limit": limit,
+				}
 		headers = self.headers
-		headers["authorization"] = f"Bearer {token}"
+		headers["authorization"] = f"Bearer {self.user.token}"
 
-		params = {
-			"tellId": tellId,
-            "limit": "25"
-		}
 
-		response = requests.post(url, headers=headers, params=params)
+		r = requests.post(url, json=data, headers=headers)
+		return r.content
+
 
 	def get_tells(self, token=""):
 		url = "https://api.tellonym.me/tells"
@@ -136,10 +140,10 @@ class Tellonym_api():
 
 
 		params = {
-            "limit": "25"
+			"limit": "25"
 		}
+		
 		response = requests.get(url, headers=headers, params=params)
-
 
 		if response.ok:
 			data = response.json()
@@ -156,6 +160,7 @@ class Tellonym_api():
 
 if __name__ == "__main__":
 	tell = Tellonym_api()
+	tell.run()
 	# token = tell.get_token()
 	# print(token.token)
 
