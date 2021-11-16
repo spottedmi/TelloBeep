@@ -38,19 +38,19 @@ class Tellonym_api():
 		    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0',
 		}
 
-	def __init__(self):
+	def run(self):
 		#self.get_token()
 		try:
 			self.load_token()
 			tells = self.get_tells(self.user.token)
-			# print(tells)
 		except TokenInvalid:
 			self.get_token()
 			tells = self.get_tells(self.user.token)
 
-		print("\n"*4)
-		for elem in tells:
-			print(f"{elem.id}  {elem.created_at}  {elem.tell}  ")
+		# print("\n"*4)
+		# for elem in tells:
+		# 	print(f"{elem.id}  {elem.created_at}  {elem.tell}  ")
+		return tells
 
 
 	def get_login_credentials(self):
@@ -141,7 +141,6 @@ class Tellonym_api():
 		response = requests.get(url, headers=headers, params=params)
 
 
-		
 		if response.ok:
 			data = response.json()
 		else:

@@ -6,6 +6,8 @@ import time, random, json
 from make_img import Make_img
 from backend.server import back_server
 
+from TellonymApi import Tellonym_api
+
 class Insta_api(object):
 	def __init__(self, q_list):
 		"this is only a makeshift"
@@ -48,20 +50,43 @@ class Insta_api(object):
 
 
 class Tello_api(object):
+	"send txt to generating thread"
 	def __init__(self, q_list):
-		"this is only a makeshift"
 		"fetching api function's going to replace this"
 		self.q_list = q_list
 
 		
-
+		self.tello = Tellonym_api()
 		self.send_msg()
 
 	def send_msg(self):
 		while 1:
-			q = q_list.get("2insta")
-			send_content = q.get()
-			print(f"SENDING TO API {send_content}")
+			content = self.tello.run()
+			for elem in content:
+				t = time.localtime()
+
+				y = f"{t.tm_year}"if len(str(t.tm_year)) == 4 else f"0{t.tm_year}"
+				M = f"{t.tm_mon}" if len(str(t.tm_mon)) == 2 else f"0{t.tm_mon}"
+				d = f"{t.tm_mday}"if len(str(t.tm_mday)) == 2 else f"0{t.tm_mday}"
+				h = f"{t.tm_hour}"if len(str(t.tm_hour)) == 2 else f"0{t.tm_hour}"
+				m = f"{t.tm_min}" if len(str(t.tm_min)) == 2 else f"0{t.tm_min}"
+				s = f"{t.tm_sec}" if len(str(t.tm_sec)) == 2 else f"0{t.tm_sec}"
+				mil = int(round(time.time() * 1000))
+				
+				title = f"{y}{M}{d}{h}{m}{s}{mil}_{elem.id}"
+
+				
+				req = {
+					"text": elem.tell,
+					"title": title,
+					"metadata":elem
+				}
+				q = q_list.get("2gen")
+				q.put(req)
+
+				# send_content = q.get()
+				print(f"SENDING TO generating {elem.tell}")
+			time.sleep(60)
 
 
 
