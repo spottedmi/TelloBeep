@@ -160,10 +160,9 @@ class Tellonym_api():
 
 if __name__ == "__main__":
 	tell = Tellonym_api()
-	tell.run()
-	# token = tell.get_token()
-	# print(token.token)
-
-	# tells = tell.get_tells(token.token)
-	# for elem in tells:
-	# 	print(f"{elem.id}   {elem.tell}")
+	out = tell.run()
+	print("fetched tells: ")
+	if out == list():
+		print("no tells")
+	for elem in out :
+		print(f"{elem.id}  {elem.created_at}  {elem.tell}")
