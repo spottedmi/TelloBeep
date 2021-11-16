@@ -77,7 +77,7 @@ class RegisterForm(FlaskForm):
 @app.route("/")
 @login_required
 def hello_world():
-    print(queue_list)
+    
     username = current_user.username
 
     # return f"<p>Hello, World! ---> {username}</p>"
@@ -121,7 +121,6 @@ def accept(id_post):
         }
         q.put(req)
     else:
-        print("____GET___")
         content = Posts.query.filter_by(id=id_post).one().content
         post.content = content
         pass
@@ -174,7 +173,6 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                print(request.args)
                 return redirect("/")
 
         return render_template('login.html', form=form)
@@ -196,7 +194,7 @@ def register():
 @login_required
 def dashboard():
 
-    qr = Posts.query.filter(Posts.approved != True).order_by(Posts.id.desc())
+    qr = Posts.query.filter(Posts.approved_by == None).order_by(Posts.id.desc())
     res = []
     for elem in qr:
         res.append(elem.as_dict())

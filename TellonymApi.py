@@ -117,7 +117,6 @@ class Tellonym_api():
 		return self.user
 
 	def remove_tell(self, tell_id, limit=25):
-
 		url = f"https://api.tellonym.me/"
 		url = url + "tells/destroy"
 		data = {
@@ -127,12 +126,12 @@ class Tellonym_api():
 		headers = self.headers
 		headers["authorization"] = f"Bearer {self.user.token}"
 
-
 		r = requests.post(url, json=data, headers=headers)
 		return r.content
 
 
 	def get_tells(self, token=""):
+		self.tells = list()
 		url = "https://api.tellonym.me/tells"
 
 		headers = self.headers

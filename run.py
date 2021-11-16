@@ -62,6 +62,8 @@ class Tello_api(object):
 	def send_msg(self):
 		while 1:
 			content = self.tello.run()
+			print("post run")
+			print(content)
 			for elem in content:
 				t = time.localtime()
 
@@ -86,7 +88,7 @@ class Tello_api(object):
 
 				# send_content = q.get()
 				print(f"SENDING TO generating {elem.tell}")
-			time.sleep(60)
+			time.sleep(10)
 
 
 
