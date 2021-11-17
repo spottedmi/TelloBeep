@@ -2,29 +2,18 @@
 
 class Censorship(object):
 
-	# def censure_txt(self):
-	# 	if not self.BAD_WORDS:
-	# 		self.BAD_WORDS = ""
-
-	# 	profanity.load_censor_words_from_file(self.BAD_WORDS)
-	# 	self.TEXT = profanity.censor(self.TEXT) 
-	
 	swears_list = None
 
 	def __init__(self, bad_words="", text=""):
-		# if not "BAD_WORDS" in globals():
-		# 	self.BAD_WORDS = bad_words
-		# if not "TEXT" in globals():
-		# 	self.TEXT = text
-
+		super.__init__()
 		self.load_file(self.BAD_WORDS)
 		
-	def load_file(self, link):
+	def load_file(self, link) -> None:
 		with open(link, "r") as f:
 			txt = f.read()
 			self.swears_list = txt.rsplit("\n")
 			
-	def censure_txt(self):
+	def censure_txt(self) -> str:
 		words = self.TEXT.replace(",", "")
 		words = words.replace(".", "")
 		words = words.replace("\n", " ")
@@ -32,8 +21,6 @@ class Censorship(object):
 
 
 		words = words.split(" ")
-
-		
 
 		for elem in words:
 			elem = elem.replace(" ", "")
