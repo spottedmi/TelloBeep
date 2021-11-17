@@ -19,6 +19,12 @@ from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 import sys, datetime, json, base64
 
+
+#_____________________________________________________________
+#
+#               INIT
+#_____________________________________________________________
+
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../db.sqlite"
@@ -35,6 +41,11 @@ login_manager.login_view = "login"
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+#_____________________________________________________________
+#
+#               DATABASE MODEL
+#_____________________________________________________________
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,9 +65,15 @@ class Posts(db.Model, UserMixin):
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
-
+#CREATE DATABASE
 # db.create_all()
 # sys.exit()
+
+#_____________________________________________________________
+#
+#               FORMS
+#_____________________________________________________________
+
 
 class LoginForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=0, max=100)], render_kw={"placeholder":"Username"})
@@ -73,6 +90,11 @@ class RegisterForm(FlaskForm):
         if existing_user_username:
             raise ValidationError("user already exists")
 
+#_____________________________________________________________
+#
+#               ROUTING
+#_____________________________________________________________
+
 
 @app.route("/")
 @login_required
@@ -80,7 +102,6 @@ def hello_world():
     
     username = current_user.username
 
-    # return f"<p>Hello, World! ---> {username}</p>"
     return redirect("/dashboard")
     
 
@@ -92,7 +113,6 @@ def logout():
         # prevent flashing automatically logged out message
         del session['was_once_logged_in']
     return redirect('/login')
-    #return render_template("mainpage.html")
 
 
 @app.route("/restricted")
@@ -103,27 +123,27 @@ def restricted():
 @app.route("/accept/<int:id_post>", methods=["POST"])
 @login_required
 def accept(id_post):
+    q = queue_list.get("2insta")
+    
     txt = request.data.decode("utf-8")
 
     post = Posts.query.filter_by(id=id_post).one()
     data = json.loads(txt)
     title = data.get("title")
 
-    if data.get("text") != None:
+    if title != None:
         txt = data.get("text")
+        print(data)
         post.content = txt
 
-        
-        q = queue_list.get("2gen")
+        filename = f"imgs/{title}.png"
+
         req = {
-        "text": txt,
-        "title": title
+        "title": title,
+        "filename": filename
         }
         q.put(req)
-    else:
-        content = Posts.query.filter_by(id=id_post).one().content
-        post.content = content
-        pass
+
 
     post.approved = True
     post.approved_date = datetime.datetime.now()
@@ -132,12 +152,6 @@ def accept(id_post):
     post.approved_by =user.id 
     db.session.commit()
 
-    api = queue_list.get("2insta")
-    info = {
-        "id":title
-    }
-
-    api.put(info)
 
     return "<p>restricted area!</p>"
 
@@ -206,12 +220,6 @@ def dashboard():
 @login_required
 def accepted():
     qr = Posts.query.filter(Posts.approved == True).order_by(Posts.id.desc()).all()
-    # Session = sessionmaker(bind = engine)
-    # session = Session()
-
-    # session.query(Posts).filter(Posts.approved == True).all():
-
-
     res = []
     for elem in qr:
         res.append(elem.as_dict())
@@ -222,21 +230,15 @@ def accepted():
 @login_required
 def rejected():
     qr = Posts.query.filter(Posts.approved == False).order_by(Posts.id.desc()).all()
-    # Session = sessionmaker(bind = engine)
-    # session = Session()
-
-    # qr =  db.session.query(Posts).filter(Posts.approved == True).all
     qr =  db.session.query(Posts).join(User).filter(Posts.approved == True).all()
-
 
     res = []
     for elem in qr:
         res.append(elem.as_dict())
     return render_template("rejected.html", posts=res)
 
-
-
-def json_parser(headers, txt):
+# parsing json
+def json_parser(headers, txt)-> dict:
     dct = list()
     tmp = {}
     for elem in txt:
@@ -251,20 +253,26 @@ def json_parser(headers, txt):
 
             else:
                 tmp[col] = str(eval(f"elem.{col}"))
-
-        #dct.append(tmp)
     return tmp
-        #return json.dumps(dct)
 
 
+#function executed in thread
 def back_server(q_list, host="localhost", port=12345):
     global queue_list
     queue_list = q_list
 
     app.run(host=host, port=port)
 
+
+#_____________________________________________________________
+#
+#               EXECUTING A PROGRAM
+#_____________________________________________________________
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=12345)
+
 
 #todo 
 # clean up this shitty code
