@@ -28,6 +28,7 @@ class Insta_api(object):
 
 		while 1 :
 			content = q.get()
+			print(f"INSTAGRAM {content["title"]}")
 			time.sleep(0.1)
 
 #_____________________________________________________________
@@ -67,7 +68,7 @@ class Tello_api(object):
 					"title": title,
 					"metadata":elem
 				}
-				
+
 				q = q_list.get("2gen")
 				q.put(req)
 

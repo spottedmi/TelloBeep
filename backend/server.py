@@ -142,7 +142,6 @@ def accept(id_post):
         "title": title,
         "filename": filename
         }
-        q.put(req)
 
 
     post.approved = True
@@ -151,6 +150,8 @@ def accept(id_post):
     user = User.query.filter_by(username=current_user.username).one()
     post.approved_by =user.id 
     db.session.commit()
+    
+    q.put(req)
 
 
     return "<p>restricted area!</p>"
@@ -172,10 +173,6 @@ def reject(id_post):
     post.approved_by =user.id 
 
     db.session.commit()
-
-
-    return "<p>restricted area!</p>"
-    return redirect("/dashboard")
 
 
 @app.route("/login", methods=["GET","POST"])

@@ -5,7 +5,7 @@ class Censorship(object):
 	swears_list = None
 
 	def __init__(self, bad_words="", text=""):
-		super.__init__()
+		# super.__init__()
 		self.load_file(self.BAD_WORDS)
 		
 	def load_file(self, link) -> None:
