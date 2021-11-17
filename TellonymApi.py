@@ -26,8 +26,8 @@ class Tellonym_api():
 	# LOGIN = None
 	# PASSWORD = None
 
-	LOGIN = "spotted_kasprzak_auto"
-	PASSWORD = "8f79akZ6"
+	LOGIN = ""
+	PASSWORD = ""
 
 
 	headers = {
