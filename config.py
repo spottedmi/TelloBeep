@@ -116,7 +116,9 @@ class Config(object):
 		print("CONFIG INIT")
 		
 		self.load_locals()
-		
+		print(self.headers)
+		print(type(self.headers))
+		print(len(self.headers))
 
 		
 
@@ -154,29 +156,36 @@ class Config(object):
 			except:
 				elem_val = eval(f'dic.get("{elem}")')
 			
+			br = False
 
 			try:
+
 				x = dict(elem_val)
 				exec(f"self.{elem} = {elem_val}")
 				pass
 			except:
+				br = True
 				pass
 			try:
+				if br: raise Exception("xD")
+
 				x = int(elem_val)
 				exec(f"self.{elem} = {elem_val}")
 				pass
 			except:
+				br = True
 				pass
 
 			try:
 				x = str(elem_val)
+				if br: raise Exception("xD")
 				try:
 					exec(f"self.{elem} = '{elem_val}'")
 				except:
 					exec(f'self.{elem} = "{elem_val}"')
-			
-
+					br = True
 				pass
+
 			except:
 				pass
 
