@@ -1,8 +1,8 @@
 {
     "BAD_WORDS": "swears_list.txt",
     "DATE": null,
-    "LOGIN": "",
-    "PASSWORD": "",
+    "LOGIN": "spotted_kasprzak_auto",
+    "PASSWORD": "8f79akZ6",
     "TEXT_footer": "#FOOTER_TEXT_FOOTER_TEXT",
     "colorBackground": "#1C1936",
     "colorOutline": "#ffffff",
@@ -12,6 +12,7 @@
         "posts": "posts",
         "users": "users"
     },
+    "TIMEZONE": 1,
     "extension": "png",
     "font": null,
     "font_footer": null,

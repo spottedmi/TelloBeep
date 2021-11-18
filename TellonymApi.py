@@ -35,11 +35,12 @@ class Tellonym_api(Config):
 
 		for elem in tells:
 			self.remove_tell(elem.id)
-
+		
 		return tells
 
 
 	def get_login_credentials(self):
+		print("input credentials")
 		if not self.LOGIN and not self.PASSWORD:
 			self.LOGIN = input("login: ")
 			self.PASSWORD = input("password: ")
@@ -57,7 +58,7 @@ class Tellonym_api(Config):
 			self.user = Tellonym_user(res)
 		except:
 			print("load json failed")
-			raise TokenInvalid
+			raise TokenInvalid("load token failed")
 
 	def save_token(self, file=None, data=""):
 		"save token to a file"

@@ -56,9 +56,12 @@ class Make_img(Censorship, Db_connector):
 		self.save_tumbnail()
 		self.db_add_img()
 
+
+
 	def save_img(self):
 		self.img_object = self.img_object.resize(self.insta_res, Image.ANTIALIAS)
-		self.img_object.save(f"{self.out_image_path}/{self.out_image_name}.{self.extension}")
+		self.filename = f"{self.out_image_path}/{self.out_image_name}.{self.extension}"
+		self.img_object.save(self.filename)
 
 	def save_tumbnail(self):
 		self.img_object = self.img_object.resize(self.thumb_res, Image.ANTIALIAS)
@@ -152,11 +155,11 @@ class Make_img(Censorship, Db_connector):
 	def load_from_threads(self):
 
 		while 1:
-			q1 = self.q_list.get("2gen")
-			q2 = self.q_list.get("2flask")
-			q2 = self.q_list.get("2tello")
-			res = q1.get() 
-
+			gen = self.q_list.get("2gen")
+			insta = self.q_list.get("2insta")
+			# q2 = self.q_list.get("2flask")
+			# q2 = self.q_list.get("2tello")
+			res = gen.get() 
 			
 			#res =  q2.get()
 
@@ -165,15 +168,21 @@ class Make_img(Censorship, Db_connector):
 			t = res["title"]
 			#2021 10 22 11 03 53
 			self.DATE = f"{t[8]}{t[9]}:{t[10]}{t[11]} {t[6]}{t[7]}/{t[4]}{t[5]}/{t[0:4]}"
-			print(f"make_img date  ---->  {self.DATE}")
-			print(f"make_img title ---->  {self.out_image_name}")
-			print()
 
 			self.TEXT_tmp = data
-			time.sleep(0.01)
 			if data:
 				self.TEXT = data
 				self.gen()
+
+			if res.get("send"):
+				res = {
+				"title": self.out_image_name
+				}
+				insta.put(res)
+				 
+			else:
+				pass
+			time.sleep(0.01)
 			
 
 

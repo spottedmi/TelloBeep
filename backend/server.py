@@ -27,6 +27,10 @@ import sys, datetime, json, base64
 
 app = Flask(__name__)
 
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../db.sqlite"
 app.config["SECRET_KEY"] = "SECRET"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -123,36 +127,47 @@ def restricted():
 @app.route("/accept/<int:id_post>", methods=["POST"])
 @login_required
 def accept(id_post):
-    q = queue_list.get("2insta")
-    # gen = queue_list.get("2gen")
+    insta = queue_list.get("2insta")
+    gen = queue_list.get("2gen")
     
     txt = request.data.decode("utf-8")
 
     post = Posts.query.filter_by(id=id_post).one()
     data = json.loads(txt)
     title = data.get("title")
-
-    if title != None:
-        txt = data.get("text")
-        print(data)
-        post.content = txt
-
-        filename = f"imgs/{title}.png"
-
-        req = {
-        "title": title,
-        "filename": filename
-        }
-
-
     post.approved = True
     post.approved_date = datetime.datetime.now()
 
     user = User.query.filter_by(username=current_user.username).one()
     post.approved_by =user.id 
+
+    if data.get("text") != None:
+        #if regenerating image    
+        new_text = data.get("text")
+        post.content = new_text
+
+
+        req = {
+            "text": new_text,
+            "title": title,
+            "send": True
+        }
+        #deleting post
+        q = Posts.query.filter_by(title=title).delete()
+
+        gen.put(req)
+
+    else:
+        filename = f"imgs/{title}.png"
+        req = {
+        "title": title,
+        "filename": filename
+        }
+        insta.put(req)
+
+
     db.session.commit()
     
-    q.put(req)
 
 
     return "<p>restricted area!</p>"
@@ -161,7 +176,6 @@ def accept(id_post):
 @login_required
 def reject(id_post):
     txt = request.data.decode("utf-8")
-    print("rejected")
     post = Posts.query.filter_by(id=id_post).one()
     data = json.loads(txt)
     title = data.get("title")
@@ -208,7 +222,6 @@ def register():
 @app.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
-    print("DASHBOARD")
     qr = Posts.query.filter(Posts.approved_by == None).order_by(Posts.id.asc())
 
     res = []

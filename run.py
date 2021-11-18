@@ -35,7 +35,7 @@ class Insta_api(object):
 
 #_____________________________________________________________
 #
-#               INSTAGRAM API
+#               Tello API
 #_____________________________________________________________
 
 class Tello_api(Config):
@@ -51,9 +51,8 @@ class Tello_api(Config):
 		"put message to the generating queue"
 		while 1:
 			content = self.tello.run()
+			print(f"fetched: {content}")
 			for elem in content:
-				print("------- TIMEZONE")
-
 				#generate file name
 				tm , date = elem.created_at.rsplit("T")
 				y, M, d = tm.rsplit("-")
@@ -66,13 +65,14 @@ class Tello_api(Config):
 				req = {
 					"text": elem.tell,
 					"title": title,
-					"metadata":elem
+					"metadata":elem,
+					"send": False
 				}
 
 				q = q_list.get("2gen")
 				q.put(req)
 
-			time.sleep(1)
+			time.sleep(3)
 
 
 
