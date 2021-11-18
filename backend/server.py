@@ -206,7 +206,8 @@ def register():
 @login_required
 def dashboard():
 
-    qr = Posts.query.filter(Posts.approved_by == None).order_by(Posts.id.desc())
+    qr = Posts.query.filter(Posts.approved != True).order_by(Posts.id.asc())
+
     res = []
     for elem in qr:
         res.append(elem.as_dict())
