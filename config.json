@@ -1,0 +1,67 @@
+{
+    "BAD_WORDS": "swears_list.txt",
+    "DATE": null,
+    "LOGIN": "",
+    "PASSWORD": "",
+    "TEXT_footer": "#FOOTER_TEXT_FOOTER_TEXT",
+    "colorBackground": "#1C1936",
+    "colorOutline": "#ffffff",
+    "colorText": "#ffffff",
+    "db_name": "db.sqlite",
+    "db_tables": {
+        "posts": "posts",
+        "users": "users"
+    },
+    "extension": "png",
+    "font": null,
+    "font_footer": null,
+    "font_footer_name": "./Anton.ttf",
+    "font_footer_size": 65,
+    "fontname": "/usr/share/fonts/TTF/Arial.TTF",
+    "fontsize": 31,
+    "footer_height": 100,
+    "headers": {
+        "Accept-Language": "pl,en-US;q=0.7,en;q=0.3",
+        "content-type": "application/json;charset=utf-8",
+        "Host": "api.tellonym.me",
+        "Origin": "https://tellonym.me",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-site",
+        "Sec-GPC": "1",
+        "TE": "trailers",
+        "tellonym-client": "web:0.59.4",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0"
+    },
+    "height": 0,
+    "image_path": "./LogoTemplate.png",
+    "image_size": [
+        250,
+        250
+    ],
+    "img_object": null,
+    "insta_res": [
+        1080,
+        1080
+    ],
+    "margin": {
+        "top": 20,
+        "right": 20,
+        "bottom": 20,
+        "left": 20
+    },
+    "out_image_name": "image.png",
+    "out_image_path": "imgs",
+    "outline_thickness": 4,
+    "swears_list": null,
+    "tells": [],
+    "thumb_path": "backend/static/thumbnails",
+    "thumb_res": [
+        300,
+        300
+    ],
+    "token_file": "token.txt",
+    "user": null,
+    "width": 0,
+    "word_break": 10
+}
