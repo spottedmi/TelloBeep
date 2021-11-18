@@ -161,7 +161,7 @@ def accept(id_post):
 @login_required
 def reject(id_post):
     txt = request.data.decode("utf-8")
-
+    print("rejected")
     post = Posts.query.filter_by(id=id_post).one()
     data = json.loads(txt)
     title = data.get("title")
@@ -174,6 +174,9 @@ def reject(id_post):
     post.approved_by =user.id 
 
     db.session.commit()
+
+    return "<p>restricted area!</p>"
+
 
 
 @app.route("/login", methods=["GET","POST"])
@@ -205,8 +208,8 @@ def register():
 @app.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
-
-    qr = Posts.query.filter(Posts.approved != True).order_by(Posts.id.asc())
+    print("DASHBOARD")
+    qr = Posts.query.filter(Posts.approved_by == None).order_by(Posts.id.asc())
 
     res = []
     for elem in qr:
