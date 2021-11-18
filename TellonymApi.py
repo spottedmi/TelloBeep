@@ -5,7 +5,10 @@ from threading import Thread
 from config import Config
 
 class TokenInvalid(Exception):
-	pass
+	def __init__(self, err=""):
+		print("___token invalid___")
+		print(err)
+
 
 class Tellonym_user():
 	def __init__(self, tokenJSON):
@@ -123,7 +126,7 @@ class Tellonym_api(Config):
 		if response.ok:
 			data = response.json()
 		else:
-			raise TokenInvalid
+			raise TokenInvalid(response.text)
 		for x in data["tells"]:
 			tell = Tellonym_tell(x)
 			self.tells.append(tell)

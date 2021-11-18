@@ -8,6 +8,8 @@ from backend.server import back_server
 
 from TellonymApi import Tellonym_api
 
+from config import Config
+
 #_____________________________________________________________
 #
 #               INSTAGRAM API
@@ -36,9 +38,10 @@ class Insta_api(object):
 #               INSTAGRAM API
 #_____________________________________________________________
 
-class Tello_api(object):
+class Tello_api(Config):
 	"send txt to generating thread"
 	def __init__(self, q_list):
+		super().__init__()
 		"fetching api function's going to replace this"
 		self.q_list = q_list
 		self.tello = Tellonym_api()
@@ -49,19 +52,28 @@ class Tello_api(object):
 		while 1:
 			content = self.tello.run()
 			for elem in content:
+				print("------- TIMEZONE")
+				print(elem.created_at)
 
 				#generate file name
-				t = time.localtime()
-				y = f"{t.tm_year}"if len(str(t.tm_year)) == 4 else f"0{t.tm_year}"
-				M = f"{t.tm_mon}" if len(str(t.tm_mon)) == 2 else f"0{t.tm_mon}"
-				d = f"{t.tm_mday}"if len(str(t.tm_mday)) == 2 else f"0{t.tm_mday}"
-				h = f"{t.tm_hour}"if len(str(t.tm_hour)) == 2 else f"0{t.tm_hour}"
-				m = f"{t.tm_min}" if len(str(t.tm_min)) == 2 else f"0{t.tm_min}"
-				s = f"{t.tm_sec}" if len(str(t.tm_sec)) == 2 else f"0{t.tm_sec}"
-				mil = int(round(time.time() * 1000))
+				# t = time.localtime()
+				tm , date = elem.created_at.rsplit("T")
+				y, M, d = tm.rsplit("-")
+				date, mil = date.rsplit(".")
+				h,m,s = date.rsplit(":")
+				h = int(h) + self.TIMEZONE
+
+				# y = f"{t.tm_year}"if len(str(t.tm_year)) == 4 else f"0{t.tm_year}"
+				# M = f"{t.tm_mon}" if len(str(t.tm_mon)) == 2 else f"0{t.tm_mon}"
+				# d = f"{t.tm_mday}"if len(str(t.tm_mday)) == 2 else f"0{t.tm_mday}"
+				# h = f"{t.tm_hour}"if len(str(t.tm_hour)) == 2 else f"0{t.tm_hour}"
+				# m = f"{t.tm_min}" if len(str(t.tm_min)) == 2 else f"0{t.tm_min}"
+				# s = f"{t.tm_sec}" if len(str(t.tm_sec)) == 2 else f"0{t.tm_sec}"
+				# mil = int(round(time.time() * 1000))
 				
 				# title = current date + tellonym id
-				title = f"{y}{M}{d}{h}{m}{s}{mil}_{elem.id}"
+				title = f"{y}{M}{d}{h}{m}{s}_{elem.id}"
+				print(title)
 				
 				req = {
 					"text": elem.tell,
