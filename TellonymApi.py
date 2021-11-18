@@ -2,6 +2,7 @@ import requests, json, sys
 from queue import Queue
 from threading import Thread
 
+from config import Config
 
 class TokenInvalid(Exception):
 	pass
@@ -17,32 +18,8 @@ class Tellonym_tell():
 		self.tell = tellJSON["tell"]
 		self.created_at = tellJSON["createdAt"]
 
-class Tellonym_api():
+class Tellonym_api(Config):
 
-	user = None
-	tells = []
-	token_file = "token.txt"
-
-	# LOGIN = None
-	# PASSWORD = None
-
-	LOGIN = ""
-	PASSWORD = ""
-
-
-	headers = {
-			'Accept-Language': 'pl,en-US;q=0.7,en;q=0.3',
-			'content-type': 'application/json;charset=utf-8',
-			'Host': 'api.tellonym.me',
-			'Origin': 'https://tellonym.me',
-			'Sec-Fetch-Dest': 'empty',
-			'Sec-Fetch-Mode': 'cors',
-			'Sec-Fetch-Site': 'same-site',
-			'Sec-GPC': '1',
-			'TE': 'trailers',
-			'tellonym-client': 'web:0.59.4',
-			'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0',
-		}
 
 	def run(self):
 		#self.get_token()
@@ -73,6 +50,7 @@ class Tellonym_api():
 			with open(file, "r") as f:
 				res = f.read()
 			res = json.loads(res)
+			
 			self.user = Tellonym_user(res)
 		except:
 			print("load json failed")
@@ -133,9 +111,8 @@ class Tellonym_api():
 	def get_tells(self, token=""):
 		self.tells = list()
 		url = "https://api.tellonym.me/tells"
-
 		headers = self.headers
-		headers["authorization"] = f"Bearer {token}"
+		headers["authorization"] = f"Bearer {self.user.token}"
 
 
 		params = {
@@ -143,12 +120,10 @@ class Tellonym_api():
 		}
 		
 		response = requests.get(url, headers=headers, params=params)
-
 		if response.ok:
 			data = response.json()
 		else:
 			raise TokenInvalid
-
 		for x in data["tells"]:
 			tell = Tellonym_tell(x)
 			self.tells.append(tell)

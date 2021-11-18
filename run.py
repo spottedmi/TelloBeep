@@ -28,7 +28,7 @@ class Insta_api(object):
 
 		while 1 :
 			content = q.get()
-			print(f"INSTAGRAM {content["title"]}")
+			print(f"INSTAGRAM {content['title']}")
 			time.sleep(0.1)
 
 #_____________________________________________________________
