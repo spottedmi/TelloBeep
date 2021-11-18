@@ -116,9 +116,7 @@ class Config(object):
 		print("CONFIG INIT")
 		
 		self.load_locals()
-		print(self.headers)
-		print(type(self.headers))
-		print(len(self.headers))
+
 
 		
 
@@ -132,8 +130,8 @@ class Config(object):
 		res = dict()
 		for elem in x:
 
-			if not elem.startswith("__") and not  elem.endswith("__") and not str(type(eval(f"self.{elem}"))) == "<class 'method'>" :
-				res[elem] = eval(f"self.{elem}")
+			if not elem.startswith("__") and not  elem.endswith("__") and not str(type(exec(f"self.{elem}"))) == "<class 'method'>" :
+				res[elem] = exec(f"self.{elem}")
 
 		return res
 
@@ -154,40 +152,19 @@ class Config(object):
 			try:
 				elem_val = eval(f"dic.get('{elem}')")
 			except:
-				elem_val = eval(f'dic.get("{elem}")')
-			
-			br = False
+				elem_val = eval(f'dic.get("{elem}")')	
 
-			try:
-
-				x = dict(elem_val)
-				exec(f"self.{elem} = {elem_val}")
-				pass
-			except:
-				br = True
-				pass
-			try:
-				if br: raise Exception("xD")
-
-				x = int(elem_val)
-				exec(f"self.{elem} = {elem_val}")
-				pass
-			except:
-				br = True
-				pass
-
-			try:
-				x = str(elem_val)
-				if br: raise Exception("xD")
+			if str(type(elem_val)) == "<class 'str'>":
 				try:
-					exec(f"self.{elem} = '{elem_val}'")
-				except:
 					exec(f'self.{elem} = "{elem_val}"')
-					br = True
-				pass
+				except:
+					exec(f"self.{elem} = '{elem_val}'")
+			else:
+					exec(f"self.{elem} = {elem_val}")
 
-			except:
-				pass
+
+
+
 
 
 if __name__ == "__main__":
