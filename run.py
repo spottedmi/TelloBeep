@@ -71,6 +71,13 @@ class Tello_api(Config):
 				h,m,s = date.rsplit(":")
 				h = int(h) + self.TIMEZONE
 
+				print(h)
+				print(h)
+				print(h)
+
+				if h == 24:
+					h = "00"
+
 				title = f"{y}{M}{d}{h}{m}{s}_{elem.id}"
 				
 				req = {
