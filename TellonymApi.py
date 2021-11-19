@@ -137,8 +137,12 @@ class Tellonym_api(Config):
 		params = {
 			"limit": "25"
 		}
-		
-		response = requests.get(url, headers=headers, params=params)
+		try:
+			time.sleep(0.01)
+			response = requests.get(url, headers=headers, params=params)
+		except:
+			return self.ERRORS.get("conn_timeout")
+
 		if response.ok:
 			data = response.json()
 		else:
