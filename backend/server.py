@@ -70,8 +70,12 @@ class Posts(db.Model, UserMixin):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
 #CREATE DATABASE
-# db.create_all()
-# sys.exit()
+
+def setup():
+    print("create")
+    db.create_all()
+    sys.exit()
+
 
 #_____________________________________________________________
 #
