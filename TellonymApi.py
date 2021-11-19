@@ -31,9 +31,9 @@ class Tellonym_api(Config):
 		print("run")
 		tls = self.load_token()
 		self.check_err(tls)
-
-		tls = self.get_tells(self.user.token)
-		self.check_err(tls)
+		if self.user:
+			tls = self.get_tells(self.user.token)
+			self.check_err(tls)
 		
 		if self.ERROR == self.ERRORS.get("token"):
 			tls = self.get_token()
@@ -68,7 +68,8 @@ class Tellonym_api(Config):
 			res = json.loads(res)
 			
 			self.user = Tellonym_user(res)
-		except:
+		except Exception as e:
+			print(e)
 			print("load json failed")
 			return self.ERRORS.get("load_token")
 			# raise TokenInvalid("load token failed")
