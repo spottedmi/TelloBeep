@@ -16,9 +16,9 @@
     "extension": "png",
     "font": null,
     "font_footer": null,
-    "font_footer_name": "./Anton.ttf",
+    "font_footer_name": "Anton.ttf",
     "font_footer_size": 65,
-    "fontname": "/usr/share/fonts/TTF/Arial.TTF",
+    "fontname": "Arial.TTF",
     "fontsize": 31,
     "footer_height": 100,
     "headers": {
@@ -35,7 +35,7 @@
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0"
     },
     "height": 0,
-    "image_path": "./LogoTemplate.png",
+    "image_path": "LogoTemplate.png",
     "image_size": [
         250,
         250
@@ -68,6 +68,7 @@
     "ERRORS":{
         "token": "TOKEN_INVALID",
         "captcha": "CAPTCHA_REQUIRED",
-        "load_token": "LOAD_TOKEN_FAILED"
+        "load_token": "LOAD_TOKEN_FAILED",
+        "conn_timeout": "CONNECTION_RESET_BY_PEER"
     }
 }
