@@ -64,5 +64,10 @@
     "token_file": "token.txt",
     "user": null,
     "width": 0,
-    "word_break": 10
+    "word_break": 10,
+    "ERRORS":{
+        "token": "TOKEN_INVALID",
+        "captcha": "CAPTCHA_REQUIRED",
+        "load_token": "LOAD_TOKEN_FAILED"
+    }
 }

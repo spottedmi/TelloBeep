@@ -51,7 +51,18 @@ class Tello_api(Config):
 		"put message to the generating queue"
 		while 1:
 			content = self.tello.run()
+
+			delay = 10
+
+			while isinstance(content, str):
+				print(f"ERROR >>>>>> {content}")
+				self.tello = Tellonym_api()
+				content = self.tello.run()
+				print(f"	---------- delay: {delay}")
+				time.sleep(delay)
+				delay += delay
 			print(f"fetched: {content}")
+
 			for elem in content:
 				#generate file name
 				tm , date = elem.created_at.rsplit("T")

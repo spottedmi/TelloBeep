@@ -162,6 +162,17 @@ class Config(object):
 			else:
 					exec(f"self.{elem} = {elem_val}")
 
+	def check_err(self, err):
+		self.ERROR = False
+		if not isinstance(err, str):
+			return self.ERROR
+
+		for elem in self.ERRORS:
+			if err in self.ERRORS[elem]:
+				self.ERROR = err
+
+		return self.ERROR
+
 
 
 

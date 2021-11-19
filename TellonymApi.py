@@ -1,6 +1,7 @@
-import requests, json, sys
+import requests, json, sys, time
 from queue import Queue
 from threading import Thread
+import importlib
 
 from config import Config
 
@@ -23,24 +24,35 @@ class Tellonym_tell():
 
 class Tellonym_api(Config):
 
+	ERROR = False
 
 	def run(self):
 		#self.get_token()
-		try:
-			self.load_token()
-			tells = self.get_tells(self.user.token)
-		except TokenInvalid:
-			self.get_token()
-			tells = self.get_tells(self.user.token)
+		print("run")
+		tls = self.load_token()
+		self.check_err(tls)
 
-		for elem in tells:
+		tls = self.get_tells(self.user.token)
+		self.check_err(tls)
+		
+		if self.ERROR == self.ERRORS.get("token"):
+			tls = self.get_token()
+			if tls:
+				print(f" get token {tls}")
+				self.check_err(tls)
+
+		if self.ERROR:
+			return self.ERROR
+	
+
+		for elem in self.tells:
 			self.remove_tell(elem.id)
 		
-		return tells
+		return self.tells
 
 
 	def get_login_credentials(self):
-		print("input credentials")
+		print("Using credentials")
 		if not self.LOGIN and not self.PASSWORD:
 			self.LOGIN = input("login: ")
 			self.PASSWORD = input("password: ")
@@ -58,7 +70,9 @@ class Tellonym_api(Config):
 			self.user = Tellonym_user(res)
 		except:
 			print("load json failed")
-			raise TokenInvalid("load token failed")
+			return self.ERRORS.get("load_token")
+			# raise TokenInvalid("load token failed")
+		return True
 
 	def save_token(self, file=None, data=""):
 		"save token to a file"
@@ -70,6 +84,7 @@ class Tellonym_api(Config):
 		url = "https://api.tellonym.me/tokens/create"
 
 		self.get_login_credentials()
+
 		data_login = {
 			"deviceName": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.11",
 			"deviceType": "web",
@@ -85,18 +100,17 @@ class Tellonym_api(Config):
 
 		response = requests.post(url, headers=headers, json=data_login, timeout=5000)
 		data = response.json()
+		close = False
 
-		try:
-			if data["code"] == "CAPTCHA_REQUIRED":
-				print("COŚ SIĘ ZEPSUŁO I NIE BYŁO MNIE SŁYCHAĆ")
-				sys.exit(0)
-		except: 
+		if data.get("code") == self.ERRORS.get("captcha"):
+			return self.ERRORS.get("captcha")
+		else: 
 			self.user = Tellonym_user(data)
 			self.save_token(data=data)
-
-
 		
-		return self.user
+		if close:
+			sys.exit(0)
+		
 
 	def remove_tell(self, tell_id, limit=25):
 		url = f"https://api.tellonym.me/"
@@ -113,6 +127,7 @@ class Tellonym_api(Config):
 
 
 	def get_tells(self, token=""):
+		importlib.reload(requests)
 		self.tells = list()
 		url = "https://api.tellonym.me/tells"
 		headers = self.headers
@@ -127,13 +142,16 @@ class Tellonym_api(Config):
 		if response.ok:
 			data = response.json()
 		else:
-			raise TokenInvalid(response.text)
+			x = response.json()["err"]
+			x = x["code"]
+			return x
+
 		for x in data["tells"]:
 			tell = Tellonym_tell(x)
 			self.tells.append(tell)
 			# self.remove_tell(token, tell.id)
 
-		return self.tells
+		return True
 
 
 if __name__ == "__main__":
