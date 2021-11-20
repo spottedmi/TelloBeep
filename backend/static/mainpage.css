@@ -3,7 +3,7 @@ body{
 	flex-direction: column;
 	height: auto;
 	width: 100vw;
-	background: white;
+	background: #202020;
 	overflow-x: hidden;
 	box-sizing: border-box;
 	padding: 0;
@@ -13,9 +13,9 @@ body{
 
 header{
 	width: 100vw;
-	background: #1C1936;
+	background: #20283E;
 	color:  white;
-	font-size: 5em;
+	font-size: 3em;
 	display: flex;
 	justify-content: space-around;
 	flex-direction: column;
@@ -23,70 +23,117 @@ header{
 }
 
 header > div{
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		margin: 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+	color: #DADADA;
+	width: 70%;
 }
-h1{
-	height: 1em;
-}
 
-header > nav {
-    display: flex;
-    flex-direction: row;
-
-    height: 100%;
-    margin-top: 3vh;
-
-
-}
-header > div > p{
+header > div > a > p{
 	margin: 0;
 	font-size: 5vh;
+}
+
+header > div > a > button{
+	border: none;
+	background: transparent;
+	color: #DADADA;
+	font-size: 17px;
 }
 
 content{
 		transition: all 0.5s linear;
 }
 
+form > textarea {
+	width: 30vw;
+	background: #20283E;
+	color: #DADADA;
+	border: none;
+	font-size: 17px;
+}
+
+#settingsForm{
+	flex-direction: column;
+	align-self: center;
+	width: 50%;
+}
+
+#settingsForm > textarea{
+	width: 100%;
+	background: #20283E;
+	color: #DADADA;
+	border: none;
+	font-size: 17px;
+}
+
+#settingsForm > input{
+	width: 100%;
+	background: #20283E;
+	color: #DADADA;
+	border: none;
+	font-size: 17px;
+	padding: 10px;
+}
+
+#settingsForm > button{
+	background: #484848;
+	color: #DADADA;
+	border: none;
+	font-size: 17px;
+	padding: 10px;
+	margin-top: 10px;
+	border-radius: 10px;
+	opacity: 80%;
+}
+
+#settingsForm > button:hover{
+	  opacity: 100%;
+}
+
+#settingsForm > p{
+	color: #DADADA;
+	margin-bottom: 5px;
+	font-size: 25px;
+}
+
+#settingsForm > textarea{
+	height: 15vw;
+}
+
 @media  (orientation:landscape){
 	header{
-		height: 20vh;
+		height: 10vh;
 	}
 
 	a > button{
 		height: auto;
-		width: 10vw;
 	}
 
 
 	content{
-		/*height: 45vh;*/
-		/*width: 100vw;*/
-		background: white;
 		flex-grow: 1;
 		z-index: 4;
-
-
 	}
+
 	br{
 		width: 90%;
 		background-color:  black;
 	}
+
 	form{
 		display: flex;
 		flex-direction: row;
 		justify-content: space-around;
 		margin: 2vh 0 ;
 	}
+
 	form > div{
 		display: flex;
 		flex-direction: column;
-	}
-	form > textarea{
-		width: 30vw;
 	}
 
 	.accReject{
@@ -99,6 +146,8 @@ content{
 		margin:  10%;
 		color:  white;
 		font-size:  1.5em;
+		border: none;
+		border-radius: 10px;
 	}
 
 	.accReject > [name="accept"]{
@@ -106,10 +155,8 @@ content{
 	}
 
 	.accReject > [name="reject"]{
-		background-color: red;
+		background-color: #D32D41;
 	}
-
-
 
 	.accept {
 		z-index: -1;    
@@ -123,15 +170,12 @@ content{
 	    margin-top:  -75vh;
 	    background: linear-gradient(0deg, #ff00008f, white);
 	}
-
-
 	
 	img{
 		height: 400px;
 		width: 400px;
 	}
 
-	
 	a{
 		height: 4vh;
 		margin:  0 5vw;
@@ -148,6 +192,22 @@ content{
 		height: 7vh;
 	}
 
+	header > div > a{
+		padding: 10px;
+	}
+
+	header > div > p{
+		display: none;
+	}
+
+	#settingsForm{
+		width: 90%;
+	}
+
+	#settingsForm > input{
+		width: 90%;
+	}
+
 	content{
 	    position: absolute;
 	    height: 93vh;
@@ -162,7 +222,6 @@ content{
 	content:last-of-type{
 	 	z-index: 10;
 		visibility: visible;
-
 	 }
 
 	form{

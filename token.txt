@@ -1,0 +1,1 @@
+{"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nzc2ODYzNzUsImlhdCI6MTYzNzQ0MzA4M30.FIpRImwFyx3ffWLWZo4Qjy7CdK5hQsr9w5V5BxoDUrY", "lang": "en", "type": "LOGIN", "userId": 77686375, "createdAt": "2021-10-15T17:29:36.000Z"}

@@ -252,6 +252,17 @@ def rejected():
         res.append(elem.as_dict())
     return render_template("rejected.html", posts=res)
 
+@app.route("/settings", methods=["GET"])
+@login_required
+def settings():
+    qr = Posts.query.filter(Posts.approved == False).order_by(Posts.id.desc()).all()
+    qr =  db.session.query(Posts).join(User).filter(Posts.approved == True).all()
+
+    res = []
+    for elem in qr:
+        res.append(elem.as_dict())
+        return render_template("settings.html", posts=res)
+
 # parsing json
 def json_parser(headers, txt)-> dict:
     dct = list()

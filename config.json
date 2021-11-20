@@ -16,9 +16,9 @@
     "extension": "png",
     "font": null,
     "font_footer": null,
-    "font_footer_name": "./Anton.ttf",
+    "font_footer_name": "Anton.ttf",
     "font_footer_size": 65,
-    "fontname": "/usr/share/fonts/TTF/Arial.TTF",
+    "fontname": "arial",
     "fontsize": 31,
     "footer_height": 100,
     "headers": {
