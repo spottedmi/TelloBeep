@@ -104,29 +104,13 @@ class RegisterForm(FlaskForm):
 #_____________________________________________________________
 
 
-@app.route("/")
-@login_required
-def hello_world():
-    
-    username = current_user.username
 
-    return redirect("/dashboard")
-    
-
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    if session.get('session'):
-        # prevent flashing automatically logged out message
-        del session['was_once_logged_in']
-    return redirect('/login')
+#_____________________________________________________________
+#
+#               api
+#_____________________________________________________________
 
 
-@app.route("/restricted")
-@login_required
-def restricted():
-    return "<p>restricted area!</p>"
 
 @app.route("/accept/<int:id_post>", methods=["POST"])
 @login_required
@@ -195,6 +179,39 @@ def reject(id_post):
 
     return "<p>restricted area!</p>"
 
+
+#_____________________________________________________________
+#
+#               html
+#_____________________________________________________________
+
+
+
+@app.route("/")
+@login_required
+def hello_world():
+    
+    username = current_user.username
+
+    return redirect("/dashboard")
+    
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    if session.get('session'):
+        # prevent flashing automatically logged out message
+        del session['was_once_logged_in']
+    return redirect('/login')
+
+
+
+
+@app.route("/restricted")
+@login_required
+def restricted():
+    return "<p>restricted area!</p>"
 
 
 @app.route("/login", methods=["GET","POST"])
