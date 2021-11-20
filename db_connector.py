@@ -6,20 +6,7 @@ from sqlalchemy import exc
 class Db_connector(object):
 
 	def db_add_img(self):
-		
-		# txt = b64encode(bytes(self.TEXT, 'utf-8'))
-		txt = self.TEXT
-		# con = connect(self.db_name)
-		# curs = con.cursor()
-		# curs.execute(""" 
-		# 	INSERT INTO posts 
-		# 	(content, title, approved)
-		# 	VALUES 
-		# 	(?,?,?)
-		# 	""",(txt, self.out_image_name, False))
-		# con.commit()
-		# con.close()
-		
+		txt = self.TEXT		
 		try:
 			post = Posts(content=txt, title=self.out_image_name)
 			db.session.add(post)

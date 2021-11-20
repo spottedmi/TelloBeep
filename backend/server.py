@@ -71,7 +71,10 @@ class Posts(db.Model, UserMixin):
     
 #CREATE DATABASE
 
+<<<<<<< HEAD
 print("run")
+=======
+>>>>>>> develop
 def setup():
     print("create")
     db.create_all()
@@ -103,6 +106,7 @@ class RegisterForm(FlaskForm):
 #
 #               ROUTING
 #_____________________________________________________________
+<<<<<<< HEAD
 
 
 
@@ -111,6 +115,27 @@ class RegisterForm(FlaskForm):
 #               api
 #_____________________________________________________________
 
+=======
+
+
+@app.route("/")
+@login_required
+def hello_world():
+    
+    username = current_user.username
+
+    return redirect("/dashboard")
+    
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    if session.get('session'):
+        # prevent flashing automatically logged out message
+        del session['was_once_logged_in']
+    return redirect('/login')
+>>>>>>> develop
 
 
 @app.route("/restricted")
@@ -185,6 +210,7 @@ def reject(id_post):
 
     return "<p>restricted area!</p>"
 
+<<<<<<< HEAD
 
 
 #_____________________________________________________________
@@ -210,6 +236,8 @@ def logout():
         # prevent flashing automatically logged out message
         del session['was_once_logged_in']
     return redirect('/login')
+=======
+>>>>>>> develop
 
 
 @app.route("/login", methods=["GET","POST"])
@@ -270,6 +298,7 @@ def rejected():
         res.append(elem.as_dict())
     return render_template("rejected.html", posts=res)
 
+<<<<<<< HEAD
 
 
 #_____________________________________________________________
@@ -278,6 +307,8 @@ def rejected():
 #_____________________________________________________________
 
 
+=======
+>>>>>>> develop
 # parsing json
 def json_parser(headers, txt)-> dict:
     dct = list()
