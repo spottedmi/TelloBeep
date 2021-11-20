@@ -71,6 +71,7 @@ class Posts(db.Model, UserMixin):
     
 #CREATE DATABASE
 
+print("run")
 def setup():
     print("create")
     db.create_all()
