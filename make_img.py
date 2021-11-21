@@ -21,7 +21,6 @@ class Make_img(Censorship, Db_connector):
 
 	def gen(self) -> None:
 		"generate image"
-
 		self.prepare_text()
 		self.get_fonts()
 		self.get_size_txt()
@@ -54,7 +53,12 @@ class Make_img(Censorship, Db_connector):
 		#resizing and prepare to save
 		self.save_img()
 		self.save_tumbnail()
+		
 		self.db_add_img()
+		
+
+		# if self.AUTORUN:
+		# 	self.db_set_approved()
 
 
 
@@ -178,10 +182,14 @@ class Make_img(Censorship, Db_connector):
 				res = {
 				"title": self.out_image_name
 				}
+
 				insta.put(res)
 				 
 			else:
 				pass
+			
+
+
 			time.sleep(0.01)
 			
 

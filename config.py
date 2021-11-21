@@ -189,6 +189,17 @@ class Config(object):
 				self.ERROR = err
 
 		return self.ERROR
+	
+	def get_autorun(self):
+		dic = self.load_json()
+		dic = dic.get("AUTORUN")
+
+		self.AUTORUN = dic
+		return dic
+
+
+
+
 
 
 

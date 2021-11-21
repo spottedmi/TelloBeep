@@ -328,7 +328,7 @@ def accepted():
 @login_required
 def rejected():
     qr = Posts.query.filter(Posts.approved == False).order_by(Posts.id.desc()).all()
-    qr =  db.session.query(Posts).join(User).filter(Posts.approved == True).all()
+    # qr =  db.session.query(Posts).join(User).filter(Posts.approved == True).all()
 
     res = []
     for elem in qr:

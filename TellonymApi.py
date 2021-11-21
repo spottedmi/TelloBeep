@@ -28,7 +28,7 @@ class Tellonym_api(Config):
 
 	def run(self):
 		#self.get_token()
-		print("run")
+		# print("run")
 		tls = self.load_token()
 		self.check_err(tls)
 		if self.user:
@@ -47,6 +47,10 @@ class Tellonym_api(Config):
 
 		for elem in self.tells:
 			self.remove_tell(elem.id)
+			
+		# self.load_locals()
+		# print(f"autorun: {self.AUTORUN}")
+
 		
 		return self.tells
 

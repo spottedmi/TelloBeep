@@ -3,19 +3,38 @@ from  base64  import b64encode
 from backend.server import User, Posts, db
 from sqlalchemy import exc
 
-class Db_connector(object):
+from config import Config
+from datetime import datetime
+
+class Db_connector(Config):
+	def __init__(self):
+		super().__init__()
 
 	def db_add_img(self):
 		txt = self.TEXT		
 		try:
-			post = Posts(content=txt, title=self.out_image_name)
+			self.AUTORUN = self.get_autorun()
+
+			post = Posts(content=txt, title=self.out_image_name, \
+				approved=self.AUTORUN, approved_by=0 )
 			db.session.add(post)
 			db.session.commit()
+
 		except exc.IntegrityError as e:
 			db.session.rollback()
 			self.TEXT = None
 			print(e)
 			print("___XDDD___")
+
+
+	def db_set_approved(self):
+		post = Posts.query.filter_by(title=self.out_image_name).one()
+		post.approved = True
+		post.approved_date = datetime.now()
+		post.approved_by = 1
+		post.content = self.TEXT
+
+		db.session.commit()
 
 
 	def if_logged(self,user=None, db_name=None, password=""):

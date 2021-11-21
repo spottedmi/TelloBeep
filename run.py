@@ -46,12 +46,12 @@ class Tello_api(Config):
 		self.q_list = q_list
 		self.tello = Tellonym_api()
 		self.send_msg()
+		
 
 	def send_msg(self) -> None:
 		"put message to the generating queue"
 		while 1:
 			content = self.tello.run()
-
 			delay = 10
 
 			while isinstance(content, str):
@@ -71,9 +71,7 @@ class Tello_api(Config):
 				h,m,s = date.rsplit(":")
 				h = int(h) + self.TIMEZONE
 
-				print(h)
-				print(h)
-				print(h)
+				
 
 				if h == 24:
 					h = "00"
