@@ -55,9 +55,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 config = Config()
-config.BAD_WORDS = "chuj"
-config.dump_json()
-sys.exit(0)
+
 #_____________________________________________________________
 #
 #               DATABASE MODEL
@@ -233,6 +231,20 @@ def changes(post_id):
     ret = json.dumps(res)
     return ret
  
+
+app.route("/autorun", methods=["POST"])
+@login_required
+def autorun():
+    txt = request.data.decode("utf-8")
+    data = json.loads(txt)
+    run = data.get("autorun")
+
+    config.AUTORUN = run
+    config.dump_json()
+
+    return "OK"
+
+
 #_____________________________________________________________
 #
 #               html
