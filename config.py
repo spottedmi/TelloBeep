@@ -1,4 +1,4 @@
-import json
+import json, os
 
 class Config(object):
 	def __init__(self):
@@ -136,7 +136,9 @@ class Config(object):
 		return res
 
 	def load_json(self):
-		f = open("config.json", "r")
+		absolute_path = os.path.abspath(__file__)
+		path = os.path.dirname(absolute_path) + "/"
+		f = open(path + "config.json", "r")
 		a = f.read()
 		x = json.loads(a)
 		f.close()
