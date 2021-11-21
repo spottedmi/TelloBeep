@@ -46,6 +46,8 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+config = Config()
+
 #_____________________________________________________________
 #
 #               DATABASE MODEL
@@ -190,25 +192,37 @@ def token_list():
 
     token = '{"accessToken": "'+token+'", "lang": "en", "type": "LOGIN", "userId": 12345678}'
 
-    x = Config()
 
-    with open(x.token_file, "w") as f:
+    with open(config.token_file, "w") as f:
         f.write(token)
 
     return "<p>restricted area!</p>"
 
-
-@app.route("/settings", methods=["GET"])
+app.route("/bad_words", methods=["POST"])
 @login_required
-def settings():
-    qr = Posts.query.filter(Posts.approved == False).order_by(Posts.id.desc()).all()
-    qr =  db.session.query(Posts).join(User).filter(Posts.approved == True).all()
+def bad_words():
+    txt = request.data.decode("utf-8")
+    data = json.loads(txt)
+    word = data.get("word")
+    
+    with open(config.BAD_WORDS, "a") as f:
+        f.write(word)
+
+    return "<p>restricted area!</p>"
+
+    
+app.route("/changes/<int:post_id>", methods=["POST"])
+@login_required
+def changes(post_id):
+    qr = Posts.query.filter(Posts.approved_by == None, Posts.id > post_id).order_by(Posts.id.asc())
 
     res = []
     for elem in qr:
         res.append(elem.as_dict())
-        return render_template("settings.html", posts=res)
-
+    
+    ret = json.dumps(res)
+    return ret
+ 
 #_____________________________________________________________
 #
 #               html
@@ -298,6 +312,19 @@ def rejected():
     for elem in qr:
         res.append(elem.as_dict())
     return render_template("rejected.html", posts=res)
+
+@app.route("/settings", methods=["GET"])
+@login_required
+def settings():
+    qr = Posts.query.filter(Posts.approved == False).order_by(Posts.id.desc()).all()
+    qr =  db.session.query(Posts).join(User).filter(Posts.approved == True).all()
+
+    res = []
+    for elem in qr:
+        res.append(elem.as_dict())
+        return render_template("settings.html", posts=res)
+
+
 
 # parsing json
 def json_parser(headers, txt)-> dict:
