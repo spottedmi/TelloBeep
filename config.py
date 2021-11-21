@@ -131,18 +131,22 @@ class Config(object):
 
 		
 
-		# res = self.parse_locals()		
-		# f = open("config.json", "w+")
-		# json.dump(res, fp=f, indent=4)
-		# f.close()
+	def dump_json(self):
+		res = self.parse_locals()	
+		f = open("config.json", "w+")
+		json.dump(res, fp=f, indent=4)
+		f.close()
+
 
 	def parse_locals(self):
 		x = dir(self)
 		res = dict()
 		for elem in x:
-
-			if not elem.startswith("__") and not  elem.endswith("__") and not str(type(exec(f"self.{elem}"))) == "<class 'method'>" :
-				res[elem] = exec(f"self.{elem}")
+			if not elem.startswith("__") and\
+			not  elem.endswith("__") and \
+			not "method" in str(type(eval(f"self.{elem}"))) and\
+			not "object at" in str(type(eval(f"self.{elem}")))  :
+				res[elem] = eval(f"self.{elem}")
 
 		return res
 
