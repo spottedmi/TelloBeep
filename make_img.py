@@ -51,6 +51,7 @@ class Make_img(Censorship, Db_connector):
 		self.img_object.paste(img, coords, img)
 
 		#resizing and prepare to save
+		img = img.convert("RGB")
 		self.save_img()
 		self.save_tumbnail()
 		
