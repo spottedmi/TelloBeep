@@ -132,8 +132,12 @@ class Config(object):
 		
 
 	def dump_json(self):
+		absolute_path = os.path.abspath(__file__)
+		path = os.path.dirname(absolute_path) + "/"
+
 		res = self.parse_locals()	
-		f = open("config.json", "w+")
+		
+		f = open(path + "config.json", "w+")
 		json.dump(res, fp=f, indent=4)
 		f.close()
 
