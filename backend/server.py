@@ -19,6 +19,14 @@ from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 import sys, datetime, json, base64
 
+import os
+
+absolute_path = os.path.abspath(__file__)
+path = os.path.dirname(absolute_path) + "/"
+path = f"{path}/.."
+
+sys.path.insert(0,path)
+from config import Config
 
 #_____________________________________________________________
 #
@@ -47,7 +55,9 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 config = Config()
-
+config.BAD_WORDS = "chuj"
+config.dump_json()
+sys.exit(0)
 #_____________________________________________________________
 #
 #               DATABASE MODEL
