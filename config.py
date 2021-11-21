@@ -116,6 +116,9 @@ class Config(object):
 		print("CONFIG INIT")
 		
 		self.load_locals()
+		absolute_path = os.path.abspath(__file__)
+		path = os.path.dirname(absolute_path) + "/"
+		self.token_file = f"{path}/{self.token_file}"
 
 
 		
