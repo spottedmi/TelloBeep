@@ -1,5 +1,5 @@
 {
-    "AUTORUN": true,
+    "AUTORUN": false,
     "BAD_WORDS": "swears_list.txt",
     "DATE": null,
     "ERRORS": {
@@ -8,8 +8,10 @@
         "load_token": "LOAD_TOKEN_FAILED",
         "conn_timeout": "CONNECTION_RESET_BY_PEER"
     },
+    "LOGIN_TELLONYM": "",
+    "PASSWORD_TELLONYM": "",
     "LOGIN": "",
-    "PASSWORD": "",
+    "PASSWORD_INSTAGRAM": "",
     "TEXT_footer": "#FOOTER_TEXT_FOOTER_TEXT",
     "TIMEZONE": 1,
     "colorBackground": "#1C1936",

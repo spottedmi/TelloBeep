@@ -57,9 +57,9 @@ class Tellonym_api(Config):
 
 	def get_login_credentials(self):
 		print("Using credentials")
-		if not self.LOGIN and not self.PASSWORD:
-			self.LOGIN = input("login: ")
-			self.PASSWORD = input("password: ")
+		if not self.LOGIN_TELLONYM and not self.PASSWORD_TELLONYM:
+			self.LOGIN_TELLONYM = input("login: ")
+			self.PASSWORD_TELLONYM = input("password: ")
 
 
 	def load_token(self, file=None):
@@ -95,8 +95,8 @@ class Tellonym_api(Config):
 			"deviceType": "web",
 			"lang": "en",
 			"captcha": "",#m3gon
-			"email": self.LOGIN,
-			"password": self.PASSWORD,
+			"email": self.LOGIN_TELLONYM,
+			"password": self.PASSWORD_TELLONYM,
 			"limit": "25"
 		}
 
