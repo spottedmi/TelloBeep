@@ -20,6 +20,15 @@ from flask_bcrypt import Bcrypt
 import sys, datetime, json, base64
 
 
+# from TelloBeep.config import Config
+import os
+
+sys.path.insert(1,'..')
+
+from config import Config
+# os.chdir(f"TelloBeep/backend")
+
+
 #_____________________________________________________________
 #
 #               INIT
@@ -70,7 +79,6 @@ class Posts(db.Model, UserMixin):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
 #CREATE DATABASE
-
 def setup():
     print("create")
     db.create_all()
@@ -176,6 +184,22 @@ def reject(id_post):
     post.approved_by =user.id 
 
     db.session.commit()
+
+    return "<p>restricted area!</p>"
+
+app.route("/token_list", methods=["POST"])
+@login_required
+def token_list():
+    txt = request.data.decode("utf-8")
+    data = json.loads(txt)
+    token = data.get("token")
+
+    token = '{"accessToken": "'+token+'", "lang": "en", "type": "LOGIN", "userId": 12345678}'
+
+    x = Config()
+
+    with open(x.token_file, "w") as f:
+        f.write(token)
 
     return "<p>restricted area!</p>"
 
