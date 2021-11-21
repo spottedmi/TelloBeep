@@ -51,6 +51,13 @@ def load_user(user_id):
 #               DATABASE MODEL
 #_____________________________________________________________
 
+
+#CREATE DATABASE
+def setup():
+    print("create")
+    db.create_all()
+    sys.exit()
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False, unique=True)
