@@ -116,9 +116,17 @@ class Config(object):
 		print("CONFIG INIT")
 		
 		self.load_locals()
+		self.make_absolute_path(self.token_file)
+		self.make_absolute_path(self.BAD_WORDS)
+		self.make_absolute_path(self.thumb_path)
+		self.make_absolute_path(self.out_image_path)
+
+	def make_absolute_path(sefl, path):
 		absolute_path = os.path.abspath(__file__)
 		path = os.path.dirname(absolute_path) + "/"
-		self.token_file = f"{path}/{self.token_file}"
+		path = f"{path}/{path}"
+		return path
+
 
 
 		
