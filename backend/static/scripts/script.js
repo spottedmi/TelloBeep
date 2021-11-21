@@ -43,11 +43,7 @@ $(document).on("click","[name='accept']", function (event) {
             $("content").on("transitionend", function (evt) { 
                   $(".accept").remove()
             });  
-            
-            /*console.log($(".removed").remove())*/
       });
-
-
 });
 
 
@@ -80,11 +76,7 @@ $(document).on("click","[name='reject']", function (event) {
                   console.log(evt)
                   $(".remove").remove()
             });  
-            
-            /*console.log($(".removed").remove())*/
       });
-
-
 });
 
 

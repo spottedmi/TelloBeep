@@ -20,15 +20,6 @@ from flask_bcrypt import Bcrypt
 import sys, datetime, json, base64
 
 
-# from TelloBeep.config import Config
-import os
-
-sys.path.insert(1,'..')
-
-from config import Config
-# os.chdir(f"TelloBeep/backend")
-
-
 #_____________________________________________________________
 #
 #               INIT
@@ -79,11 +70,8 @@ class Posts(db.Model, UserMixin):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
 #CREATE DATABASE
-def setup():
-    print("create")
-    db.create_all()
-    sys.exit()
-
+# db.create_all()
+# sys.exit()
 
 #_____________________________________________________________
 #
@@ -112,13 +100,29 @@ class RegisterForm(FlaskForm):
 #_____________________________________________________________
 
 
+@app.route("/")
+@login_required
+def hello_world():
+    
+    username = current_user.username
 
-#_____________________________________________________________
-#
-#               api
-#_____________________________________________________________
+    return redirect("/dashboard")
+    
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    if session.get('session'):
+        # prevent flashing automatically logged out message
+        del session['was_once_logged_in']
+    return redirect('/login')
 
 
+@app.route("/restricted")
+@login_required
+def restricted():
+    return "<p>restricted area!</p>"
 
 @app.route("/accept/<int:id_post>", methods=["POST"])
 @login_required
@@ -187,55 +191,6 @@ def reject(id_post):
 
     return "<p>restricted area!</p>"
 
-app.route("/token_list", methods=["POST"])
-@login_required
-def token_list():
-    txt = request.data.decode("utf-8")
-    data = json.loads(txt)
-    token = data.get("token")
-
-    token = '{"accessToken": "'+token+'", "lang": "en", "type": "LOGIN", "userId": 12345678}'
-
-    x = Config()
-
-    with open(x.token_file, "w") as f:
-        f.write(token)
-
-    return "<p>restricted area!</p>"
-
-
-#_____________________________________________________________
-#
-#               html
-#_____________________________________________________________
-
-
-
-@app.route("/")
-@login_required
-def hello_world():
-    
-    username = current_user.username
-
-    return redirect("/dashboard")
-    
-
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    if session.get('session'):
-        # prevent flashing automatically logged out message
-        del session['was_once_logged_in']
-    return redirect('/login')
-
-
-
-
-@app.route("/restricted")
-@login_required
-def restricted():
-    return "<p>restricted area!</p>"
 
 
 @app.route("/login", methods=["GET","POST"])
@@ -296,6 +251,17 @@ def rejected():
     for elem in qr:
         res.append(elem.as_dict())
     return render_template("rejected.html", posts=res)
+
+@app.route("/settings", methods=["GET"])
+@login_required
+def settings():
+    qr = Posts.query.filter(Posts.approved == False).order_by(Posts.id.desc()).all()
+    qr =  db.session.query(Posts).join(User).filter(Posts.approved == True).all()
+
+    res = []
+    for elem in qr:
+        res.append(elem.as_dict())
+        return render_template("settings.html", posts=res)
 
 # parsing json
 def json_parser(headers, txt)-> dict:

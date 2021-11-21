@@ -6,12 +6,17 @@ body{
 	height: 100vh;
 	width: 100vw;
 	overflow: hidden;
-	background: #aca9c5;
+	background: #0C0D0D;
 }
+
+h1{
+	font-family: arial;
+}
+
 .login_form{
 	height: 60vh;
 	width: 40vw;
-	background: #1C1936;
+	background: #20283E;
 	border-radius: 10px;
 	color:  white;
 	display: flex;
@@ -19,9 +24,19 @@ body{
 	justify-content: center;
 	align-items: center;
 }
+
 input{
 	width: 60%;
-	height: 10%;
+	height: 9%;
+	background: #DADADA;
+	font-size: 20px;
+	margin-bottom: 20px;
+	border: none;
+	border-radius: 10px;
+}
+
+#submit{
+	width: 100px;
 }
 
 .error{
