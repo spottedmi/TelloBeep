@@ -56,6 +56,16 @@ class Make_img(Censorship, Db_connector):
 		self.save_tumbnail()
 		
 		self.db_add_img()
+
+		insta = self.q_list.get("2insta")
+		if self.AUTORUN:
+			req = {
+				"text": f"{self.out_image_name}.{self.extension}",
+				"title": self.TEXT,
+				"send": True
+			}
+			insta.put(req)
+	
 		
 
 		# if self.AUTORUN:

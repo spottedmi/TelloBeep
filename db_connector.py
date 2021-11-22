@@ -17,6 +17,8 @@ class Db_connector(Config):
 
 			post = Posts(content=txt, title=self.out_image_name, \
 				approved=self.AUTORUN, approved_by=0 )
+
+			post.approved_date = datetime.now()
 			db.session.add(post)
 			db.session.commit()
 

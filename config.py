@@ -116,15 +116,15 @@ class Config(object):
 		print("CONFIG INIT")
 		
 		self.load_locals()
-		self.make_absolute_path(self.token_file)
-		self.make_absolute_path(self.BAD_WORDS)
-		self.make_absolute_path(self.thumb_path)
-		self.make_absolute_path(self.out_image_path)
+		self.token_file = self.make_absolute_path(self.token_file)
+		self.BAD_WORDS = self.make_absolute_path(self.BAD_WORDS)
+		self.thumb_path = self.make_absolute_path(self.thumb_path)
+		self.out_image_path = self.make_absolute_path(self.out_image_path)
 
-	def make_absolute_path(sefl, path):
+	def make_absolute_path(sefl, filepath):
 		absolute_path = os.path.abspath(__file__)
 		path = os.path.dirname(absolute_path) + "/"
-		path = f"{path}/{path}"
+		path = f"{path}{filepath}"
 		return path
 
 
@@ -137,7 +137,7 @@ class Config(object):
 
 		res = self.parse_locals()	
 		
-		f = open(path + "config.json", "w+")
+		f = open("config.json", "w+")
 		json.dump(res, fp=f, indent=4)
 		f.close()
 
@@ -157,7 +157,7 @@ class Config(object):
 	def load_json(self):
 		absolute_path = os.path.abspath(__file__)
 		path = os.path.dirname(absolute_path) + "/"
-		f = open(path + "config.json", "r")
+		f = open("config.json", "r")
 		a = f.read()
 		x = json.loads(a)
 		f.close()

@@ -128,6 +128,7 @@ class RegisterForm(FlaskForm):
 @login_required
 def accept(id_post):
     insta = queue_list.get("2insta")
+    
     gen = queue_list.get("2gen")
     
     txt = request.data.decode("utf-8")

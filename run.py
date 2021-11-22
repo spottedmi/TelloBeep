@@ -7,6 +7,7 @@ from make_img import Make_img
 from backend.server import back_server
 
 from TellonymApi import Tellonym_api
+from Instagram_Api import Instagram_api
 
 from config import Config
 
@@ -15,22 +16,39 @@ from config import Config
 #               INSTAGRAM API
 #_____________________________________________________________
 
-class Insta_api(object):
+class Insta_api(Config):
 	def __init__(self, q_list):
+		super().__init__()
 		"this is only a makeshift"
 		"fetching api function's going to replace this"
+
 		self.q_list = q_list
+		# self.TEXT_tmp = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum """
+
+		# self.insta = Instagram_api()
+		# self.insta.login()
 		
-		self.TEXT_tmp = """Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum """
 		self.recv_mgs()
 
-
 	def recv_mgs(self) -> None:
-		q = q_list.get("2insta")
+		q = self.q_list.get("2insta")
 
 		while 1 :
 			content = q.get()
 			print(f"INSTAGRAM {content['title']}")
+			print(content)
+			path = f"{self.out_image_path}/{content['text']}"
+			print(path)
+
+			if self.CAPTION != "":
+				pass
+				# self.insta.upload_post(path, caption=self.CAPTION)
+			else:
+				pass
+				# self.insta.upload_post(path)
+
+
+			print("sent")
 			time.sleep(0.1)
 
 #_____________________________________________________________
@@ -43,6 +61,7 @@ class Tello_api(Config):
 	def __init__(self, q_list):
 		super().__init__()
 		"fetching api function's going to replace this"
+		# time.sleep(10)
 		self.q_list = q_list
 		self.tello = Tellonym_api()
 		self.send_msg()
@@ -67,9 +86,17 @@ class Tello_api(Config):
 				#generate file name
 				tm , date = elem.created_at.rsplit("T")
 				y, M, d = tm.rsplit("-")
+				if len(M) == 1: M = f"0{M}"
 				date, mil = date.rsplit(".")
+				
 				h,m,s = date.rsplit(":")
-				h = int(h) + self.TIMEZONE
+				h = str(int(h) + self.TIMEZONE)
+				print(h)
+
+				if len(h) == 1: h = f"0{h}"
+				if len(m) == 1: m = f"0{m}"
+				if len(s) == 1: s = f"0{s}"
+		
 
 				
 
