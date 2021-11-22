@@ -78,7 +78,7 @@ class Tello_api(Config):
 				print(f"	---------- delay: {delay}")
 				time.sleep(delay)
 				delay += delay
-			print(f"fetched: {content}")
+			print(f"fetched: {content} ")
 
 			for elem in content:
 				#generate file name
@@ -89,7 +89,6 @@ class Tello_api(Config):
 				
 				h,m,s = date.rsplit(":")
 				h = str(int(h) + self.TIMEZONE)
-				print(h)
 
 				if len(h) == 1: h = f"0{h}"
 				if len(m) == 1: m = f"0{m}"
@@ -107,7 +106,8 @@ class Tello_api(Config):
 					"text": elem.tell,
 					"title": title,
 					"metadata":elem,
-					"send": False
+					"send": False,
+					"censure_flag": elem.flag
 				}
 
 				q = q_list.get("2gen")

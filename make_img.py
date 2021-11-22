@@ -58,9 +58,9 @@ class Make_img(Censorship, Db_connector):
 		self.db_add_img()
 
 		insta = self.q_list.get("2insta")
-		if self.AUTORUN:
+		if self.AUTORUN and not self.censor_flag:
 			req = {
-				"text": f"{self.out_image_name}.{self.extension}",
+				"filename": f"{self.out_image_name}.{self.extension}",
 				"title": self.TEXT,
 				"send": True
 			}
@@ -165,7 +165,9 @@ class Make_img(Censorship, Db_connector):
 
 		self.TEXT = str(res_txt)
 
-		self.censure_txt()
+
+
+		# self.censure_txt()
 
 	def load_from_threads(self):
 
@@ -181,6 +183,8 @@ class Make_img(Censorship, Db_connector):
 			data = res["text"]
 			self.out_image_name = res["title"]
 			t = res["title"]
+			self.censor_flag = res["censure_flag"]
+
 			#2021 10 22 11 03 53
 			self.DATE = f"{t[8]}{t[9]}:{t[10]}{t[11]} {t[6]}{t[7]}/{t[4]}{t[5]}/{t[0:4]}"
 

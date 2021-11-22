@@ -18,7 +18,7 @@ class Db_connector(Config):
 			
 			post.content = txt
 			post.title = self.out_image_name
-			if self.AUTORUN:
+			if self.AUTORUN and not self.censor_flag:
 				post.approved = True
 				post.approved_by = 0
 			else:

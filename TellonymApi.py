@@ -4,6 +4,8 @@ from threading import Thread
 import importlib
 
 from config import Config
+from censorship import Censorship
+
 
 class TokenInvalid(Exception):
 	def __init__(self, err=""):
@@ -21,6 +23,7 @@ class Tellonym_tell():
 		self.id = tellJSON["id"]
 		self.tell = tellJSON["tell"]
 		self.created_at = tellJSON["createdAt"]
+		self.flag = False
 
 class Tellonym_api(Config):
 
@@ -72,6 +75,7 @@ class Tellonym_api(Config):
 			res = json.loads(res)
 			
 			self.user = Tellonym_user(res)
+
 		except Exception as e:
 			print(e)
 			print("load json failed")
@@ -154,9 +158,15 @@ class Tellonym_api(Config):
 			x = response.json()["err"]
 			x = x["code"]
 			return x
-
 		for x in data["tells"]:
+			
+			cen = Censorship()
+			cen.TEXT = x["tell"]
+			FLAG = cen.flag_word()
 			tell = Tellonym_tell(x)
+			tell.flag = FLAG
+			
+			
 			self.tells.append(tell)
 			# self.remove_tell(token, tell.id)
 

@@ -38,6 +38,21 @@ class Censorship(Config):
 					self.TEXT = self.TEXT.replace(elem, elem_rep)
 		return self.TEXT
 
+	def flag_word(self) -> str:
+		try:
+			text = self.TEXT 
+		except:
+			text = ""
+
+		self.censure_txt()
+		if "*" in self.TEXT:
+			self.TEXT = text
+			return True
+		else:
+			self.TEXT = text
+			return False
+
+
 
 
 if __name__ == '__main__':
