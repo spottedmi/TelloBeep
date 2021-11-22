@@ -21,6 +21,9 @@ class Make_img(Censorship, Db_connector):
 
 	def gen(self) -> None:
 		"generate image"
+		print(f"self.TEXT: {self.TEXT}")
+
+
 		self.prepare_text()
 		self.get_fonts()
 		self.get_size_txt()
@@ -31,9 +34,15 @@ class Make_img(Censorship, Db_connector):
 		d = ImageDraw.Draw(self.img_object)
 		
 		#text 
+		
 		coords =(self.margin["left"] ,self.margin["top"])
 		
 		d.text(coords, self.TEXT, fill=self.hex_to_rgb(self.colorText), font=self.font)
+		print(coords)
+		print(self.font)
+		print(self.fontsize)
+		print(f"self.TEXT: {self.TEXT}")
+
 		d.rectangle((0, 0, self.width-self.outline_thickness, self.height-self.outline_thickness),width= self.outline_thickness, fill=None, outline=self.hex_to_rgb(self.colorOutline))
 
 		#header
@@ -109,11 +118,12 @@ class Make_img(Censorship, Db_connector):
 		
 		self.font = ImageFont.truetype(self.fontname, self.fontsize)
 		self.font_footer = ImageFont.truetype(self.font_footer_name, self.font_footer_size)
+		self.font_header = ImageFont.truetype(self.font_header_name, self.header_font_size)
 
 	def set_margins(self) -> None:
 		"margins"
 
-		self.margin["top"] = (self.height - self.heightTXT) / 2 - self.footer_height
+		self.margin["top"] = (self.height - self.heightTXT) / 2 
 		self.margin["left"] = (self.width * 5) / 100
 		
 		self.width = int(self.width+(self.margin["left"]*2))
@@ -122,7 +132,7 @@ class Make_img(Censorship, Db_connector):
 		"creating image's footer"
 
 		ftr = ImageDraw.Draw(self.img_object)
-		footer_coords = (self.margin["left"], self.insta_res[1]*0.85)
+		footer_coords = (self.margin["left"], self.insta_res[1]*self.footer_position_ratio)
 		# print(footer_coords)
 		ftr.text(footer_coords, self.TEXT_footer, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
 
@@ -130,8 +140,8 @@ class Make_img(Censorship, Db_connector):
 		"creating footer with posting date"
 		self.create_data()
 		header = ImageDraw.Draw(self.img_object)
-		header_coords = (self.margin["left"], self.insta_res[1]*0.04)
-		header.text(header_coords, self.DATE, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
+		header_coords = (self.margin["left"], self.insta_res[1]*self.header_position_ratio)
+		header.text(header_coords, self.DATE, fill=self.hex_to_rgb(self.colorText), font=self.font_header)
 
 		
 	def create_data(self) -> None:
@@ -164,6 +174,7 @@ class Make_img(Censorship, Db_connector):
 				res_txt = res_txt + "\n"
 
 		self.TEXT = str(res_txt)
+		print(self.TEXT)
 
 
 
@@ -181,6 +192,7 @@ class Make_img(Censorship, Db_connector):
 			#res =  q2.get()
 
 			data = res["text"]
+			print(f"data: {data}")
 			self.out_image_name = res["title"]
 			t = res["title"]
 			self.censor_flag = res["censure_flag"]
@@ -190,7 +202,11 @@ class Make_img(Censorship, Db_connector):
 
 			self.TEXT_tmp = data
 			if data:
+				print(f"data: {data}")
+
 				self.TEXT = data
+				print(f"self.TEXT: {self.TEXT}")
+
 				self.gen()
 
 			if res.get("send"):
@@ -214,4 +230,4 @@ class Make_img(Censorship, Db_connector):
 if __name__ == '__main__':
 
 	asd = Make_img()
-	asd.gen()
+	asd.gen("LOREM IPSUM")
