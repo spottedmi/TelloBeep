@@ -63,6 +63,8 @@ config = Config()
 
 
 #CREATE DATABASE
+
+
 def setup():
     print("create")
     db.create_all()
@@ -80,7 +82,7 @@ class Posts(db.Model, UserMixin):
     added_date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
     content = db.Column(db.String(5000))
     title = db.Column(db.String(100), nullable=False, unique=True)
-    approved = db.Column(db.Boolean(), nullable=False, default=False)
+    approved = db.Column(db.Boolean(), nullable=True)
     approved_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     approved_date = db.Column(db.DateTime(timezone=True), nullable=True)
     def as_dict(self):
@@ -159,7 +161,7 @@ def accept(id_post):
         gen.put(req)
 
     else:
-        filename = f"imgs/{title}.png"
+        filename = f"{title}.{config.extension}"
         req = {
         "title": title,
         "filename": filename
@@ -361,7 +363,7 @@ def json_parser(headers, txt)-> dict:
                 tmp[col] = str(x)
             elif col == "title":
                 tmp[col] = str(eval(f"elem.{col}"))
-                tmp["thumb"] = str("thumbnails/"+eval(f"elem.{col}")+ "_thumbnails.png")
+                tmp["thumb"] = str("thumbnails/"+eval(f"elem.{col}")+ f"_thumbnails.{config.extension}")
 
             else:
                 tmp[col] = str(eval(f"elem.{col}"))
@@ -383,6 +385,8 @@ def back_server(q_list, host="localhost", port=12345):
 
 
 if __name__ == "__main__":
+    if "create" in sys.argv:
+        setup()
     app.run(host='0.0.0.0', port=12345)
 
 

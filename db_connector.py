@@ -14,9 +14,21 @@ class Db_connector(Config):
 		txt = self.TEXT		
 		try:
 			self.AUTORUN = self.get_autorun()
+			post = Posts()
+			
+			post.content = txt
+			post.title = self.out_image_name
+			print(self.AUTORUN)
+			print(self.AUTORUN)
+			print(self.AUTORUN)
+			if self.AUTORUN:
+				post.approved = True
+				post.approved_by = 0
+			else:
+				post.approved = None
+				post.approved_by = None
 
-			post = Posts(content=txt, title=self.out_image_name, \
-				approved=self.AUTORUN, approved_by=0 )
+
 
 			post.approved_date = datetime.now()
 			db.session.add(post)

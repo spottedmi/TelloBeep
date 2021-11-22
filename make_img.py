@@ -191,7 +191,8 @@ class Make_img(Censorship, Db_connector):
 
 			if res.get("send"):
 				res = {
-				"title": self.out_image_name
+				"title": self.out_image_name,
+				"filename": f"{self.out_image_name}.{self.extension}"
 				}
 
 				insta.put(res)

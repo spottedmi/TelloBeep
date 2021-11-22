@@ -11,7 +11,7 @@ class Instagram_api(Config):
         if(isConfigExists):
             self.clear_cookies()
         self.ig_bot = Bot()
-        self.ig_bot.login(username=self.LOGIN_INSTAGRAM, password=self.PASSWORD_INSTAGRAM)
+        self.ig_bot.login(username=self.LOGIN_INSTAGRAM, password=self.PASSWORD_INSTAGRAM, is_threaded=True)
         # self.ig_bot.login(username=login, password=password, is_threaded=True)
 
 
