@@ -14,8 +14,6 @@ h1{
 }
 
 .login_form{
-	height: 60vh;
-	width: 40vw;
 	background: #20283E;
 	border-radius: 10px;
 	color:  white;
@@ -46,4 +44,23 @@ input{
 	justify-content: center;
 	text-align: center;
 
+}
+
+@media  (orientation:landscape){
+	.login_form{
+		height: 60vh;
+		width: 40vw;
+	}
+
+}
+
+@media screen and (max-width: 881px){
+	.login_form{
+		width: 90%;
+		height: 90%;
+	}
+
+	input{
+		width: 80%;
+	}
 }

@@ -35,9 +35,9 @@ from config import Config
 
 app = Flask(__name__)
 
-import logging
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+#import logging
+#log = logging.getLogger('werkzeug')
+#log.setLevel(logging.ERROR)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../db.sqlite"
 app.config["SECRET_KEY"] = "SECRET"
@@ -347,7 +347,7 @@ def settings():
     res = []
     for elem in qr:
         res.append(elem.as_dict())
-        return render_template("settings.html", posts=res)
+    return render_template("settings.html", posts=res)
 
 
 

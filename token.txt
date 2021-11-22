@@ -1,1 +1,1 @@
-{"accessToken": "asdf", "lang": "en", "type": "LOGIN", "userId": 12345678}
+{"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Nzc2ODYzNzUsImlhdCI6MTYzNzYxNDMxM30.E9gUCqkCJuJ0a2iTjhq5hwW9Uco-EXv1pqT8D4ePdO8", "lang": "en", "type": "LOGIN", "userId": 77686375, "createdAt": "2021-10-15T17:29:36.000Z"}

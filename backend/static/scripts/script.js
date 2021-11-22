@@ -3,7 +3,13 @@ Array.from(elements).forEach(function(element) {
       element.addEventListener('click', myFunction);
     });*/
 
-let changes = []
+window.onload = function() {
+    console.log("script loaded")
+    var btn = document.getElementById("uploadFilterBtn");
+    btn.onclick = uploadFilter();
+}
+
+let changes = [];
 $(document).ready(function () {
 
       $("textarea").change(function(){
@@ -105,6 +111,36 @@ $(document).ready(function() {
     $cardLike.css("opacity", likeOpacity);
 
   };
+
+  function uploadToken() {
+    const body = JSON.stringify({
+        token: document.getElementById("tokenInput").value,
+      });
+
+      fetch(`${window.location.hostname}/token_list`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: body,
+    });
+  }
+
+  function uploadFilter() {
+      const body = JSON.stringify({
+      word: document.getElementById("filterInput").value,
+      });
+
+      fetch(`${window.location.origin}/bad_words`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: body,
+      });
+  }
 
   function release() {
 

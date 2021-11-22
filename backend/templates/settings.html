@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="../static/mainpage.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.13.0-rc.3/jquery-ui.js"></script>
+	<script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 	<title>Settings</title>
 </head>
 <body>
@@ -32,14 +33,13 @@
 
 	 <div id="settingsForm">
 	 	<p>Access Token:</p>
-		<textarea></textarea>
+		<textarea id="tokenInput"></textarea>
 		</br>
-		<button>Upload token</button>
+		<button onclick="uploadToken()">Upload token</button>
 		<p>Add swear:</p>
-		<input type="text" name="swearsList">
+		<input id="filterInput" type="text" name="swearsList">
 		</br>
-		<button>Upload swear</button>
-	</div> 
-
+		<button id="uploadFilterBtn">Upload filter</button>
+	</div>
 </body>
 </html>
