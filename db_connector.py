@@ -18,9 +18,6 @@ class Db_connector(Config):
 			
 			post.content = txt
 			post.title = self.out_image_name
-			print(self.AUTORUN)
-			print(self.AUTORUN)
-			print(self.AUTORUN)
 			if self.AUTORUN:
 				post.approved = True
 				post.approved_by = 0

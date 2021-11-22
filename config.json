@@ -2,6 +2,7 @@
     "AUTORUN": false,
     "BAD_WORDS": "swears_list.txt",
     "DATE": null,
+    "CAPTION":"",
     "ERRORS": {
         "token": "TOKEN_INVALID",
         "captcha": "CAPTCHA_REQUIRED",
@@ -10,7 +11,7 @@
     },
     "LOGIN_TELLONYM": "",
     "PASSWORD_TELLONYM": "",
-    "LOGIN": "",
+    "LOGIN_INSTAGRAM": "",
     "PASSWORD_INSTAGRAM": "",
     "TEXT_footer": "#FOOTER_TEXT_FOOTER_TEXT",
     "TIMEZONE": 1,
