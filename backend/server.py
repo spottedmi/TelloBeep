@@ -153,7 +153,8 @@ def accept(id_post):
         req = {
             "text": new_text,
             "title": title,
-            "send": True
+            "send": True,
+            "censure_flag": False
         }
         #deleting post
         q = Posts.query.filter_by(title=title).delete()
