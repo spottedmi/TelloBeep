@@ -38,14 +38,22 @@ class Db_connector(Config):
 			print("___XDDD___")
 
 
-	def db_set_approved(self):
+	def db_set_approved(self, state=True):
+
 		post = Posts.query.filter_by(title=self.out_image_name).one()
-		post.approved = True
+		if state:
+			post.approved_by = 1
+		else:
+			post.approved_by = None
+
+		
+		post.approved = state
 		post.approved_date = datetime.now()
-		post.approved_by = 1
 		post.content = self.TEXT
 
 		db.session.commit()
+
+
 
 
 	def if_logged(self,user=None, db_name=None, password=""):

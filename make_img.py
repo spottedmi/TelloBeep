@@ -13,6 +13,9 @@ from db_connector import Db_connector
 class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
 		super().__init__()
+
+		self.FIRST_POST = None
+		self.HOURS_PASSED = 0
 		
 
 		if q_list:
@@ -21,8 +24,6 @@ class Make_img(Censorship, Db_connector):
 
 	def gen(self) -> None:
 		"generate image"
-		print(f"self.TEXT: {self.TEXT}")
-
 
 		self.prepare_text()
 		self.get_fonts()
@@ -39,10 +40,6 @@ class Make_img(Censorship, Db_connector):
 		coords =(self.margin["left"] ,self.margin["top"])
 		
 		d.text(coords, self.TEXT, fill=self.hex_to_rgb(self.colorText), font=self.font)
-		print(coords)
-		print(self.font)
-		print(self.fontsize)
-		print(f"self.TEXT: {self.TEXT}")
 
 		d.rectangle((0, 0, self.width-self.outline_thickness, self.height-self.outline_thickness),width= self.outline_thickness, fill=None, outline=self.hex_to_rgb(self.colorOutline))
 
@@ -75,7 +72,9 @@ class Make_img(Censorship, Db_connector):
 				"send": True
 			}
 			insta.put(req)
-	
+		self.edit_ratio()
+		print(f"POSTS RATIO:	{self.POST_RATIO} PER HOUR")
+		print(f"POSTS COUNT:	{self.POST_COUNT} ")
 		
 
 		# if self.AUTORUN:
@@ -93,10 +92,38 @@ class Make_img(Censorship, Db_connector):
 		self.img_object.save(f"{self.thumb_path}/{self.out_image_name}_thumbnail.{self.extension}")
 		
 	def get_bg_color(self):
+		if isinstance(self.colorBackground, list):
 			x = random.randrange(0, len(self.colorBackground)-1)
 			self.bg_color = self.colorBackground[x]
 		else:
 			self.bg_color = self.colorBackground
+
+	def edit_ratio(self):
+		# self.POST_RATIO += 1
+		self.POST_COUNT += 1
+
+		if self.FIRST_POST == None:
+			self.FIRST_POST = int(time.time())
+
+		self.HOURS_PASSED = int(time.time()) 
+		self.HOURS_PASSED = ( self.HOURS_PASSED - self.FIRST_POST )/ 3600
+
+		# if self.HOURS_PASSED:
+		if self.HOURS_PASSED > 1:
+			self.POST_RATIO = int(self.POST_COUNT / self.HOURS_PASSED)
+		else:
+			self.POST_RATIO = int(self.POST_COUNT / 1)
+
+		if self.AUTORUN:
+			if self.POST_RATIO >= self.POST_RATIO_WARNING:
+				print("POSTS ALERT ALERTTTT!!!!")
+			if self.POST_RATIO >= self.POST_RATIO_ALERT:
+				self.db_set_approved(state=None)
+				print('-------------  TO MAY POSTS, AUTO RUN OFF')
+
+		# if (self.FIRST_POST - time.time()) > 3600000:
+		# 	self.HOURS_PASSED +=1
+
 
 
 
@@ -183,7 +210,7 @@ class Make_img(Censorship, Db_connector):
 				res_txt = res_txt + "\n"
 
 		self.TEXT = str(res_txt)
-		print(self.TEXT)
+		
 
 
 
@@ -211,10 +238,8 @@ class Make_img(Censorship, Db_connector):
 
 			self.TEXT_tmp = data
 			if data:
-				print(f"data: {data}")
-
 				self.TEXT = data
-				print(f"self.TEXT: {self.TEXT}")
+				
 
 				self.gen()
 
