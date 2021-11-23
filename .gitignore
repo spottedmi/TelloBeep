@@ -516,3 +516,13 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Token file
+token.txt
+
+# Databases
+*.sqlite
+
+# Images
+
+*.png

@@ -57,6 +57,7 @@ form > textarea {
 }
 
 #settingsForm{
+	display: flex;
 	flex-direction: column;
 	align-self: center;
 	width: 50%;
@@ -64,6 +65,8 @@ form > textarea {
 
 #settingsForm > textarea{
 	width: 100%;
+	height: 17vw;
+	padding: 10px;
 	background: #20283E;
 	color: #DADADA;
 	border: none;
@@ -71,27 +74,11 @@ form > textarea {
 }
 
 #settingsForm > input{
-	width: 100%;
 	background: #20283E;
 	color: #DADADA;
 	border: none;
 	font-size: 17px;
 	padding: 10px;
-}
-
-#settingsForm > button{
-	background: #484848;
-	color: #DADADA;
-	border: none;
-	font-size: 17px;
-	padding: 10px;
-	margin-top: 10px;
-	border-radius: 10px;
-	opacity: 80%;
-}
-
-#settingsForm > button:hover{
-	  opacity: 100%;
 }
 
 #settingsForm > p{
@@ -100,8 +87,25 @@ form > textarea {
 	font-size: 25px;
 }
 
-#settingsForm > textarea{
-	height: 15vw;
+#filterInput{
+	width: 100%;
+}
+
+.uploadButton{
+	width: 40%;
+	background: #484848;
+	color: #DADADA;
+	border: none;
+	font-size: 17px;
+	padding: 10px;
+	margin-top: 10px;
+	border-radius: 10px;
+	opacity: 80%;
+	align-self: center;
+}
+
+.uploadButton:hover{
+	  opacity: 100%;
 }
 
 @media  (orientation:landscape){
@@ -201,10 +205,6 @@ form > textarea {
 	}
 
 	#settingsForm{
-		width: 90%;
-	}
-
-	#settingsForm > input{
 		width: 90%;
 	}
 

@@ -2,11 +2,9 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mainpage.css') }}"> -->
 	<link rel="stylesheet" type="text/css" href="../static/mainpage.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.13.0-rc.3/jquery-ui.js"></script>
-	<script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 	<title>Settings</title>
 </head>
 <body>
@@ -35,11 +33,12 @@
 	 	<p>Access Token:</p>
 		<textarea id="tokenInput"></textarea>
 		</br>
-		<button onclick="uploadToken()">Upload token</button>
+		<input id="uploadTokenBtn" class="uploadButton" type="button" value="Upload token" />
 		<p>Add swear:</p>
 		<input id="filterInput" type="text" name="swearsList">
 		</br>
-		<button id="uploadFilterBtn">Upload filter</button>
+		<input id="uploadFilterBtn" class="uploadButton" type="button" value="Upload filter" />
 	</div>
+	<script src="../static/scripts/script.js"></script>
 </body>
 </html>
