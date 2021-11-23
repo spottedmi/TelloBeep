@@ -28,11 +28,11 @@
     "font_footer": null,
     "font_footer_name": "Kollektif/Kollektif.ttf",
     "font_footer_size": 55,
-    "footer_position_ratio": 0.05,
+    "footer_position_ratio": 0.03,
     "fontname": "Kollektif/Kollektif.ttf",
     "fontsize": 35,
     "footer_height": 1000,
-    "header_position_ratio": 0.14,
+    "header_position_ratio": 0.08,
     "header_font_size": 39,
     "font_header_name": "Kollektif/Kollektif.ttf",
     "POST_RATIO": 0,
@@ -59,6 +59,8 @@
         200,
         200
     ],
+    "logo_X_ratio":0.87,
+    "logo_Y_ratio":0.76,
     "img_object": null,
     "insta_res": [
         1080,

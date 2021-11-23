@@ -53,7 +53,7 @@ class Make_img(Censorship, Db_connector):
 		img = img.resize(self.image_size, Image.ANTIALIAS)
 		img = img.convert("RGBA")
 
-		coords = (int(self.insta_res[1]*0.82), int(self.insta_res[0]*0.73))
+		coords = (int(self.insta_res[1]*self.logo_X_ratio), int(self.insta_res[0]*self.logo_Y_ratio))
 
 		self.img_object.paste(img, coords, img)
 
