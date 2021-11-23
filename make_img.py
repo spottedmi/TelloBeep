@@ -30,7 +30,8 @@ class Make_img(Censorship, Db_connector):
 		self.set_margins()
 
 		# img = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.colorBackground))
-		self.img_object = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.colorBackground))
+		self.get_bg_color()
+		self.img_object = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.bg_color))
 		d = ImageDraw.Draw(self.img_object)
 		
 		#text 
@@ -91,6 +92,14 @@ class Make_img(Censorship, Db_connector):
 		self.img_object = self.img_object.resize(self.thumb_res, Image.ANTIALIAS)
 		self.img_object.save(f"{self.thumb_path}/{self.out_image_name}_thumbnail.{self.extension}")
 		
+	def get_bg_color(self):
+			x = random.randrange(0, len(self.colorBackground)-1)
+			self.bg_color = self.colorBackground[x]
+		else:
+			self.bg_color = self.colorBackground
+
+
+
 	def get_size_txt(self)-> None:
 		"get size of text object"
 
