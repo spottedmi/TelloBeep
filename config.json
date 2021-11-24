@@ -37,8 +37,8 @@
     "font_header_name": "Kollektif/Kollektif.ttf",
     "POST_RATIO": 0,
     "POST_COUNT": 0,
-    "POST_RATIO_WARNING": 4,
-    "POST_RATIO_ALERT": 5,
+    "POST_RATIO_WARNING": 1,
+    "POST_RATIO_ALERT": 2,
 
     "headers": {
         "Accept-Language": "pl,en-US;q=0.7,en;q=0.3",
@@ -85,5 +85,7 @@
     "token_file": "token.txt",
     "user": null,
     "width": 0,
-    "word_break": 10
+    "word_break": 10,
+    "DISCORD_CHANNEL_ID":"",
+    "DISCORD_TOKEN":""
 }

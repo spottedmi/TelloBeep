@@ -8,6 +8,7 @@ from backend.server import back_server
 
 from TellonymApi import Tellonym_api
 from Instagram_Api import Instagram_api
+from discord_bot import Discord_bot
 
 from config import Config
 
@@ -111,7 +112,11 @@ class Tello_api(Config):
 				}
 
 				q = q_list.get("2gen")
+
 				q.put(req)
+				
+
+
 
 			time.sleep(3)
 
@@ -123,6 +128,7 @@ if __name__ == "__main__":
 		"2flask": Queue(),
 		"2tello": Queue(),
 		"2insta": Queue(),
+		"2main_thread": Queue(),
 	}
 
 	
@@ -138,9 +144,13 @@ if __name__ == "__main__":
 	
 	#teloym thread
 	t4 = Thread(target = Tello_api, kwargs={"q_list":q_list}).start()
+	
+	# #discord notifications
+	# t5 = Thread(target = Discord_bot, kwargs={"q_list":q_list}).start()
 
 
 	while 1 :		
+		Discord_bot(q_list)
 		time.sleep(1)
 
 

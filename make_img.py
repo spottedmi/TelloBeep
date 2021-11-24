@@ -16,6 +16,8 @@ class Make_img(Censorship, Db_connector):
 
 		self.FIRST_POST = None
 		self.HOURS_PASSED = 0
+		self.ALERT_SEND = False
+		self.WARNING_SEND = False
 		
 
 		if q_list:
@@ -65,13 +67,15 @@ class Make_img(Censorship, Db_connector):
 		self.db_add_img()
 
 		insta = self.q_list.get("2insta")
+		self.req = {
+			"filename": f"{self.out_image_name}.{self.extension}",
+			"title": self.TEXT,
+			"send": False
+		}
+
 		if self.AUTORUN and not self.censor_flag:
-			req = {
-				"filename": f"{self.out_image_name}.{self.extension}",
-				"title": self.TEXT,
-				"send": True
-			}
-			insta.put(req)
+			self.req["send"] = True
+			insta.put(self.req)
 		self.edit_ratio()
 		print(f"POSTS RATIO:	{self.POST_RATIO} PER HOUR")
 		print(f"POSTS COUNT:	{self.POST_COUNT} ")
@@ -79,6 +83,12 @@ class Make_img(Censorship, Db_connector):
 
 		# if self.AUTORUN:
 		# 	self.db_set_approved()
+
+		# d = self.q_list.get("2main_thread")
+		# self.req["bot_comment"] = "New post added"
+		# d.put(self.req)
+
+		
 
 
 
@@ -115,14 +125,44 @@ class Make_img(Censorship, Db_connector):
 			self.POST_RATIO = int(self.POST_COUNT / 1)
 
 		if self.AUTORUN:
-			if self.POST_RATIO >= self.POST_RATIO_WARNING:
-				print("POSTS ALERT ALERTTTT!!!!")
 			if self.POST_RATIO >= self.POST_RATIO_ALERT:
-				self.db_set_approved(state=None)
 				print('-------------  TO MAY POSTS, AUTO RUN OFF')
+				d = self.q_list.get("2main_thread")
+				self.req["bot_comment"] = f"""
+```ALERT ---  posts ratio ----- ALERT
+		Post ratio: {self.POST_RATIO}
+		Autorun off when {self.POST_RATIO_ALERT}
+	_____________________________________________
+
+				BOT_STATUS = {self.AUTORUN}
+		
+```"""
+				if self.ALERT_SEND == False:
+					d.put(self.req)
+					self.ALERT_SEND = True
+
+				self.db_set_approved(state=None)
+
+			elif self.POST_RATIO >= self.POST_RATIO_WARNING:
+				print("POSTS ALERT ALERTTTT!!!!")
+				
+				d = self.q_list.get("2main_thread")
+				self.req["bot_comment"] = f"""
+```posts ratio warining
+		Post ratio: {self.POST_RATIO}
+		Autorun off when {self.POST_RATIO_ALERT}
+
+```"""
+
+				if self. WARNING_SEND == False:
+					d.put(self.req)
+					self.WARNING_SEND = True
+
 
 		# if (self.FIRST_POST - time.time()) > 3600000:
 		# 	self.HOURS_PASSED +=1
+
+		
 
 
 

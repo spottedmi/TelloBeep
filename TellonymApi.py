@@ -39,10 +39,13 @@ class Tellonym_api(Config):
 			self.check_err(tls)
 		
 		if self.ERROR == self.ERRORS.get("token"):
-			tls = self.get_token()
-			if tls:
-				print(f" get token {tls}")
-				self.check_err(tls)
+			try:
+				tls = self.get_token()
+				if tls:
+					print(f" get token {tls}")
+					self.check_err(tls)
+			except:
+				self.ERROR = self.ERRORS.get("load_token")
 
 		if self.ERROR:
 			return self.ERROR
