@@ -37,8 +37,8 @@
     "font_header_name": "Kollektif/Kollektif.ttf",
     "POST_RATIO": 0,
     "POST_COUNT": 0,
-    "POST_RATIO_WARNING": 1,
-    "POST_RATIO_ALERT": 2,
+    "POST_RATIO_WARNING": 5,
+    "POST_RATIO_ALERT": 7,
 
     "headers": {
         "Accept-Language": "pl,en-US;q=0.7,en;q=0.3",
