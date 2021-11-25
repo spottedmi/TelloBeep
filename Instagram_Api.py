@@ -1,19 +1,22 @@
-from instabot import Bot
-import glob, os
+from instagrapi import Client
 
 login = ""
 password = ""
 
 class Instagram_api():
-    def Clear_cookies(self):
-        cookie_del = glob.glob("config/*cookie.json")
-        os.remove(cookie_del[0])
+    def Login(self, login, password):
+        bot = Client()
+        bot.login(login, password)
+        return bot
 
-    def Upload_post(self, img_path):
-        isConfigExists = os.path.isdir("config")
-        if(isConfigExists):
-            self.Clear_cookies
-        
-        ig_bot = Bot()
-        ig_bot.login(username=login, password=password)
-        ig_bot.upload_photo(img_path, caption="")
+    def Upload_photo(self, bot, img_path, caption=""):
+        bot.photo_upload(
+            img_path, 
+            caption=caption
+        )
+
+    def Upload_album(self, bot, imgs_paths, caption=""):
+        bot.album_upload(
+            imgs_paths,
+            caption = caption
+        )
