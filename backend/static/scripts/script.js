@@ -6,7 +6,7 @@ document.getElementById("uploadTokenBtn").onclick = function () {
         token: document.getElementById("tokenInput").value,
       });
 
-      fetch(`${window.location.hostname}/token_list`, {
+      fetch(`${window.location.origin}/token_list`, {
       method: 'POST',
       credentials: 'include',
       headers: {

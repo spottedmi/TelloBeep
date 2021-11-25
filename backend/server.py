@@ -195,9 +195,10 @@ def reject(id_post):
 
     return "<p>restricted area!</p>"
 
-app.route("/token_list", methods=["POST"])
+@app.route("/token_list", methods=["POST"])
 @login_required
 def token_list():
+    print("token list")
     txt = request.data.decode("utf-8")
     data = json.loads(txt)
     token = data.get("token")
@@ -210,7 +211,7 @@ def token_list():
 
     return "<p>restricted area!</p>"
 
-app.route("/bad_words", methods=["POST"])
+@app.route("/bad_words", methods=["POST"])
 @login_required
 def bad_words():
     txt = request.data.decode("utf-8")
@@ -218,7 +219,7 @@ def bad_words():
     word = data.get("word")
     
     with open(config.BAD_WORDS, "a") as f:
-        f.write(word)
+        f.write(f"\n{word}")
 
     return "<p>restricted area!</p>"
 
