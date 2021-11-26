@@ -34,6 +34,14 @@ class Notify(object):
 			self.censorship_dict()
 		elif error == "PLEASE_WAIT_FEW_MINUTES":
 			self.instagram_wait()
+		elif error == "INSTAGRAM_LOGGED":
+			self.instagram_logged()
+		elif error == "RATE_LIMIT_ERROR":
+			self.instagram_rate_limit()
+		elif error == "INSTAGRAM_ERROR":
+			self.instagram_error()
+		
+			
 
 	def post_ratio_warining(self):
 		
@@ -76,6 +84,14 @@ class Notify(object):
 		self.req["bot_comment"] = f"""**INSTAGRAM: too many requests**"""
 		self.disc.put(self.req)
 
+	def instagram_logged(self):
+		self.req["bot_comment"] = f"""**INSTAGRAM: succesfully logged in**"""
+		self.disc.put(self.req)
 
+	def instagram_rate_limit(self):
+		self.req["bot_comment"] = f"""**INSTAGRAM: rate_limi error**"""
+		self.disc.put(self.req)
 
-
+	def instagram_error(self):
+		self.req["bot_comment"] = f"""**INSTAGRAM: just error**"""
+		self.disc.put(self.req)
