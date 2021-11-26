@@ -24,6 +24,8 @@ class Insta_api(Config):
 		"fetching api function's going to replace this"
 
 		self.q_list = q_list
+		# self.insta = Instagram_api()
+		# self.insta.login()
 
 		self.recv_mgs()
 
