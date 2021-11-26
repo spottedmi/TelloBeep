@@ -1,15 +1,23 @@
 from instagrapi import Client
+from notifications import Notify
 
 from config import Config
 
 
 class Instagram_api(Config):
     bot = None
+    q_list=None
+    def __init__(self, q_list=None):
+        super().__init__()
+        if q_list != None:
+            self.q_list = q_list
 
 
     def login(self):
         self.bot = Client()
         self.bot.login(self.LOGIN_INSTAGRAM, self.PASSWORD_INSTAGRAM)
+        Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
+
         return self.bot
 
     def upload_post(self, img_path, caption=""):
