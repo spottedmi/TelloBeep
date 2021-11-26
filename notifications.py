@@ -6,7 +6,6 @@ class Notify(object):
 	img = None
 	req = {}
 	def __init__(self, q_list=None,img=None, error=None):
-		print(q_list)
 		if q_list != None:
 			self.q_list = q_list
 
@@ -28,11 +27,13 @@ class Notify(object):
 		elif error == "FONT_NOT_FOND":
 			self.font_not_found()
 		elif error == "CAPTCHA_REQUIRED":
-			self.tello_relogin()
-		elif error == "TELLO_RELOGIN":
 			self.tello_captcha()
+		elif error == "TELLO_RELOGIN":
+			self.tello_relogin()
 		elif error == "CENSORSHIP_DICT_NOT_FOUNF":
 			self.censorship_dict()
+		elif error == "PLEASE_WAIT_FEW_MINUTES":
+			self.instagram_wait()
 
 	def post_ratio_warining(self):
 		
@@ -70,6 +71,11 @@ class Notify(object):
 	def censorship_dict(self):
 		self.req["bot_comment"] = f"""**couldn't find swears list**"""
 		self.disc.put(self.req)
+
+	def instagram_wait(self):
+		self.req["bot_comment"] = f"""**INSTAGRAM: too many requests**"""
+		self.disc.put(self.req)
+
 
 
 
