@@ -24,8 +24,8 @@ class Insta_api(Config):
 		"fetching api function's going to replace this"
 
 		self.q_list = q_list
-		# self.insta = Instagram_api()
-		# self.insta.login()
+		self.insta = Instagram_api()
+		self.insta.login()
 
 		self.recv_mgs()
 
@@ -38,13 +38,11 @@ class Insta_api(Config):
 
 			path = f"{self.out_image_path}/{content['filename']}"
 
-			# if self.CAPTION != "":
-			# 	pass
-			# 	self.insta.upload_post(path, caption=self.CAPTION)
-			# else:
-			# 	pass
-			# 	self.insta.upload_post(path)
-
+			if self.CAPTION != "":
+				self.insta.upload_post(path, caption=self.CAPTION)
+			else:
+				self.insta.upload_post(path)
+			print("instagram sent")
 
 			time.sleep(0.1)
 
