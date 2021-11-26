@@ -8,11 +8,11 @@ class Instagram_api(Config):
 
 
     def login(self):
-        bot = Client()
-        bot.login(login=LOGIN_INSTAGRAM, password=PASSWORD_INSTAGRAM)
-        return bot
+        self.bot = Client()
+        self.bot.login(self.LOGIN_INSTAGRAM, self.PASSWORD_INSTAGRAM)
+        return self.bot
 
-    def upload_photo(self, img_path, caption=""):
+    def upload_post(self, img_path, caption=""):
         self.bot.photo_upload(
             img_path, 
             caption=caption
