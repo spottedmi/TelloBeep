@@ -81,7 +81,11 @@ class Make_img(Censorship, Db_connector):
 
 		if self.AUTORUN and not self.censor_flag:
 			self.req["send"] = True
+			print("SENDING TO INSTA")
+			print(f"autorun: {self.AUTORUN}")
 			insta.put(self.req)
+			self.SENT = True
+
 		self.edit_ratio()
 		print(f"POSTS RATIO:	{self.POST_RATIO} PER HOUR")
 		print(f"POSTS COUNT:	{self.POST_COUNT} ")
@@ -255,11 +259,12 @@ class Make_img(Censorship, Db_connector):
 
 
 
-		# self.censure_txt()
+		self.censure_txt()
 
 	def load_from_threads(self):
 
 		while 1:
+			self.SENT = False
 			gen = self.q_list.get("2gen")
 			insta = self.q_list.get("2insta")
 			# q2 = self.q_list.get("2flask")
@@ -280,11 +285,9 @@ class Make_img(Censorship, Db_connector):
 			self.TEXT_tmp = data
 			if data:
 				self.TEXT = data
-				
-
+		
 				self.gen()
-
-			if res.get("send"):
+			if res.get("send") and not self.SENT:
 				res = {
 				"title": self.out_image_name,
 				"filename": f"{self.out_image_name}.{self.extension}"
