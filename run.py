@@ -58,7 +58,7 @@ class Tello_api(Config):
 		"fetching api function's going to replace this"
 		# time.sleep(10)
 		self.q_list = q_list
-		self.tello = Tellonym_api()
+		self.tello = Tellonym_api(q_list=self.q_list)
 		self.send_msg()
 		
 
