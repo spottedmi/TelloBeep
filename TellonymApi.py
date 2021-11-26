@@ -8,10 +8,6 @@ from censorship import Censorship
 
 from notifications import Notify
 
-class TokenInvalid(Exception):
-	def __init__(self, err=""):
-		print("___token invalid___")
-		print(err)
 
 
 class Tellonym_user():
@@ -37,20 +33,25 @@ class Tellonym_api(Config):
 
 	def run(self):
 		#self.get_token()
-		# print("run")
+		
 		tls = self.load_token()
 		self.check_err(tls)
 		if self.user:
 			tls = self.get_tells(self.user.token)
+
 			self.check_err(tls)
 		
 		if self.ERROR == self.ERRORS.get("token"):
 			try:
+
 				tls = self.get_token()
+
+
 				if tls:
-					print(f" get token {tls}")
+
 					self.check_err(tls)
-			except:
+			except Exception as e:
+
 				self.ERROR = self.ERRORS.get("load_token")
 
 		if self.ERROR:
@@ -61,14 +62,14 @@ class Tellonym_api(Config):
 			self.remove_tell(elem.id)
 			
 		# self.load_locals()
-		# print(f"autorun: {self.AUTORUN}")
+		
 
 		
 		return self.tells
 
 
 	def get_login_credentials(self):
-		print("Using credentials")
+
 		Notify(q_list=self.q_list, error="TELLO_RELOGIN")
 		if not self.LOGIN_TELLONYM and not self.PASSWORD_TELLONYM:
 			self.LOGIN_TELLONYM = input("login: ")
@@ -87,8 +88,8 @@ class Tellonym_api(Config):
 			self.user = Tellonym_user(res)
 
 		except Exception as e:
-			print(e)
-			print("load json failed")
+
+
 			return self.ERRORS.get("load_token")
 			# raise TokenInvalid("load token failed")
 		return True
@@ -104,6 +105,7 @@ class Tellonym_api(Config):
 
 		self.get_login_credentials()
 
+
 		data_login = {
 			"deviceName": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.11",
 			"deviceType": "web",
@@ -118,7 +120,9 @@ class Tellonym_api(Config):
 		self.headers["Content-Length"] = f"{len(str(data_login))}"
 
 		response = requests.post(url, headers=headers, json=data_login, timeout=5000)
+
 		data = response.json()
+
 		close = False
 
 		if data.get("code") == self.ERRORS.get("captcha"):
@@ -168,6 +172,8 @@ class Tellonym_api(Config):
 		else:
 			x = response.json()["err"]
 			x = x["code"]
+
+
 			return x
 		for x in data["tells"]:
 			
@@ -187,7 +193,7 @@ class Tellonym_api(Config):
 if __name__ == "__main__":
 	tell = Tellonym_api()
 	out = tell.run()
-	print("fetched tells: ")
+
 	if out == list():
 		print("no tells")
 	for elem in out :
