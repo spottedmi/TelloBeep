@@ -258,8 +258,8 @@ class Make_img(Censorship, Db_connector):
 		
 
 
-
-		self.censure_txt()
+		if self.censor_flag == True:
+			self.censure_txt()
 
 	def load_from_threads(self):
 
@@ -270,6 +270,7 @@ class Make_img(Censorship, Db_connector):
 			# q2 = self.q_list.get("2flask")
 			# q2 = self.q_list.get("2tello")
 			res = gen.get() 
+
 			
 			#res =  q2.get()
 
