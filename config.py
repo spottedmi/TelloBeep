@@ -201,6 +201,17 @@ class Config(object):
 		self.AUTORUN = dic
 		return dic
 
+	def set_autorun(self, state):
+		with open("config.json", "r") as f:
+			res = f.read()
+			if state == False:
+				res = res.replace('"AUTORUN": true,','"AUTORUN": false,')
+			else:
+				res = res.replace('"AUTORUN": false,','"AUTORUN": true,')
+
+		with open("config.json", "w") as f:
+			f.write(res)
+
 
 
 

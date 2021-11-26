@@ -30,11 +30,13 @@ class Make_img(Censorship, Db_connector):
 		"generate image"
 
 		self.prepare_text()
+
 		try:
 			self.get_fonts()
 		except:
 			Notify(q_list=self.q_list, error="FONT_NOT_FOND")
 			sys.exit(1)
+		
 		self.get_size_txt()
 		self.set_margins()
 
@@ -65,9 +67,13 @@ class Make_img(Censorship, Db_connector):
 
 		self.img_object.paste(img, coords, img)
 
+		# self.get_autorun()
+
 		#resizing and prepare to save
 		img = img.convert("RGB")
+		
 		self.save_img()
+		
 		self.save_tumbnail()
 		
 		self.db_add_img()
@@ -147,25 +153,34 @@ class Make_img(Censorship, Db_connector):
 		else:
 			self.POST_RATIO = int(self.POST_COUNT / 1)
 
-		if self.AUTORUN:
-			if self.POST_RATIO >= self.POST_RATIO_ALERT:
-				print('-------------  TO MAY POSTS, AUTO RUN OFF')
-				self.db_set_approved(state=None)
+		
+		if self.POST_RATIO >= self.POST_RATIO_ALERT:
+			print('-------------  TO MAY POSTS, AUTO RUN OFF')
+			self.db_set_approved(state=None)
+			# self.set_autorun(False)
+			self.AUTORUN = False
+			# self.get_autorun()
 
-				if self.ALERT_SEND == False:
-					# d.put(self.req)
-					Notify(q_list=self.q_list,error="POST_RATIO_ALERT", img=self.req.get("filename"))
-					self.ALERT_SEND = True
+			if self.ALERT_SEND == False:
+				# d.put(self.req)
+				Notify(q_list=self.q_list,error="POST_RATIO_ALERT", img=self.req.get("filename"))
+				self.ALERT_SEND = True
 
 
-			elif self.POST_RATIO >= self.POST_RATIO_WARNING:
-				print("POSTS ALERT ALERTTTT!!!!")
-				
+		elif self.POST_RATIO >= self.POST_RATIO_WARNING:
+			print("POSTS ALERT ALERTTTT!!!!")
+			
 
-				if self. WARNING_SEND == False:
-					# d.put(self.req)
-					Notify(q_list=self.q_list ,error="POST_RATIO_WARNING", img=self.req.get("filename"))
-					self.WARNING_SEND = True
+			if self. WARNING_SEND == False:
+				# d.put(self.req)
+				Notify(q_list=self.q_list ,error="POST_RATIO_WARNING", img=self.req.get("filename"))
+				self.WARNING_SEND = True
+		
+		if self.POST_RATIO < self.POST_RATIO_WARNING:
+			self.AUTORUN = True
+			# self.set_autorun(True)
+
+
 
 
 		# if (self.FIRST_POST - time.time()) > 3600000:
@@ -293,6 +308,8 @@ class Make_img(Censorship, Db_connector):
 				"title": self.out_image_name,
 				"filename": f"{self.out_image_name}.{self.extension}"
 				}
+
+	
 
 				insta.put(res)
 				 

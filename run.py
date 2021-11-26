@@ -9,8 +9,9 @@ from backend.server import back_server
 from TellonymApi import Tellonym_api
 from Instagram_Api import Instagram_api
 from discord_bot import Discord_bot
-
+from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError
 from config import Config
+from notifications import Notify
 
 #_____________________________________________________________
 #
@@ -24,8 +25,24 @@ class Insta_api(Config):
 		"fetching api function's going to replace this"
 
 		self.q_list = q_list
-		self.insta = Instagram_api()
-		self.insta.login()
+		self.insta = Instagram_api(q_list=self.q_list)
+		delay = 10
+		while True:
+			try:
+				self.insta.login()
+				break
+			except PleaseWaitFewMinutes :
+				Notify(q_list=self.q_list, error="PLEASE_WAIT_FEW_MINUTES")
+				time.sleep(delay)
+				delay += 2*delay
+			except RateLimitError:
+				Notify(q_list=self.q_list, error="RATE_LIMIT_ERROR")
+				time.sleep(60)
+			except:
+				Notify(q_list=self.q_list, error="INSTAGRAM_ERROR")
+
+
+
 
 		self.recv_mgs()
 

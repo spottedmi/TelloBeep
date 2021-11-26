@@ -13,7 +13,6 @@ class Db_connector(Config):
 	def db_add_img(self):
 		txt = self.TEXT		
 		try:
-			self.AUTORUN = self.get_autorun()
 			post = Posts()
 			
 			post.content = txt
