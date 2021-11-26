@@ -2,7 +2,7 @@
 #by RandomGuy90 A.D.2021
 
 from PIL import Image, ImageDraw, ImageFont
-import random, time
+import random, time, sys
 
 from queue import Queue
 import _thread
@@ -10,9 +10,11 @@ import _thread
 from censorship import Censorship
 from db_connector import Db_connector
 
+from notifications import Notify
+
 class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
-		super().__init__()
+		super().__init__(q_list=q_list)
 
 		self.FIRST_POST = None
 		self.HOURS_PASSED = 0
@@ -28,7 +30,11 @@ class Make_img(Censorship, Db_connector):
 		"generate image"
 
 		self.prepare_text()
-		self.get_fonts()
+		try:
+			self.get_fonts()
+		except:
+			Notify(q_list=self.q_list, error="FONT_NOT_FOND")
+			sys.exit(1)
 		self.get_size_txt()
 		self.set_margins()
 
@@ -95,7 +101,20 @@ class Make_img(Censorship, Db_connector):
 	def save_img(self):
 		self.img_object = self.img_object.resize(self.insta_res, Image.ANTIALIAS)
 		self.filename = f"{self.out_image_path}/{self.out_image_name}.{self.extension}"
-		self.img_object.save(self.filename)
+		try:
+			self.img_object.save(self.filename)
+		except FileNotFoundError:
+			Notify(q_list=self.q_list,error="CANT_SAVE_IMG")
+			try:
+				self.filename = f"{self.out_image_path_BACKUP}/{self.out_image_name}.{self.extension}"
+
+				self.img_object.save(self.filename)
+			except FileNotFoundError:
+				Notify(q_list=self.q_list,error="CANT_SAVE_IMG_BACK")
+				sys.exit(1)
+
+
+
 
 	def save_tumbnail(self):
 		self.img_object = self.img_object.resize(self.thumb_res, Image.ANTIALIAS)
@@ -127,44 +146,26 @@ class Make_img(Censorship, Db_connector):
 		if self.AUTORUN:
 			if self.POST_RATIO >= self.POST_RATIO_ALERT:
 				print('-------------  TO MAY POSTS, AUTO RUN OFF')
-				d = self.q_list.get("2main_thread")
-				self.req["bot_comment"] = f"""
-```ALERT ---  posts ratio ----- ALERT
-		Post ratio: {self.POST_RATIO}
-		Autorun off when {self.POST_RATIO_ALERT}
-	_____________________________________________
+				self.db_set_approved(state=None)
 
-				BOT_STATUS = {self.AUTORUN}
-		
-```"""
 				if self.ALERT_SEND == False:
-					d.put(self.req)
+					# d.put(self.req)
+					Notify(q_list=self.q_list,error="POST_RATIO_ALERT", img=self.req.get("filename"))
 					self.ALERT_SEND = True
 
-				self.db_set_approved(state=None)
 
 			elif self.POST_RATIO >= self.POST_RATIO_WARNING:
 				print("POSTS ALERT ALERTTTT!!!!")
 				
-				d = self.q_list.get("2main_thread")
-				self.req["bot_comment"] = f"""
-```posts ratio warining
-		Post ratio: {self.POST_RATIO}
-		Autorun off when {self.POST_RATIO_ALERT}
-
-```"""
 
 				if self. WARNING_SEND == False:
-					d.put(self.req)
+					# d.put(self.req)
+					Notify(q_list=self.q_list ,error="POST_RATIO_WARNING", img=self.req.get("filename"))
 					self.WARNING_SEND = True
 
 
 		# if (self.FIRST_POST - time.time()) > 3600000:
 		# 	self.HOURS_PASSED +=1
-
-		
-
-
 
 
 	def get_size_txt(self)-> None:

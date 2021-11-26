@@ -6,6 +6,7 @@ import importlib
 from config import Config
 from censorship import Censorship
 
+from notifications import Notify
 
 class TokenInvalid(Exception):
 	def __init__(self, err=""):
@@ -26,6 +27,11 @@ class Tellonym_tell():
 		self.flag = False
 
 class Tellonym_api(Config):
+	q_list = None
+	def __init__(self, q_list=None):
+		super().__init__()
+		if q_list != None:
+			self.q_list = q_list
 
 	ERROR = False
 
@@ -63,6 +69,7 @@ class Tellonym_api(Config):
 
 	def get_login_credentials(self):
 		print("Using credentials")
+		Notify(q_list=self.q_list, error="TELLO_RELOGIN")
 		if not self.LOGIN_TELLONYM and not self.PASSWORD_TELLONYM:
 			self.LOGIN_TELLONYM = input("login: ")
 			self.PASSWORD_TELLONYM = input("password: ")
@@ -71,7 +78,7 @@ class Tellonym_api(Config):
 	def load_token(self, file=None):
 		# use pre-defined file location
 		"load token from file"
-		file = file if file  else self.token_file
+		file = self.token_file
 		try:
 			with open(file, "r") as f:
 				res = f.read()
@@ -115,6 +122,7 @@ class Tellonym_api(Config):
 		close = False
 
 		if data.get("code") == self.ERRORS.get("captcha"):
+			Notify(q_list=self.q_list, error="CAPTCHA_REQUIRED")
 			return self.ERRORS.get("captcha")
 		else: 
 			self.user = Tellonym_user(data)

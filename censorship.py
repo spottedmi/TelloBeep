@@ -1,19 +1,27 @@
-
-
 from config import Config
+
+from notifications import Notify
+
 class Censorship(Config):
 
 	# swears_list = None
-
-	def __init__(self, bad_words="", text=""):
+	q_list=None
+	def __init__(self, bad_words="", text="", q_list=None):
 		super().__init__()
+		if q_list != None:
+			self.q_list=q_list
+
 		self.load_file(self.BAD_WORDS)
 		
 	def load_file(self, link) -> None:
-		with open(link, "r") as f:
-			txt = f.read()
-			self.swears_list = txt.rsplit("\n")
+		try:
+			with open(link, "r") as f:
+				txt = f.read()
+				self.swears_list = txt.rsplit("\n")
+		except:
+			Notify(q_list=self.q_list, error="CENSORSHIP_DICT_NOT_FOUNF")
 			
+
 	def censure_txt(self) -> str:
 		words = self.TEXT.replace(",", "")
 		words = words.replace(".", "")

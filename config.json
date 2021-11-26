@@ -74,6 +74,7 @@
     },
     "out_image_name": "image.png",
     "out_image_path": "imgs",
+    "out_image_path_BACKUP": "imgs",
     "outline_thickness": 0,
     "swears_list": null,
     "tells": [],
