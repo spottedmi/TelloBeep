@@ -92,7 +92,8 @@ class Tello_api(Config):
 				print(f"	---------- delay: {delay}")
 				time.sleep(delay)
 				delay += delay
-			print(f"fetched: {content} ")
+			if len(content) > 0:
+				print(f"fetched: {content} ")
 
 			for elem in content:
 				#generate file name
