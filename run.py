@@ -94,6 +94,9 @@ class Tello_api(Config):
 				delay += delay
 			if len(content) > 0:
 				print(f"fetched: {content} ")
+				Notify(q_list=self.q_list, error=f"new tellonyms ({content})")
+
+
 
 			for elem in content:
 				#generate file name

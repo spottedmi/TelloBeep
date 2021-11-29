@@ -40,6 +40,8 @@ class Notify(object):
 			self.instagram_rate_limit()
 		elif error == "INSTAGRAM_ERROR":
 			self.instagram_error()
+		else:
+			self.all_error(error)
 		
 			
 
@@ -94,4 +96,8 @@ class Notify(object):
 
 	def instagram_error(self):
 		self.req["bot_comment"] = f"""**INSTAGRAM: just error**"""
+		self.disc.put(self.req)
+
+	def all_error(self, error):
+		self.req["bot_comment"] = f"""{error}"""
 		self.disc.put(self.req)
