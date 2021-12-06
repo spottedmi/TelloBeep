@@ -27,11 +27,11 @@ class Insta_api(Config):
 		"fetching api function's going to replace this"
 
 		self.q_list = q_list
-		# self.insta = Instagram_api(q_list=self.q_list)
+		self.insta = Instagram_api(q_list=self.q_list)
 		delay = 10
 		while True:
 			try:
-				# self.insta.login()
+				self.insta.login()
 				break
 			except PleaseWaitFewMinutes :
 				Notify(q_list=self.q_list, error="PLEASE_WAIT_FEW_MINUTES")
@@ -60,10 +60,10 @@ class Insta_api(Config):
 
 			if self.CAPTION != "":
 				pass
-				# self.insta.upload_post(path, caption=self.CAPTION)
+				self.insta.upload_post(path, caption=self.CAPTION)
 			else:
 				pass
-				# self.insta.upload_post(path)
+				self.insta.upload_post(path)
 			print("instagram sent")
 
 			time.sleep(0.1)
