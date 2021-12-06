@@ -35,9 +35,9 @@ from config import Config
 
 app = Flask(__name__)
 
-#import logging
-#log = logging.getLogger('werkzeug')
-#log.setLevel(logging.ERROR)
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../db.sqlite"
 app.config["SECRET_KEY"] = "SECRET"
