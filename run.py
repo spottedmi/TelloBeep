@@ -21,15 +21,17 @@ from notifications import Notify
 class Insta_api(Config):
 	def __init__(self, q_list):
 		super().__init__()
+		print("instaapi")
+
 		"this is only a makeshift"
 		"fetching api function's going to replace this"
 
 		self.q_list = q_list
-		self.insta = Instagram_api(q_list=self.q_list)
+		# self.insta = Instagram_api(q_list=self.q_list)
 		delay = 10
 		while True:
 			try:
-				self.insta.login()
+				# self.insta.login()
 				break
 			except PleaseWaitFewMinutes :
 				Notify(q_list=self.q_list, error="PLEASE_WAIT_FEW_MINUTES")
@@ -38,7 +40,8 @@ class Insta_api(Config):
 			except RateLimitError:
 				Notify(q_list=self.q_list, error="RATE_LIMIT_ERROR")
 				time.sleep(60)
-			except:
+			except Exception as e:
+				print(e)
 				Notify(q_list=self.q_list, error="INSTAGRAM_ERROR")
 
 
@@ -56,9 +59,11 @@ class Insta_api(Config):
 			path = f"{self.out_image_path}/{content['filename']}"
 
 			if self.CAPTION != "":
-				self.insta.upload_post(path, caption=self.CAPTION)
+				pass
+				# self.insta.upload_post(path, caption=self.CAPTION)
 			else:
-				self.insta.upload_post(path)
+				pass
+				# self.insta.upload_post(path)
 			print("instagram sent")
 
 			time.sleep(0.1)
@@ -72,6 +77,7 @@ class Tello_api(Config):
 	"send txt to generating thread"
 	def __init__(self, q_list):
 		super().__init__()
+		print("tello")
 		"fetching api function's going to replace this"
 		# time.sleep(10)
 		self.q_list = q_list
@@ -92,10 +98,10 @@ class Tello_api(Config):
 				print(f"	---------- delay: {delay}")
 				time.sleep(delay)
 				delay += delay
-			if len(content) > 0:
-				print(f"fetched: {content} ")
-				Notify(q_list=self.q_list, error=f"new tellonyms ({content})")
+			
 
+			if len(content) > 0:
+				print(f"fetched: {content[0].tell} ")
 
 
 			for elem in content:
@@ -129,6 +135,8 @@ class Tello_api(Config):
 				}
 
 				q = q_list.get("2gen")
+				Notify(q_list=self.q_list, error=f"new tellonym ({elem.tell})")
+
 
 				q.put(req)
 				
