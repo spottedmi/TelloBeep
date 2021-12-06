@@ -44,7 +44,7 @@ class Discord_bot(Config):
 
 		while True:
 			res = queue.get()
-			if res.get("filename") != None:
+			if res.get("filename"):
 				try:
 					x = f"{self.out_image_path}/{res.get('filename')}"
 					with open(x, 'rb') as f:
@@ -72,7 +72,6 @@ class Discord_bot(Config):
 if __name__ == "__main__":
 	
 	bot = commands.Bot(command_prefix='!')
-	print(bot)
 	bot.loop.create_task(timer())
 	print("loop 1 ")
 	bot.run('')

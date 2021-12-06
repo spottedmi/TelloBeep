@@ -87,14 +87,11 @@ class Make_img(Censorship, Db_connector):
 
 		if self.AUTORUN and not self.censor_flag:
 			self.req["send"] = True
-			print("SENDING TO INSTA")
-			print(f"autorun: {self.AUTORUN}")
 			insta.put(self.req)
 			self.SENT = True
 
 		self.edit_ratio()
-		print(f"POSTS RATIO:	{self.POST_RATIO} PER HOUR")
-		print(f"POSTS COUNT:	{self.POST_COUNT} ")
+		
 		
 
 		# if self.AUTORUN:
@@ -290,7 +287,6 @@ class Make_img(Censorship, Db_connector):
 			#res =  q2.get()
 
 			data = res["text"]
-			print(f"data: {data}")
 			self.out_image_name = res["title"]
 			t = res["title"]
 			self.censor_flag = res["censure_flag"]

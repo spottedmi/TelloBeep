@@ -2,16 +2,21 @@
 
 
 class Notify(object):
-	q_list = None
-	img = None
-	req = {}
 	def __init__(self, q_list=None,img=None, error=None):
+		self.req = {}
+		self.q_list = None
+		self.img = None
 		if q_list != None:
 			self.q_list = q_list
+		else:
+			self.q_list = None
+	
+
 
 		if img != None:
 			self.img = img
-
+		else:
+			self.img = None
 		self.disc = self.q_list.get("2main_thread")
 		self.catalog(error=error)
 
@@ -48,13 +53,16 @@ class Notify(object):
 	def post_ratio_warining(self):
 		
 		self.req["bot_comment"] = f"""POST RATIO WARNING"""
-		self.req["filename"] = self.img
+		
+		if self.img: self.req["filename"] = self.img
+		self.img = None
 
 		self.disc.put(self.req)
 
 	def post_ratio_alert(self):
 		self.req["bot_comment"] = f"""**POST RATIO ALERT**"""
-		self.req["filename"] = self.img
+		if self.img: self.req["filename"] = self.img
+		self.img = None
 
 		self.disc.put(self.req)
 
