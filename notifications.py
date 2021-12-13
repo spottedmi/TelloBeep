@@ -2,14 +2,17 @@
 
 
 class Notify(object):
-	def __init__(self, q_list=None,img=None, error=None):
+	def __init__(self, q_list=None,img=None, error=None, text=None):
 		self.req = {}
 		self.q_list = None
 		self.img = None
+		self.text = None
 		if q_list != None:
 			self.q_list = q_list
 		else:
 			self.q_list = None
+		if text != None:
+			self.text = text
 	
 
 
@@ -107,5 +110,6 @@ class Notify(object):
 		self.disc.put(self.req)
 
 	def all_error(self, error):
-		self.req["bot_comment"] = f"""{error}"""
+		self.req["bot_comment"] = f"""{error} | {self.text}"""
+
 		self.disc.put(self.req)
