@@ -38,7 +38,6 @@ class Tellonym_api(Config):
 		self.check_err(tls)
 		if self.user:
 			tls = self.get_tells(self.user.token)
-
 			self.check_err(tls)
 		
 		if self.ERROR == self.ERRORS.get("token"):
@@ -62,7 +61,6 @@ class Tellonym_api(Config):
 			self.remove_tell(elem.id)
 			
 		# self.load_locals()
-		
 
 		
 		return self.tells
@@ -84,12 +82,11 @@ class Tellonym_api(Config):
 			with open(file, "r") as f:
 				res = f.read()
 			res = json.loads(res)
+
 			
 			self.user = Tellonym_user(res)
 
 		except Exception as e:
-
-
 			return self.ERRORS.get("load_token")
 			# raise TokenInvalid("load token failed")
 		return True
@@ -157,12 +154,12 @@ class Tellonym_api(Config):
 		headers = self.headers
 		headers["authorization"] = f"Bearer {self.user.token}"
 
-
 		params = {
 			"limit": "25"
 		}
 		try:
 			time.sleep(0.01)
+
 			response = requests.get(url, headers=headers, params=params)
 		except:
 			return self.ERRORS.get("conn_timeout")
@@ -175,8 +172,8 @@ class Tellonym_api(Config):
 
 
 			return x
-		for x in data["tells"]:
-			
+
+		for x in data["tells"]:		
 			cen = Censorship()
 			cen.TEXT = x["tell"]
 			FLAG = cen.flag_word()
@@ -187,7 +184,7 @@ class Tellonym_api(Config):
 			self.tells.append(tell)
 			# self.remove_tell(token, tell.id)
 
-		return True
+		return self.tells
 
 
 if __name__ == "__main__":
