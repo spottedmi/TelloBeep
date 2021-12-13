@@ -15,8 +15,8 @@ class Instagram_api(Config):
 
     def login(self):
         self.bot = Client()
-        self.bot.set_proxy("http://80.211.246.8:8080")
-        print("proxy set")
+        # self.bot.set_proxy("http://80.211.246.8:8080")
+        # print("proxy set")
         self.bot.login(self.LOGIN_INSTAGRAM, self.PASSWORD_INSTAGRAM)
         print("bot logged")
         Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
