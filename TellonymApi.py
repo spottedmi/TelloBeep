@@ -8,6 +8,8 @@ from censorship import Censorship
 
 from notifications import Notify
 
+from exceptions import TokenInvalid, ConnectionTimeout
+
 
 
 class Tellonym_user():
@@ -33,28 +35,50 @@ class Tellonym_api(Config):
 
 	def run(self):
 		#self.get_token()
-		
-		tls = self.load_token()
-		self.check_err(tls)
+		loop = 5
+		try:
+			self.load_token()
+			# self.check_err(tls)
+
+		except TokenReadImpossible:
+			print("cannot read a token")
+			time.sleep(loop)
+			loop += loop
+
+
 		if self.user:
-			tls = self.get_tells(self.user.token)
-			self.check_err(tls)
-		
-		if self.ERROR == self.ERRORS.get("token"):
+			# tls = self.get_tells(self.user.token)
+			# self.check_err(tls)
 			try:
+				self.get_tells(self.user.token)
 
-				tls = self.get_token()
+			except ConnectionTimeout:
+				print("conneciton timeout")
+				time.sleep(loop)
+				loop += loop
+
+			except TokenInvalid:
+				print("token invalid")
+				self.get_token()
 
 
-				if tls:
+			
+		
+		# if self.ERROR == self.ERRORS.get("token"):
+		# 	try:
 
-					self.check_err(tls)
-			except Exception as e:
+		# 		tls = self.get_token()
 
-				self.ERROR = self.ERRORS.get("load_token")
 
-		if self.ERROR:
-			return self.ERROR
+		# 		if tls:
+
+		# 			self.check_err(tls)
+		# 	except Exception as e:
+
+		# 		self.ERROR = self.ERRORS.get("load_token")
+
+		# if self.ERROR:
+		# 	return self.ERROR
 	
 
 		for elem in self.tells:
@@ -87,8 +111,8 @@ class Tellonym_api(Config):
 			self.user = Tellonym_user(res)
 
 		except Exception as e:
-			return self.ERRORS.get("load_token")
-			# raise TokenInvalid("load token failed")
+			# return self.ERRORS.get("load_token")
+			raise TokenInvalid(q_list=self.q_list)
 		return True
 
 	def save_token(self, file=None, data=""):
@@ -162,7 +186,8 @@ class Tellonym_api(Config):
 
 			response = requests.get(url, headers=headers, params=params)
 		except:
-			return self.ERRORS.get("conn_timeout")
+			raise ConnectionTimeout( q_list=self.q_list)
+			# return self.ERRORS.get("conn_timeout")
 
 		if response.ok:
 			data = response.json()
