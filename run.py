@@ -27,11 +27,11 @@ class Insta_api(Config):
 		"fetching api function's going to replace this"
 
 		self.q_list = q_list
-		self.insta = Instagram_api(q_list=self.q_list)
+		# self.insta = Instagram_api(q_list=self.q_list)
 		delay = 10
 		while True:
 			try:
-				self.insta.login()
+				# self.insta.login()
 				break
 			except PleaseWaitFewMinutes :
 				Notify(q_list=self.q_list, error="PLEASE_WAIT_FEW_MINUTES")
@@ -60,10 +60,10 @@ class Insta_api(Config):
 
 			if self.CAPTION != "":
 				pass
-				self.insta.upload_post(path, caption=self.CAPTION)
+				# self.insta.upload_post(path, caption=self.CAPTION)
 			else:
 				pass
-				self.insta.upload_post(path)
+				# self.insta.upload_post(path)
 			print("instagram sent")
 
 			time.sleep(0.1)
@@ -87,19 +87,32 @@ class Tello_api(Config):
 
 	def send_msg(self) -> None:
 		"put message to the generating queue"
+		
 		while 1:
-			content = self.tello.run()
-			delay = 10
-
-			while isinstance(content, str):
-				print(f"ERROR >>>>>> {content}")
-				self.tello = Tellonym_api()
-				content = self.tello.run()
-				print(f"	---------- delay: {delay}")
-				time.sleep(delay)
-				delay += delay
 			
+			while 1:
+				delay = 10
 
+				try:
+
+					content = self.tello.run()
+					print(content)
+					break
+
+				except Exception as content:
+
+					# print(f"ERROR >>>>>> {content}")
+					self.tello = Tellonym_api()
+					content = self.tello.run()
+				
+					print(f"Exception {content}")
+					print(f"	---------- delay: {delay}")
+					time.sleep(delay)
+					delay += delay
+				
+
+
+				# while isinstance(content, str):
 			if len(content) > 0:
 				print(f"fetched: {content[0].tell} ")
 
@@ -140,9 +153,6 @@ class Tello_api(Config):
 
 				q.put(req)
 				
-
-
-
 			time.sleep(3)
 
 
