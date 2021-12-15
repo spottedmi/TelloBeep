@@ -54,8 +54,10 @@ class Tellonym_api(Config):
 
 			except ConnectionTimeout:
 				print("conneciton timeout")
+				print(f"looop {loop}")
 				time.sleep(loop)
 				loop += loop
+				raise ConnectionTimeout( q_list=self.q_list)
 
 			except TokenInvalid:
 				print("token invalid")
@@ -113,6 +115,7 @@ class Tellonym_api(Config):
 		except Exception as e:
 			# return self.ERRORS.get("load_token")
 			raise TokenInvalid(q_list=self.q_list)
+
 		return True
 
 	def save_token(self, file=None, data=""):
@@ -123,7 +126,6 @@ class Tellonym_api(Config):
 
 	def get_token(self):
 		url = "https://api.tellonym.me/tokens/create"
-
 		self.get_login_credentials()
 
 
@@ -152,7 +154,7 @@ class Tellonym_api(Config):
 		else: 
 			self.user = Tellonym_user(data)
 			self.save_token(data=data)
-		
+				
 		if close:
 			sys.exit(0)
 		
@@ -185,8 +187,10 @@ class Tellonym_api(Config):
 			time.sleep(0.01)
 
 			response = requests.get(url, headers=headers, params=params)
-		except:
-			raise ConnectionTimeout( q_list=self.q_list)
+
+		except Exception as e:
+			print(e)
+			raise ConnectionTimeout()
 			# return self.ERRORS.get("conn_timeout")
 
 		if response.ok:
@@ -195,7 +199,8 @@ class Tellonym_api(Config):
 			x = response.json()["err"]
 			x = x["code"]
 
-
+			if x == self.ERRORS.get("token"):
+				raise TokenInvalid
 			return x
 
 		for x in data["tells"]:		
