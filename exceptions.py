@@ -34,6 +34,10 @@ class ConnectionTimeout(Exception_base):
 	def __init__(self, q_list=None, error=None):
 		super().__init__(q_list=q_list, error="tellonym conneciotn timeout")
 
+class CaptchaRequired(Exception_base):
+	def __init__(self, q_list=None, error=None):
+		super().__init__(q_list=q_list, error="tellonym conneciotn timeout")
+
 
 
 class Post_ratio(Exception):
