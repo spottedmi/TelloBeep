@@ -126,7 +126,7 @@ class Notify(object):
 			self.disc.put(self.req)
 
 	def all_error(self, error):
-		self.req["bot_comment"] = f"""{error} | {self.text}"""
+		self.req["bot_comment"] = f"""{error} """
 
 		if self.disc:
 			self.disc.put(self.req)
