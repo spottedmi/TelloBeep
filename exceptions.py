@@ -48,30 +48,5 @@ class Post_ratio(Exception_base):
 		super().__init__(q_list=q_list, error="post ratio", img=img)
 
 
-# class Post_ratio(Exception):
-# 	q_list = None
-# 	def __init__(self, q_list=None, error=None):
-# 		print("Exception")
-# 		if q_list != None:
-# 			self.q_list = q_list
-
-# 		if error != None:
-# 			self.error = error
-		
-# 		self.send_exception()
-
-	
-# 	def send_exception(self):
-# 		if self.q_list != None:
-# 			disc = self.q_list.get("2main_thread")
-# 			res = {
-# 				"bot_comment": self.error
-# 			}
-
-# 			disc.put(self.error)
-
-
-
-
 
 

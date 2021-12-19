@@ -69,28 +69,6 @@ class Tellonym_api(Config):
 						time.sleep(loop)
 						loop += loop
 
-						# raise CaptchaRequired(q_list=self.q_list)
-						# raise e
-						# return
-
-
-			
-		
-		# if self.ERROR == self.ERRORS.get("token"):
-		# 	try:
-
-		# 		tls = self.get_token()
-
-
-		# 		if tls:
-
-		# 			self.check_err(tls)
-		# 	except Exception as e:
-
-		# 		self.ERROR = self.ERRORS.get("load_token")
-
-		# if self.ERROR:
-		# 	return self.ERROR
 	
 
 		for elem in self.tells:

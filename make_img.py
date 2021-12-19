@@ -30,8 +30,6 @@ class Make_img(Censorship, Db_connector):
 	def gen(self) -> None:
 		"generate image"
 	
-
-
 		self.prepare_text()
 
 		try:
@@ -40,20 +38,13 @@ class Make_img(Censorship, Db_connector):
 			Notify(q_list=self.q_list, error="FONT_NOT_FOND")
 			sys.exit(1)
 
-	
-
-		
 		self.get_size_txt()
 		self.set_margins()
 	
-
-
 		# img = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.colorBackground))
 		self.get_bg_color()
 		self.img_object = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.bg_color))
 		d = ImageDraw.Draw(self.img_object)
-		
-	
 
 		#text 
 		
@@ -62,9 +53,6 @@ class Make_img(Censorship, Db_connector):
 		d.text(coords, self.TEXT, fill=self.hex_to_rgb(self.colorText), font=self.font)
 
 		d.rectangle((0, 0, self.width-self.outline_thickness, self.height-self.outline_thickness),width= self.outline_thickness, fill=None, outline=self.hex_to_rgb(self.colorOutline))
-
-	
-
 
 		#header
 		self.create_header()
@@ -80,23 +68,11 @@ class Make_img(Censorship, Db_connector):
 
 		self.img_object.paste(img, coords, img)
 
-		# self.get_autorun()
-		
-	
-
-
 		#resizing and prepare to save
 		img = img.convert("RGB")
 		
-	
-
-
 		self.save_img()
-	
-		
 		self.save_tumbnail()
-	
-			
 		self.db_add_img()
 	
 
@@ -115,19 +91,7 @@ class Make_img(Censorship, Db_connector):
 
 		print("edit_ratio")
 		self.edit_ratio()
-		
-		
-
-		# if self.AUTORUN:
-		# 	self.db_set_approved()
-
-		# d = self.q_list.get("2main_thread")
-		# self.req["bot_comment"] = "New post added"
-		# d.put(self.req)
-
-		
-
-
+	
 
 	def save_img(self):
 		self.img_object = self.img_object.resize(self.insta_res, Image.ANTIALIAS)
