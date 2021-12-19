@@ -101,47 +101,47 @@ class Tello_api(Config):
 
 
 
-			if len(content) > 0:
-				print(f"fetched: {content[0].tell} ")
+				if len(content) > 0:
+					print(f"fetched: {content[0].tell} ")
 
 
-			for elem in content:
+				for elem in content:
 
-				#generate file name
-				tm , date = elem.created_at.rsplit("T")
-				y, M, d = tm.rsplit("-")
-				if len(M) == 1: M = f"0{M}"
-				date, mil = date.rsplit(".")
-				
-				h,m,s = date.rsplit(":")
-				h = str(int(h) + self.TIMEZONE)
+					#generate file name
+					tm , date = elem.created_at.rsplit("T")
+					y, M, d = tm.rsplit("-")
+					if len(M) == 1: M = f"0{M}"
+					date, mil = date.rsplit(".")
+					
+					h,m,s = date.rsplit(":")
+					h = str(int(h) + self.TIMEZONE)
 
-				if len(h) == 1: h = f"0{h}"
-				if len(m) == 1: m = f"0{m}"
-				if len(s) == 1: s = f"0{s}"
-		
+					if len(h) == 1: h = f"0{h}"
+					if len(m) == 1: m = f"0{m}"
+					if len(s) == 1: s = f"0{s}"
+			
 
-				
+					
 
-				if h == 24:
-					h = "00"
+					if h == 24:
+						h = "00"
 
-				title = f"{y}{M}{d}{h}{m}{s}_{elem.id}"
-				
-				req = {
-					"text": elem.tell,
-					"title": title,
-					"metadata":elem,
-					"send": False,
-					"censure_flag": elem.flag
-				}
+					title = f"{y}{M}{d}{h}{m}{s}_{elem.id}"
+					
+					req = {
+						"text": elem.tell,
+						"title": title,
+						"metadata":elem,
+						"send": False,
+						"censure_flag": elem.flag
+					}
 
-				q = q_list.get("2gen")
-				Notify(q_list=self.q_list, error=f"new tellonym ({elem.tell})")
+					q = q_list.get("2gen")
+					Notify(q_list=self.q_list, error=f"new tellonym ({elem.tell})")
 
 
-				q.put(req)
-				
+					q.put(req)
+					
 
 
 

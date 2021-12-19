@@ -2,6 +2,7 @@
 class Exception_base(Exception):
 	def __init__(self, q_list=None, error=None, img=None):
 		self.q_list = None
+		self.img = None
 
 		if q_list != None:
 			self.q_list = q_list
