@@ -8,7 +8,7 @@ from censorship import Censorship
 
 from notifications import Notify
 
-from exceptions import TokenInvalid, ConnectionTimeout
+from exceptions import TokenInvalid, ConnectionTimeout, CaptchaRequired
 
 
 
@@ -24,6 +24,7 @@ class Tellonym_tell():
 		self.created_at = tellJSON["createdAt"]
 		self.flag = False
 
+
 class Tellonym_api(Config):
 	q_list = None
 	def __init__(self, q_list=None):
@@ -34,34 +35,43 @@ class Tellonym_api(Config):
 	ERROR = False
 
 	def run(self):
-		#self.get_token()
 		loop = 5
-		try:
-			self.load_token()
-			# self.check_err(tls)
-
-		except TokenReadImpossible:
-			print("cannot read a token")
-			time.sleep(loop)
-			loop += loop
-
-
-		if self.user:
-			# tls = self.get_tells(self.user.token)
-			# self.check_err(tls)
+		while True:
 			try:
-				self.get_tells(self.user.token)
+				self.load_token()
 
-			except ConnectionTimeout:
-				print("conneciton timeout")
-				print(f"looop {loop}")
+			except TokenReadImpossible:
+				print("cannot read a token")
+				return False
 				time.sleep(loop)
 				loop += loop
-				raise ConnectionTimeout( q_list=self.q_list)
 
-			except TokenInvalid:
-				print("token invalid")
-				self.get_token()
+
+			if self.user:
+				try:
+					self.get_tells(self.user.token)
+					break
+
+				except ConnectionTimeout as e:
+					print("conneciton timeout")
+					print(f"sleep {loop}")
+					time.sleep(loop)
+					loop += loop
+
+				except TokenInvalid as e:
+					print("token invalid")
+					try:
+						self.get_token()
+						break
+
+					except CaptchaRequired:
+						print("captcha required")
+						time.sleep(loop)
+						loop += loop
+
+						# raise CaptchaRequired(q_list=self.q_list)
+						# raise e
+						# return
 
 
 			
@@ -149,8 +159,9 @@ class Tellonym_api(Config):
 		close = False
 
 		if data.get("code") == self.ERRORS.get("captcha"):
-			Notify(q_list=self.q_list, error="CAPTCHA_REQUIRED")
-			return self.ERRORS.get("captcha")
+			raise CaptchaRequired(q_list=self.q_list)
+			# Notify(q_list=self.q_list, error="CAPTCHA_REQUIRED")
+			# return self.ERRORS.get("captcha")
 		else: 
 			self.user = Tellonym_user(data)
 			self.save_token(data=data)
@@ -184,15 +195,13 @@ class Tellonym_api(Config):
 			"limit": "25"
 		}
 		try:
-			time.sleep(0.01)
-
-			response = requests.get(url, headers=headers, params=params)
+			response = requests.get(url, headers=headers, params=params, )
+		except requests.ConnectionError as e:
+			raise ConnectionTimeout(q_list=self.q_list) 
 
 		except Exception as e:
 			print(e)
-			raise ConnectionTimeout()
-			# return self.ERRORS.get("conn_timeout")
-
+			raise e
 		if response.ok:
 			data = response.json()
 		else:

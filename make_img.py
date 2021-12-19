@@ -15,6 +15,7 @@ from notifications import Notify
 class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
 		super().__init__(q_list=q_list)
+		print("init")
 
 		self.FIRST_POST = None
 		self.HOURS_PASSED = 0
@@ -28,6 +29,8 @@ class Make_img(Censorship, Db_connector):
 
 	def gen(self) -> None:
 		"generate image"
+	
+
 
 		self.prepare_text()
 
@@ -36,15 +39,22 @@ class Make_img(Censorship, Db_connector):
 		except:
 			Notify(q_list=self.q_list, error="FONT_NOT_FOND")
 			sys.exit(1)
+
+	
+
 		
 		self.get_size_txt()
 		self.set_margins()
+	
+
 
 		# img = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.colorBackground))
 		self.get_bg_color()
 		self.img_object = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.bg_color))
 		d = ImageDraw.Draw(self.img_object)
 		
+	
+
 		#text 
 		
 		coords =(self.margin["left"] ,self.margin["top"])
@@ -52,6 +62,9 @@ class Make_img(Censorship, Db_connector):
 		d.text(coords, self.TEXT, fill=self.hex_to_rgb(self.colorText), font=self.font)
 
 		d.rectangle((0, 0, self.width-self.outline_thickness, self.height-self.outline_thickness),width= self.outline_thickness, fill=None, outline=self.hex_to_rgb(self.colorOutline))
+
+	
+
 
 		#header
 		self.create_header()
@@ -68,15 +81,25 @@ class Make_img(Censorship, Db_connector):
 		self.img_object.paste(img, coords, img)
 
 		# self.get_autorun()
+		
+	
+
 
 		#resizing and prepare to save
 		img = img.convert("RGB")
 		
+	
+
+
 		self.save_img()
+	
 		
 		self.save_tumbnail()
-		
+	
+			
 		self.db_add_img()
+	
+
 
 		insta = self.q_list.get("2insta")
 		self.req = {
@@ -90,6 +113,7 @@ class Make_img(Censorship, Db_connector):
 			insta.put(self.req)
 			self.SENT = True
 
+		print("edit_ratio")
 		self.edit_ratio()
 		
 		
@@ -149,6 +173,8 @@ class Make_img(Censorship, Db_connector):
 			self.POST_RATIO = int(self.POST_COUNT / self.HOURS_PASSED)
 		else:
 			self.POST_RATIO = int(self.POST_COUNT / 1)
+
+		print(self.POST_RATIO)
 
 		
 		if self.POST_RATIO >= self.POST_RATIO_ALERT:
