@@ -60,7 +60,7 @@ class Tellonym_api(Config):
 					print("conneciton timeout")
 					time.sleep(loop)
 					loop += loop
-					raise ValueError("xD")
+					raise Exception("xD") from None
 
 				except TokenInvalid as e:
 					print("token invalid")
