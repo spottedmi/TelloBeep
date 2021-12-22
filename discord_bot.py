@@ -25,9 +25,11 @@ async def timer():
 
 class Discord_bot(Config):
 	def __init__(self, q_list):
-		super().__init__()
+		super().__init__(child_class=__class__.__name__)
+
 		print("INIT: DISCORD")
 		self.q_list = q_list
+		self.logger.info(f"discord bot init")
 
 		self.bot = commands.Bot(command_prefix='!')
 
@@ -55,8 +57,12 @@ class Discord_bot(Config):
 						picture = discord.File(f)
 
 				await channel.send(f"{res.get('bot_comment')}", file=picture)
+				self.logger.info(f"discord post send with picture, {res.get('bot_comment')}, {self.out_image_path}/{res.get('filename')}")
+
 			else:
-			   await channel.send(f"{res.get('bot_comment')}")
+				await channel.send(f"{res.get('bot_comment')}")
+				self.logger.info(f"discord post send {res.get('bot_comment')}")
+
 
 
 

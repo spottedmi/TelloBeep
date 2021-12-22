@@ -8,6 +8,8 @@ class Censorship(Config):
 	q_list=None
 	def __init__(self, bad_words="", text="", q_list=None):
 		super().__init__()
+		Config().__init__(child_class=__class__.__name__)
+		
 		if q_list != None:
 			self.q_list=q_list
 
@@ -19,7 +21,11 @@ class Censorship(Config):
 				txt = f.read()
 				self.swears_list = txt.rsplit("\n")
 		except:
-			Notify(q_list=self.q_list, error="CENSORSHIP_DICT_NOT_FOUNF")
+			Notify(q_list=self.q_list, error="CENSORSHIP_DICT_NOT_FOUND")
+			self.logger.error(f"couldn't find censorship dictionary")
+
+
+
 			
 
 	def censure_txt(self) -> str:

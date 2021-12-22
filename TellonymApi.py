@@ -28,7 +28,7 @@ class Tellonym_tell():
 class Tellonym_api(Config):
 	q_list = None
 	def __init__(self, q_list=None):
-		super().__init__()
+		super().__init__(child_class=__class__.__name__)
 		if q_list != None:
 			self.q_list = q_list
 
@@ -42,6 +42,8 @@ class Tellonym_api(Config):
 
 			except TokenReadImpossible:
 				print("cannot read a token")
+				self.logger.error(f"cannot load token")
+
 				return False
 				time.sleep(loop)
 				loop += loop
@@ -50,22 +52,28 @@ class Tellonym_api(Config):
 			if self.user:
 				try:
 					self.get_tells(self.user.token)
+					
 					break
 
 				except ConnectionTimeout as e:
+					self.logger.error(f"connection timeout")
 					print("conneciton timeout")
-					print(f"sleep {loop}")
 					time.sleep(loop)
 					loop += loop
+					raise ValueError("xD")
 
 				except TokenInvalid as e:
 					print("token invalid")
+					self.logger.error(f"token invalid")
+
 					try:
 						self.get_token()
 						break
 
 					except CaptchaRequired:
 						print("captcha required")
+						self.logger.error(f"captcha required")
+
 						time.sleep(loop)
 						loop += loop
 
@@ -83,6 +91,8 @@ class Tellonym_api(Config):
 	def get_login_credentials(self):
 
 		Notify(q_list=self.q_list, error="TELLO_RELOGIN")
+		self.logger.error(f"tellonym relogin")
+
 		if not self.LOGIN_TELLONYM and not self.PASSWORD_TELLONYM:
 			self.LOGIN_TELLONYM = input("login: ")
 			self.PASSWORD_TELLONYM = input("password: ")
@@ -108,6 +118,7 @@ class Tellonym_api(Config):
 
 	def save_token(self, file=None, data=""):
 		"save token to a file"
+
 		file = file if file  else self.token_file
 		with open(file, "w+") as f:
 			f.write(json.dumps(data))
@@ -183,6 +194,8 @@ class Tellonym_api(Config):
 		if response.ok:
 			data = response.json()
 		else:
+			self.logger.error(f"tellonym get tells failed")
+
 			x = response.json()["err"]
 			x = x["code"]
 
@@ -202,6 +215,9 @@ class Tellonym_api(Config):
 			# self.remove_tell(token, tell.id)
 
 		return self.tells
+
+
+
 
 
 if __name__ == "__main__":

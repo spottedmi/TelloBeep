@@ -15,6 +15,9 @@ from notifications import Notify
 class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
 		super().__init__(q_list=q_list)
+
+		
+
 		print("init")
 
 		self.FIRST_POST = None
@@ -29,6 +32,8 @@ class Make_img(Censorship, Db_connector):
 
 	def gen(self) -> None:
 		"generate image"
+		self.logger.info(f"generating new image")
+
 	
 		self.prepare_text()
 
@@ -36,6 +41,8 @@ class Make_img(Censorship, Db_connector):
 			self.get_fonts()
 		except:
 			Notify(q_list=self.q_list, error="FONT_NOT_FOND")
+			self.logger.error(f"font not found")
+
 			sys.exit(1)
 
 		self.get_size_txt()
@@ -86,7 +93,9 @@ class Make_img(Censorship, Db_connector):
 
 		if self.AUTORUN and not self.censor_flag:
 			self.req["send"] = True
+
 			insta.put(self.req)
+			self.logger.info(f"image send automatically, {self.req['filename']}")
 			self.SENT = True
 
 		print("edit_ratio")
@@ -100,12 +109,16 @@ class Make_img(Censorship, Db_connector):
 			self.img_object.save(self.filename)
 		except FileNotFoundError:
 			Notify(q_list=self.q_list,error="CANT_SAVE_IMG")
+			self.logger.error(f" couldn't save image, {self.filename}")
+
 			try:
 				self.filename = f"{self.out_image_path_BACKUP}/{self.out_image_name}.{self.extension}"
 
 				self.img_object.save(self.filename)
 			except FileNotFoundError:
 				Notify(q_list=self.q_list,error="CANT_SAVE_IMG_BACK")
+				self.logger.critical(f" couldn't save image in backup location, {self.filename}")
+
 				sys.exit(1)
 
 
@@ -142,6 +155,8 @@ class Make_img(Censorship, Db_connector):
 
 		
 		if self.POST_RATIO >= self.POST_RATIO_ALERT:
+			self.logger.warning(f" post ratio alert, autorun off, {self.POST_RATIO}")
+
 			print('-------------  TO MAY POSTS, AUTO RUN OFF')
 			self.db_set_approved(state=None)
 			# self.set_autorun(False)
@@ -156,7 +171,7 @@ class Make_img(Censorship, Db_connector):
 
 		elif self.POST_RATIO >= self.POST_RATIO_WARNING:
 			print("POSTS ALERT ALERTTTT!!!!")
-			
+			self.logger.warning(f" post ratio warning, {self.POST_RATIO}")		
 
 			if self. WARNING_SEND == False:
 				# d.put(self.req)

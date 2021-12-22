@@ -8,7 +8,7 @@ from datetime import datetime
 
 class Db_connector(Config):
 	def __init__(self):
-		super().__init__()
+		super().__init__(child_class=__class__.__name__)
 
 	def db_add_img(self):
 		txt = self.TEXT		
