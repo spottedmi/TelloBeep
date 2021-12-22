@@ -1,14 +1,30 @@
 import json, os
+import logging
 
 class Config(object):
-	def __init__(self):	
-		print("CONFIG INIT")
+	def __init__(self, child_class=None):	
 		
 		self.load_locals()
 		self.token_file = self.make_absolute_path(self.token_file)
 		self.BAD_WORDS = self.make_absolute_path(self.BAD_WORDS)
 		self.thumb_path = self.make_absolute_path(self.thumb_path)
 		self.out_image_path = self.make_absolute_path(self.out_image_path)
+
+
+		if child_class:
+
+			self.logger = logging.getLogger(child_class)
+			
+			fh = logging.FileHandler(self.LOG_FILE)
+
+			fh.setLevel(logging.DEBUG)
+			fh.setFormatter(CustomFormatter())
+			
+			self.logger.addHandler(fh)
+
+			self.logger.setLevel(logging.DEBUG)
+
+
 
 	def make_absolute_path(sefl, filepath):
 		absolute_path = os.path.abspath(__file__)
@@ -105,9 +121,27 @@ class Config(object):
 
 
 
+class CustomFormatter(logging.Formatter):
 
+    grey = "\x1b[38;21m"
+    yellow = "\x1b[33;21m"
+    red = "\x1b[31;21m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
+    format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
 
+    FORMATS = {
+        logging.DEBUG: grey + format + reset,
+        logging.INFO: grey + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset
+    }
 
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
 
 
 if __name__ == "__main__":
