@@ -2,7 +2,7 @@
     "AUTORUN": true,
     "BAD_WORDS": "swears_list.txt",
     "DATE": null,
-    "LOG_FILE":"testlog.log",
+    "LOG_FILE":"tellobeep.log",
     "CAPTION":"",
     "ERRORS": {
         "token": "TOKEN_INVALID",
