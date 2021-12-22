@@ -2,6 +2,7 @@
     "AUTORUN": true,
     "BAD_WORDS": "swears_list.txt",
     "DATE": null,
+    "LOG_FILE":"testlog.log",
     "CAPTION":"",
     "ERRORS": {
         "token": "TOKEN_INVALID",
@@ -14,6 +15,7 @@
     "LOGIN_INSTAGRAM": "",
     "PASSWORD_INSTAGRAM": "",
     "TEXT_footer": "#footer_text",
+
     "TIMEZONE": 1,
     "colorBackground": ["#23282D", "#1C4E80", "#6AB187", "#5211D4", "#4CB5F5", "#EA6A47", "#D32D41", "#85044F", "#8A7b0b", "#631313", "#993355", "#084013", "#2E1C1B"],
     "colorOutline": "#ffffff",
