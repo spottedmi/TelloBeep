@@ -20,7 +20,8 @@ from notifications import Notify
 
 class Insta_api(Config):
 	def __init__(self, q_list):
-		super().__init__()
+		super().__init__(child_class=__class__.__name__)
+		
 		print("instaapi")
 
 		"this is only a makeshift"
@@ -28,10 +29,11 @@ class Insta_api(Config):
 
 		self.q_list = q_list
 		self.insta = Instagram_api(q_list=self.q_list)
+
 		delay = 10
 		while True:
 			try:
-				self.insta.login()
+				# self.insta.login()
 				break
 			except PleaseWaitFewMinutes :
 				Notify(q_list=self.q_list, error="PLEASE_WAIT_FEW_MINUTES")
@@ -41,7 +43,7 @@ class Insta_api(Config):
 				Notify(q_list=self.q_list, error="RATE_LIMIT_ERROR")
 				time.sleep(60)
 			except Exception as e:
-				print(e)
+				# print(e)
 				Notify(q_list=self.q_list, error="INSTAGRAM_ERROR")
 
 
@@ -54,7 +56,7 @@ class Insta_api(Config):
 
 		while 1 :
 			content = q.get()
-			print(f"INSTAGRAM {content['title']}")
+			# print(f"INSTAGRAM {content['title']}")
 
 			path = f"{self.out_image_path}/{content['filename']}"
 
@@ -64,7 +66,7 @@ class Insta_api(Config):
 			else:
 				pass
 				self.insta.upload_post(path)
-			print("instagram sent")
+			# print("instagram sent")
 
 			time.sleep(0.1)
 
@@ -76,13 +78,14 @@ class Insta_api(Config):
 class Tello_api(Config):
 	"send txt to generating thread"
 	def __init__(self, q_list):
-		super().__init__()
-		print("tello")
+		super().__init__(child_class=__class__.__name__)
 		"fetching api function's going to replace this"
+
+		print("tello")
 		# time.sleep(10)
 
 		self.q_list = q_list
-		self.tello = Tellonym_api(q_list=self.q_list)
+		# self.tello = Tellonym_api(q_list=self.q_list)
 		self.send_msg()
 		
 
@@ -91,57 +94,64 @@ class Tello_api(Config):
 		
 		while 1:
 			
-			while 1:
-				delay = 10
-
-
-				content = self.tello.run()
-
-				time.sleep(5)
-
-
-
-				if len(content) > 0:
-					print(f"fetched: {content[0].tell} ")
-
-
-				for elem in content:
-
-					#generate file name
-					tm , date = elem.created_at.rsplit("T")
-					y, M, d = tm.rsplit("-")
-					if len(M) == 1: M = f"0{M}"
-					date, mil = date.rsplit(".")
-					
-					h,m,s = date.rsplit(":")
-					h = str(int(h) + self.TIMEZONE)
-
-					if len(h) == 1: h = f"0{h}"
-					if len(m) == 1: m = f"0{m}"
-					if len(s) == 1: s = f"0{s}"
 			
+			delay = 10
+			while 1:
+				try:
+					self.tello = Tellonym_api(q_list=self.q_list)
+					content = self.tello.run()
+					break
+				except Exception as e:
+					time.sleep(delay)
+					delay+=delay
+					# content = self.tello.run()
 
-					
-
-					if h == 24:
-						h = "00"
-
-					title = f"{y}{M}{d}{h}{m}{s}_{elem.id}"
-					
-					req = {
-						"text": elem.tell,
-						"title": title,
-						"metadata":elem,
-						"send": False,
-						"censure_flag": elem.flag
-					}
-
-					q = q_list.get("2gen")
-					Notify(q_list=self.q_list, error=f"new tellonym ({elem.tell})")
+			time.sleep(5)
 
 
-					q.put(req)
-					
+
+			if len(content) > 0:
+				self.logger.info(f"new Tellonyms: {len(content)}")
+				# print(f"fetched: {content[0].tell} ")
+
+
+			for elem in content:
+
+				#generate file name
+				tm , date = elem.created_at.rsplit("T")
+				y, M, d = tm.rsplit("-")
+				if len(M) == 1: M = f"0{M}"
+				date, mil = date.rsplit(".")
+				
+				h,m,s = date.rsplit(":")
+				h = str(int(h) + self.TIMEZONE)
+
+				if len(h) == 1: h = f"0{h}"
+				if len(m) == 1: m = f"0{m}"
+				if len(s) == 1: s = f"0{s}"
+		
+
+				
+
+				if h == 24:
+					h = "00"
+
+				title = f"{y}{M}{d}{h}{m}{s}_{elem.id}"
+				
+				req = {
+					"text": elem.tell,
+					"title": title,
+					"metadata":elem,
+					"send": False,
+					"censure_flag": elem.flag
+				}
+
+				q = q_list.get("2gen")
+				Notify(q_list=self.q_list, error=f"new tellonym ({elem.tell})")
+
+
+				q.put(req)
+				
 
 
 
@@ -153,8 +163,15 @@ if __name__ == "__main__":
 		"2insta": Queue(),
 		"2main_thread": Queue(),
 	}
+	
+	class StartUp(Config):
+		def __init__(self):
+			super().__init__(self.__class__.__name__)
+			self.logger.critical("_____Tellobeep INIT___________________________________")
+
 
 	
+	StartUp()
 	
 	#generating images
 	t1 = Thread(target = Make_img, kwargs={"q_list":q_list}).start()
@@ -173,7 +190,13 @@ if __name__ == "__main__":
 
 
 	while 1 :		
-		Discord_bot(q_list)
-		time.sleep(1)
+
+		try:
+			Discord_bot(q_list)
+			time.sleep(1)
+		except:
+			print("cannot log into bot")
+			time.sleep(1)
+
 
 
