@@ -33,7 +33,7 @@ class Insta_api(Config):
 		delay = 10
 		while True:
 			try:
-				# self.insta.login()
+				self.insta.login()
 				break
 			except PleaseWaitFewMinutes :
 				Notify(q_list=self.q_list, error="PLEASE_WAIT_FEW_MINUTES")
