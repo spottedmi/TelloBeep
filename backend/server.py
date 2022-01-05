@@ -295,16 +295,17 @@ def login():
         return render_template('login.html', form=form)
     return render_template('login.html', form=form)
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        hashed_pass = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_pass)
-        db.session.add(new_user)
-        db.session.commit()
+
+# @app.route("/register", methods=["GET", "POST"])
+# def register():
+#     form = RegisterForm()
+#     if form.validate_on_submit():
+#         hashed_pass = bcrypt.generate_password_hash(form.password.data)
+#         new_user = User(username=form.username.data, password=hashed_pass)
+#         db.session.add(new_user)
+#         db.session.commit()
    
-    return render_template("register.html", form=form)
+#     return render_template("register.html", form=form)
 
 
 @app.route("/dashboard", methods=["GET"])
