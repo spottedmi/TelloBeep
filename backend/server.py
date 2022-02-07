@@ -68,6 +68,29 @@ config = Config()
 def setup():
     print("create")
     db.create_all()
+    print(sys.argv)
+    try:
+        login = sys.argv[sys.argv.index("-l")+1]
+        passwd = sys.argv[sys.argv.index("-p")+1]
+    except:
+        sys.argv.append("-h")
+
+
+    if "-h" or "--help" in sys.argv:
+        print("-l   login")
+        print("-p   password")
+        print("-h   help msg")
+        sys.exit()
+
+    print(f" l: {login} p: {passwd}")
+
+    hashed_pass = bcrypt.generate_password_hash(passwd)
+    new_user = User(username=login, password=hashed_pass)
+    
+    db.session.add(new_user)
+    db.session.commit()
+
+
     sys.exit()
 
 class User(db.Model, UserMixin):
