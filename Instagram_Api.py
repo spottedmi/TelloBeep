@@ -17,12 +17,15 @@ class Instagram_api(Config):
         self.bot = Client()
         # self.bot.set_proxy("http://80.211.246.8:8080")
         # print("proxy set")
-        self.bot.login(self.LOGIN_INSTAGRAM, self.PASSWORD_INSTAGRAM)
-        
-        self.logger.info(f"instagram logged")
+        if self.LOGIN_INSTAGRAM != "" and self.PASSWORD_INSTAGRAM != "":
+            self.bot.login(self.LOGIN_INSTAGRAM, self.PASSWORD_INSTAGRAM)
+            self.logger.info(f"instagram logged")
 
-        print("bot logged")
-        Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
+            print("bot logged")
+            Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
+        else:
+            Notify(q_list=self.q_list, error="INSTAGRAM_LOGIN_SKIPPED")
+            print("bot login skipped")
 
         return self.bot
 
