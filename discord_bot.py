@@ -3,6 +3,7 @@ import discord
 import datetime
 import asyncio
 
+
 time = datetime.datetime.now
 
 from config import Config
@@ -62,10 +63,6 @@ class Discord_bot(Config):
 			else:
 				await channel.send(f"{res.get('bot_comment')}")
 				self.logger.info(f"discord post send {res.get('bot_comment')}")
-
-
-
-
 
 
 			await asyncio.sleep(1)
