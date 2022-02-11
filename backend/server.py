@@ -76,11 +76,11 @@ def setup():
         sys.argv.append("-h")
 
 
-    if "-h" or "--help" in sys.argv:
+    if "-h" in sys.argv or "--help" in sys.argv:
         print("-l   login")
         print("-p   password")
         print("-h   help msg")
-        sys.exit()
+        sys.exit(0)
 
     print(f" l: {login} p: {passwd}")
 
@@ -89,9 +89,10 @@ def setup():
     
     db.session.add(new_user)
     db.session.commit()
+    print("created")
 
 
-    sys.exit()
+    sys.exit(0)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
