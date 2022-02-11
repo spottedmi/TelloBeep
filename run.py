@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 from queue import Queue
 from threading import Thread
-import time, random, json
+import time, random, json, os
 
 from make_img import Make_img
 from backend.server import back_server
@@ -167,11 +167,16 @@ if __name__ == "__main__":
 	class StartUp(Config):
 		def __init__(self):
 			super().__init__(self.__class__.__name__)
+			pid = os.getpid()
+			print(pid)
+			os.popen(f"prlimit -n524288 -p {pid}")
+			# os.popen(f"prlimit -n4 -p {pid}")
+			print(f"prlimit -n524288 -p {pid}")
 			self.logger.critical("_____Tellobeep INIT___________________________________")
 
 
 	
-	StartUp()
+	start = StartUp()
 	
 	#generating images
 	t1 = Thread(target = Make_img, kwargs={"q_list":q_list}).start()
@@ -193,10 +198,14 @@ if __name__ == "__main__":
 
 		try:
 			Discord_bot(q_list)
-			time.sleep(1)
-		except:
+		except OSError:
+			start.logger.critical("closing OSError Too many open files")
+			sys.exit(0)
+
+		except Exception as e:
 			print("cannot log into bot")
-			time.sleep(1)
+			t3 = Thread(target = Insta_api, kwargs={"q_list":q_list}).start()
+			time.sleep(10)
 
 
 
