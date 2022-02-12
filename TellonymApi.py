@@ -56,7 +56,7 @@ class Tellonym_api(Config):
 					break
 
 				except ConnectionTimeout as e:
-					self.logger.error(f"connection timeout")
+					# self.logger.error(f"connection timeout")
 					print("conneciton timeout")
 					time.sleep(loop)
 					loop += loop
