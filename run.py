@@ -100,6 +100,9 @@ class Tello_api(Config):
 				try:
 					self.tello = Tellonym_api(q_list=self.q_list)
 					content = self.tello.run()
+					print(f"fetch: {content}")
+					self.logger.info(f"new fetch: {content}")
+
 					break
 				except Exception as e:
 					time.sleep(delay)
