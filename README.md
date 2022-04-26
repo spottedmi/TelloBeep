@@ -130,6 +130,8 @@ logs:
 admin pannel:
 ![image](https://user-images.githubusercontent.com/64653975/165392505-b93040a5-b288-4207-a4d8-1331e31b33c2.png)
 
-![[Pasted image 20220426231043.png]]
+![Pasted image 20220426231043 1](https://user-images.githubusercontent.com/64653975/165402571-cbab962d-1386-43e3-984a-0b99e5ec3c6f.png)
+
+
 
 
