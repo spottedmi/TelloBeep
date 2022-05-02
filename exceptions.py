@@ -27,9 +27,14 @@ class Exception_base(Exception):
 			disc.put(res)
 
 
-class TokenInvalid(Exception_base):
+class TokenInvalidTellonym(Exception_base):
 	def __init__(self, q_list=None, error=None):
-		super().__init__(q_list=q_list, error="token is invalid")
+		super().__init__(q_list=q_list, error="tellonym token is invalid")
+
+class TokenInvalidQuestionmi(Exception_base):
+	def __init__(self, q_list=None, error=None):
+		super().__init__(q_list=q_list, error="questionmi token is invalid")
+
 
 class TokenReadImpossible(Exception_base):
 	def __init__(self, q_list=None, error=None):

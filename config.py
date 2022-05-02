@@ -5,7 +5,7 @@ class Config(object):
 	def __init__(self, child_class=None):	
 		
 		self.load_locals()
-		self.token_file = self.make_absolute_path(self.token_file)
+		self.token_file_tellonym = self.make_absolute_path(self.token_file_tellonym)
 		self.BAD_WORDS = self.make_absolute_path(self.BAD_WORDS)
 		self.thumb_path = self.make_absolute_path(self.thumb_path)
 		self.out_image_path = self.make_absolute_path(self.out_image_path)
