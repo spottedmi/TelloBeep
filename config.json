@@ -85,6 +85,7 @@
     ],
     "token_file_tellonym": "token.txt",
     "token_questionmi": "",
+    "questionmi_api_base_url":"",
     "user": null,
     "width": 0,
     "word_break": 10,

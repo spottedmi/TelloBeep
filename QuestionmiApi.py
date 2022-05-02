@@ -164,7 +164,7 @@ class Questionmi_api(Config):
 		
 
 	def remove_tell(self, tell_id, limit=25):
-		url = f"https://questionmi-api.herokuapp.com/api/Tells"
+		url = f"{self.questionmi_api_base_url}Tells"
 		payload = {
 				"id": tell_id,
 				}
@@ -180,7 +180,7 @@ class Questionmi_api(Config):
 	def get_tells(self, token=""):
 		# importlib.reload(requests)
 		self.tells = list()
-		url = "https://questionmi-api.herokuapp.com/api/Tells"
+		url = f"{self.questionmi_api_base_url}Tells"
 	
 		headers = {}
 		headers["token"] = f"{self.user.token}"
