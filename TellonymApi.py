@@ -2,27 +2,17 @@ import requests, json, sys, time
 from queue import Queue
 from threading import Thread
 import importlib
-
+from TellModels import Tellonym_user, Tellonym_tell
 from config import Config
 from censorship import Censorship
 
 from notifications import Notify
 
-from exceptions import TokenInvalid, ConnectionTimeout, CaptchaRequired
+from exceptions import TokenInvalidTellonym, ConnectionTimeout, CaptchaRequired
 
 
 
-class Tellonym_user():
-	def __init__(self, tokenJSON):
-		self.user_id = tokenJSON["userId"]
-		self.token = tokenJSON["accessToken"]
 
-class Tellonym_tell():
-	def __init__(self, tellJSON):
-		self.id = tellJSON["id"]
-		self.tell = tellJSON["tell"]
-		self.created_at = tellJSON["createdAt"]
-		self.flag = False
 
 
 class Tellonym_api(Config):
@@ -62,9 +52,9 @@ class Tellonym_api(Config):
 					loop += loop
 					raise Exception("xD") from None
 
-				except TokenInvalid as e:
-					print("token invalid")
-					self.logger.error(f"token invalid")
+				except TokenInvalidTellonym as e:
+					print("Tellonym token invalid")
+					self.logger.error(f"Tellonym token invalid")
 
 					try:
 						self.get_token()
@@ -101,7 +91,7 @@ class Tellonym_api(Config):
 	def load_token(self, file=None):
 		# use pre-defined file location
 		"load token from file"
-		file = self.token_file
+		file = self.token_file_tellonym
 		try:
 			with open(file, "r") as f:
 				res = f.read()
@@ -112,14 +102,14 @@ class Tellonym_api(Config):
 
 		except Exception as e:
 			# return self.ERRORS.get("load_token")
-			raise TokenInvalid(q_list=self.q_list)
+			raise TokenInvalidTellonym(q_list=self.q_list)
 
 		return True
 
 	def save_token(self, file=None, data=""):
 		"save token to a file"
 
-		file = file if file  else self.token_file
+		file = file if file  else self.token_file_tellonym
 		with open(file, "w+") as f:
 			f.write(json.dumps(data))
 
@@ -200,7 +190,7 @@ class Tellonym_api(Config):
 			x = x["code"]
 
 			if x == self.ERRORS.get("token"):
-				raise TokenInvalid
+				raise TokenInvalidTellonym
 			return x
 
 		for x in data["tells"]:		
@@ -223,6 +213,7 @@ class Tellonym_api(Config):
 if __name__ == "__main__":
 	tell = Tellonym_api()
 	out = tell.run()
+	print(out)
 
 	if out == list():
 		print("no tells")

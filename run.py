@@ -7,6 +7,7 @@ from make_img import Make_img
 from backend.server import back_server
 
 from TellonymApi import Tellonym_api
+from QuestionmiApi import Questionmi_api
 from Instagram_Api import Instagram_api
 from discord_bot import Discord_bot
 from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError
@@ -77,11 +78,11 @@ class Insta_api(Config):
 
 class Tello_api(Config):
 	"send txt to generating thread"
-	def __init__(self, q_list):
+	def __init__(self, q_list, fetch_class):
 		super().__init__(child_class=__class__.__name__)
 		"fetching api function's going to replace this"
+		self.fetch_class = fetch_class
 
-		print("tello")
 		# time.sleep(10)
 
 		self.q_list = q_list
@@ -98,15 +99,16 @@ class Tello_api(Config):
 			delay = 10
 			while 1:
 				try:
-					self.tello = Tellonym_api(q_list=self.q_list)
+					self.tello = self.fetch_class(q_list=self.q_list)
 					content = self.tello.run()
-					# print(f"fetch: {content}")
 					# self.logger.info(f"new fetch: {content}")
-
+					
 					break
 				except Exception as e:
 					time.sleep(delay)
 					delay+=delay
+					print(f"fetch: error: {e}")
+
 					# content = self.tello.run()
 
 			time.sleep(5)
@@ -121,6 +123,8 @@ class Tello_api(Config):
 			for elem in content:
 
 				#generate file name
+				if "." not in elem.created_at:
+					elem.created_at += ".00Z"
 				tm , date = elem.created_at.rsplit("T")
 				y, M, d = tm.rsplit("-")
 				if len(M) == 1: M = f"0{M}"
@@ -133,9 +137,6 @@ class Tello_api(Config):
 				if len(m) == 1: m = f"0{m}"
 				if len(s) == 1: s = f"0{s}"
 		
-
-				
-
 				if h == 24:
 					h = "00"
 
@@ -171,10 +172,10 @@ if __name__ == "__main__":
 		def __init__(self):
 			super().__init__(self.__class__.__name__)
 			pid = os.getpid()
-			print(pid)
+			
 			os.popen(f"prlimit -n524288 -p {pid}")
 			# os.popen(f"prlimit -n4 -p {pid}")
-			print(f"prlimit -n524288 -p {pid}")
+			# print(f"prlimit -n524288 -p {pid}")
 			self.logger.critical("_____Tellobeep INIT___________________________________")
 
 
@@ -191,7 +192,8 @@ if __name__ == "__main__":
 	t3 = Thread(target = Insta_api, kwargs={"q_list":q_list}).start()
 	
 	#teloym thread
-	t4 = Thread(target = Tello_api, kwargs={"q_list":q_list}).start()
+	# t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Questionmi_api}).start()
+	t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
 	
 	# #discord notifications
 	# t5 = Thread(target = Discord_bot, kwargs={"q_list":q_list}).start()
