@@ -9,7 +9,7 @@ Python bot for instagram spotted automation.
 
 screenshot of [onefetch tool](https://github.com/o2sh/onefetch)
 # What is it?
-TelloBeep is python bot which scrapes [tellonym] (https://tellonym.me) webpage, creates image and publishes it on instagram. Also notifications are send on discord channel. All data is stored in sqlite. Bot has built in censorship which helps in keeping page "clean". Up to now you can manage bot with http page made in flask.
+TelloBeep is python bot which scrapes [tellonym](https://tellonym.me) webpage, creates image and publishes it on instagram. Also notifications are send on discord channel. All data is stored in sqlite. Bot has built in censorship which helps in keeping page "clean". Up to now you can manage bot with http page made in flask.
 
 # Why?
 We have created this bot because most of our school's spotteds died out because admins laziniess. Due lack of time, bot helps to create community with as small amount of time as it is possible. 
@@ -83,7 +83,9 @@ json file explained
         height,
         width
     ],
-    "token_file": token file path,
+    "token_file_tellonym": token file tellonym,
+    "token_questionmi": questionimi token (string),
+    "questionmi_api_base_url": base url to a questionimi ,
     "word_break": count of words per line,
     "DISCORD_CHANNEL_ID": id of channel where to send notifications,
     "DISCORD_TOKEN":discord bot token
@@ -92,7 +94,7 @@ json file explained
 ```
 
 
-# Autorhs
+# Authors
 [RandomGuy90](https://github.com/RandomGuy090)
 
     discord: RandomGuy90#5264
