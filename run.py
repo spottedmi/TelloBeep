@@ -102,7 +102,7 @@ class Tello_api(Config):
 					self.tello = self.fetch_class(q_list=self.q_list)
 					content = self.tello.run()
 					# self.logger.info(f"new fetch: {content}")
-
+					
 					break
 				except Exception as e:
 					time.sleep(delay)
@@ -192,8 +192,8 @@ if __name__ == "__main__":
 	t3 = Thread(target = Insta_api, kwargs={"q_list":q_list}).start()
 	
 	#teloym thread
-	t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Questionmi_api}).start()
-	# t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
+	# t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Questionmi_api}).start()
+	t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
 	
 	# #discord notifications
 	# t5 = Thread(target = Discord_bot, kwargs={"q_list":q_list}).start()
