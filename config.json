@@ -1,8 +1,8 @@
 {
     "AUTORUN": true,
     "BAD_WORDS": "swears_list.txt",
+    "LOG_FILE": "tellobeep.log",
     "DATE": null,
-    "LOG_FILE":"tellobeep.log",
     "CAPTION":"",
     "ERRORS": {
         "token": "TOKEN_INVALID",
@@ -15,7 +15,6 @@
     "LOGIN_INSTAGRAM": "",
     "PASSWORD_INSTAGRAM": "",
     "TEXT_footer": "#footer_text",
-
     "TIMEZONE": 1,
     "colorBackground": ["#23282D", "#1C4E80", "#6AB187", "#5211D4", "#4CB5F5", "#EA6A47", "#D32D41", "#85044F", "#8A7b0b", "#631313", "#993355", "#084013", "#2E1C1B", "#e0a500","#797fab","#5b7570","#5c1433","#910000","#a85865","#566b3e","#692f6b","#588182","#4d2d7a","#94448d","#944444","#945f44","#449453","#448494"],
     "colorOutline": "#ffffff",
@@ -41,7 +40,6 @@
     "POST_COUNT": 0,
     "POST_RATIO_WARNING": 5,
     "POST_RATIO_ALERT": 7,
-
     "headers": {
         "Accept-Language": "pl,en-US;q=0.7,en;q=0.3",
         "content-type": "application/json;charset=utf-8",
@@ -85,7 +83,8 @@
         300,
         300
     ],
-    "token_file": "token.txt",
+    "token_file_tellonym": "token.txt",
+    "token_questionmi": "",
     "user": null,
     "width": 0,
     "word_break": 10,
