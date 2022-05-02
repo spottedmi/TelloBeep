@@ -43,12 +43,12 @@ class Censorship(Config):
 
 			for swear in self.swears_list:
 				if swear in elem.lower() and len(swear) > 0:
-				# if swear in elem.lower() and len(swear) > 0:
 					s = elem[0]
 					e = elem[-1]
 
 					elem_rep = s+(len(swear)-2)*"*" + e
 					
+					self.TEXT = self.TEXT.replace(swear, elem_rep)
 					self.TEXT = self.TEXT.replace(elem, elem_rep)
 		return self.TEXT
 
@@ -70,7 +70,9 @@ class Censorship(Config):
 
 
 if __name__ == '__main__':
-	txt = """TESTING STRING WITH SWEARS	"""
+	txt = """ ** Swears here **	"""
 	print(txt)
-	Censorship(text=txt, bad_words="swears_list.txt")
+	cen = Censorship(text=txt, bad_words="swears_list.txt")
+	cen.TEXT = txt
+	print(cen.censure_txt())
 
