@@ -1,4 +1,3 @@
-from censorship import Censorship
 
 class Questionmi_user():
 	def __init__(self, tokenJSON):		
@@ -7,7 +6,6 @@ class Questionmi_user():
 
 class Questionmi_tell():
 	def __init__(self, tellJSON):
-		self.cen = Censorship()
 
 		self.id = tellJSON["id"]
 		self.tell = tellJSON["text"]
