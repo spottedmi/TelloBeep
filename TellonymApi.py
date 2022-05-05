@@ -2,7 +2,7 @@ import requests, json, sys, time
 from queue import Queue
 from threading import Thread
 import importlib
-from TellModels import Tellonym_user, Tellonym_tell
+from models.TellModels import Tellonym_user, Tellonym_tell
 from config import conf
 from censorship import Censorship
 

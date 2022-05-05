@@ -2,7 +2,7 @@ import requests, json, sys, time
 from queue import Queue
 from threading import Thread
 import importlib
-from TellModels import Questionmi_user, Questionmi_tell
+from models.TellModels import Questionmi_user, Questionmi_tell
 
 from config import conf
 
