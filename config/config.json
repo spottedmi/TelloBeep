@@ -1,7 +1,7 @@
 {
     "AUTORUN": true,
     "BAD_WORDS": "config/swears_list.txt",
-    "LOG_FILE": "tellobeep.log",
+    "LOG_FILE": "logs/tellobeep.log",
     "DATE": null,
     "CAPTION":"",
     "ERRORS": {
