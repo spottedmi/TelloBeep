@@ -8,7 +8,7 @@ from queue import Queue
 import _thread
 
 from censorship.censorship import Censorship
-from db_connector import Db_connector
+from database.db_connector import Db_connector
 
 from config import conf
 
