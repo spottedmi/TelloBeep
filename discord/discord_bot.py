@@ -6,11 +6,11 @@ import asyncio
 
 time = datetime.datetime.now
 
-from config import Config
+from config import conf
 
 async def timer():
 	await bot.wait_until_ready()
-	channel = bot.get_channel(913154344130576434) # replace with channel ID that you want to send to
+	channel = bot.get_channel("") # replace with channel ID that you want to send to
 	msg_sent = False
 
 	while True:
@@ -24,23 +24,23 @@ async def timer():
 	await asyncio.sleep(1)
 
 
-class Discord_bot(Config):
+class Discord_bot():
 	def __init__(self, q_list):
-		super().__init__(child_class=__class__.__name__)
+		
 
 		print("INIT: DISCORD")
 		self.q_list = q_list
-		self.logger.info(f"discord bot init")
+		conf['logger'].info(f"discord bot init")
 
 		self.bot = commands.Bot(command_prefix='!')
 
 		self.bot.loop.create_task(self.load_from_thread())
-		self.bot.run(self.DISCORD_TOKEN)
+		self.bot.run(conf['DISCORD_TOKEN'])
 
 
 	async def load_from_thread(self):
 		await self.bot.wait_until_ready()
-		channel = self.bot.get_channel(int(self.DISCORD_CHANNEL_ID))
+		channel = self.bot.get_channel(int(conf['DISCORD_CHANNEL_ID']))
 		msg_sent = False
 
 		queue = self.q_list.get("2main_thread")
@@ -49,20 +49,20 @@ class Discord_bot(Config):
 			res = queue.get()
 			if res.get("filename"):
 				try:
-					x = f"{self.out_image_path}/{res.get('filename')}"
+					x = f"{conf['out_image_path']}/{res.get('filename')}"
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
 				except:
-					x = f"{self.out_image_path_BACKUP}/{res.get('filename')}"
+					x = f"{conf['out_image_path_BACKUP']}/{res.get('filename')}"
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
 
 				await channel.send(f"{res.get('bot_comment')}", file=picture)
-				self.logger.info(f"discord post send with picture, {res.get('bot_comment')}, {self.out_image_path}/{res.get('filename')}")
+				conf['logger'].info(f"discord post send with picture, {res.get('bot_comment')}, {conf['out_image_path']}/{res.get('filename')}")
 
 			else:
 				await channel.send(f"{res.get('bot_comment')}")
-				self.logger.info(f"discord post send {res.get('bot_comment')}")
+				conf['logger'].info(f"discord post send {res.get('bot_comment')}")
 
 
 			await asyncio.sleep(1)

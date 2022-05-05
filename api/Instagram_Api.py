@@ -1,14 +1,14 @@
 from instagrapi import Client
-from notifications import Notify
+from discord.notifications import Notify
 
-from config import Config
+from config import conf
 
 
-class Instagram_api(Config):
+class Instagram_api():
     bot = None
     q_list=None
     def __init__(self, q_list=None):
-        super().__init__(child_class=__class__.__name__)
+        
         if q_list != None:
             self.q_list = q_list
 
@@ -17,9 +17,9 @@ class Instagram_api(Config):
         self.bot = Client()
         # self.bot.set_proxy("http://80.211.246.8:8080")
         # print("proxy set")
-        if self.LOGIN_INSTAGRAM != "" and self.PASSWORD_INSTAGRAM != "":
-            self.bot.login(self.LOGIN_INSTAGRAM, self.PASSWORD_INSTAGRAM)
-            self.logger.info(f"instagram logged")
+        if conf['LOGIN_INSTAGRAM'] != "" and conf['PASSWORD_INSTAGRAM'] != "":
+            self.bot.login(conf['LOGIN_INSTAGRAM'], conf['PASSWORD_INSTAGRAM'])
+            conf['logger'].info(f"instagram logged")
 
             print("bot logged")
             Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
@@ -30,7 +30,7 @@ class Instagram_api(Config):
         return self.bot
 
     def upload_post(self, img_path, caption=""):
-        self.logger.info(f"post uploaded. {img_path}")
+        conf['logger'].info(f"post uploaded. {img_path}")
 
         self.bot.photo_upload(
             img_path, 
@@ -38,7 +38,7 @@ class Instagram_api(Config):
         )
 
     def upload_album(self, imgs_paths, caption=""):
-        self.logger.info(f"instagram album loaded, {imgs_paths}")
+        conf['logger'].info(f"instagram album loaded, {imgs_paths}")
 
         self.bot.album_upload(
             imgs_paths,

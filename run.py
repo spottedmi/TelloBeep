@@ -3,25 +3,26 @@ from queue import Queue
 from threading import Thread
 import time, random, json, os
 
-from make_img import Make_img
+from image_generation.make_img import Make_img
 from backend.server import back_server
 
-from TellonymApi import Tellonym_api
-from QuestionmiApi import Questionmi_api
-from Instagram_Api import Instagram_api
-from discord_bot import Discord_bot
+from api.TellonymApi import Tellonym_api
+from api.QuestionmiApi import Questionmi_api
+from api.Instagram_Api import Instagram_api
+
+from discord.discord_bot import Discord_bot
 from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError
-from config import Config
-from notifications import Notify
+from config import conf
+from discord.notifications import Notify
 
 #_____________________________________________________________
 #
 #               INSTAGRAM API
 #_____________________________________________________________
 
-class Insta_api(Config):
+class Insta_api():
 	def __init__(self, q_list):
-		super().__init__(child_class=__class__.__name__)
+		
 		
 		print("instaapi")
 
@@ -59,11 +60,11 @@ class Insta_api(Config):
 			content = q.get()
 			# print(f"INSTAGRAM {content['title']}")
 
-			path = f"{self.out_image_path}/{content['filename']}"
+			path = f"{conf['out_image_path']}/{content['filename']}"
 
-			if self.CAPTION != "":
+			if conf['CAPTION'] != "":
 				pass
-				self.insta.upload_post(path, caption=self.CAPTION)
+				self.insta.upload_post(path, caption=conf['CAPTION'])
 			else:
 				pass
 				self.insta.upload_post(path)
@@ -76,10 +77,10 @@ class Insta_api(Config):
 #               Tello API
 #_____________________________________________________________
 
-class Tello_api(Config):
+class Tello_api():
 	"send txt to generating thread"
 	def __init__(self, q_list, fetch_class):
-		super().__init__(child_class=__class__.__name__)
+		
 		"fetching api function's going to replace this"
 		self.fetch_class = fetch_class
 
@@ -95,18 +96,20 @@ class Tello_api(Config):
 		
 		while 1:
 			
-			
 			delay = 10
 			while 1:
 				try:
 					self.tello = self.fetch_class(q_list=self.q_list)
 					content = self.tello.run()
-					# self.logger.info(f"new fetch: {content}")
 					
+					# print(f"content {content}")
+					conf['logger'].info(f"new fetch: {content}")
 					break
+
 				except Exception as e:
 					time.sleep(delay)
 					delay+=delay
+					del self.tello
 					print(f"fetch: error: {e}")
 
 					# content = self.tello.run()
@@ -116,7 +119,7 @@ class Tello_api(Config):
 
 
 			if len(content) > 0:
-				self.logger.info(f"new Tellonyms: {len(content)}")
+				conf['logger'].info(f"new Tellonyms: {len(content)}")
 				# print(f"fetched: {content[0].tell} ")
 
 
@@ -131,7 +134,7 @@ class Tello_api(Config):
 				date, mil = date.rsplit(".")
 				
 				h,m,s = date.rsplit(":")
-				h = str(int(h) + self.TIMEZONE)
+				h = str(int(h) + conf['TIMEZONE'])
 
 				if len(h) == 1: h = f"0{h}"
 				if len(m) == 1: m = f"0{m}"
@@ -157,9 +160,19 @@ class Tello_api(Config):
 				q.put(req)
 				
 
+class StartUp():
+	def __init__(self):
+		pid = os.getpid()
+		
+		os.popen(f"prlimit -n524288 -p {pid}")
+		# os.popen(f"prlimit -n4 -p {pid}")
+		# print(f"prlimit -n524288 -p {pid}")
+		conf["logger"].critical("_____Tellobeep INIT___________________________________")
 
 
 if __name__ == "__main__":
+	# Config()
+
 	q_list = {
 		"2gen": Queue(),
 		"2flask": Queue(),
@@ -168,17 +181,6 @@ if __name__ == "__main__":
 		"2main_thread": Queue(),
 	}
 	
-	class StartUp(Config):
-		def __init__(self):
-			super().__init__(self.__class__.__name__)
-			pid = os.getpid()
-			
-			os.popen(f"prlimit -n524288 -p {pid}")
-			# os.popen(f"prlimit -n4 -p {pid}")
-			# print(f"prlimit -n524288 -p {pid}")
-			self.logger.critical("_____Tellobeep INIT___________________________________")
-
-
 	
 	start = StartUp()
 	

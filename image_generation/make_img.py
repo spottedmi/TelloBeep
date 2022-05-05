@@ -2,15 +2,17 @@
 #by RandomGuy90 A.D.2021
 
 from PIL import Image, ImageDraw, ImageFont
-import random, time, sys
+import random, time, sys, json
 
 from queue import Queue
 import _thread
 
-from censorship import Censorship
-from db_connector import Db_connector
+from censorship.censorship import Censorship
+from database.db_connector import Db_connector
 
-from notifications import Notify
+from config import conf
+
+from discord.notifications import Notify
 
 class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
@@ -24,6 +26,7 @@ class Make_img(Censorship, Db_connector):
 		self.HOURS_PASSED = 0
 		self.ALERT_SEND = False
 		self.WARNING_SEND = False
+		self.censor_flag = False
 		
 
 		if q_list:
@@ -32,7 +35,8 @@ class Make_img(Censorship, Db_connector):
 
 	def gen(self) -> None:
 		"generate image"
-		self.logger.info(f"generating new image")
+		xd = conf
+		conf['logger'].info(f"generating new image")
 
 	
 		self.prepare_text()
@@ -40,26 +44,25 @@ class Make_img(Censorship, Db_connector):
 		try:
 			self.get_fonts()
 		except:
-			Notify(q_list=self.q_list, error="FONT_NOT_FOND")
-			self.logger.error(f"font not found")
+			Notify(q_list=self.q_list, error="FONT_NOT_FOUfND")
+			conf['logger'].error(f"font not found")
 
 			sys.exit(1)
 
 		self.get_size_txt()
 		self.set_margins()
 	
-		# img = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.colorBackground))
+		# img = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(conf['colorBackground']))
 		self.get_bg_color()
-		self.img_object = Image.new('RGB', (self.width, self.height), self.hex_to_rgb(self.bg_color))
+		self.img_object = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(self.bg_color))
+		print((conf['width'], conf['height']))
 		d = ImageDraw.Draw(self.img_object)
 
 		#text 
-		
-		coords =(self.margin["left"] ,self.margin["top"])
-		
-		d.text(coords, self.TEXT, fill=self.hex_to_rgb(self.colorText), font=self.font)
-
-		d.rectangle((0, 0, self.width-self.outline_thickness, self.height-self.outline_thickness),width= self.outline_thickness, fill=None, outline=self.hex_to_rgb(self.colorOutline))
+		coords =(conf['margin']["left"] ,conf['margin']["top"])
+		print(coords)
+		d.text(coords, self.TEXT, fill=self.hex_to_rgb(conf['colorText']), font=self.font)
+		d.rectangle((0, 0, conf['width']-conf['outline_thickness'], conf['height']-conf['outline_thickness']),width= conf['outline_thickness'], fill=None, outline=self.hex_to_rgb(conf['colorOutline']))
 
 		#header
 		self.create_header()
@@ -67,11 +70,11 @@ class Make_img(Censorship, Db_connector):
 		#footer
 		self.create_footer()
 
-		img = Image.open(self.image_path, "r")
-		img = img.resize(self.image_size, Image.ANTIALIAS)
+		img = Image.open(conf['image_path'], "r")
+		img = img.resize(conf['image_size'], Image.ANTIALIAS)
 		img = img.convert("RGBA")
 
-		coords = (int(self.insta_res[1]*self.logo_X_ratio), int(self.insta_res[0]*self.logo_Y_ratio))
+		coords = (int(conf['insta_res'][1]*conf['logo_X_ratio']), int(conf['insta_res'][0]*conf['logo_Y_ratio']))
 
 		self.img_object.paste(img, coords, img)
 
@@ -83,19 +86,19 @@ class Make_img(Censorship, Db_connector):
 		self.db_add_img()
 	
 
-
-		insta = self.q_list.get("2insta")
+		insta = self.q_list.get("2insta")  if self.q_list else None
+		print(self.TEXT)
 		self.req = {
-			"filename": f"{self.out_image_name}.{self.extension}",
+			"filename": f"{conf['out_image_name']}.{conf['extension']}",
 			"title": self.TEXT,
 			"send": False
 		}
 
-		if self.AUTORUN and not self.censor_flag:
+		if conf['AUTORUN'] and not self.censor_flag:
 			self.req["send"] = True
 
-			insta.put(self.req)
-			self.logger.info(f"image send automatically, {self.req['filename']}")
+			if insta: insta.put(self.req)
+			conf['logger'].info(f"image send automatically, {self.req['filename']}")
 			self.SENT = True
 
 		print("edit_ratio")
@@ -103,21 +106,21 @@ class Make_img(Censorship, Db_connector):
 	
 
 	def save_img(self):
-		self.img_object = self.img_object.resize(self.insta_res, Image.ANTIALIAS)
-		self.filename = f"{self.out_image_path}/{self.out_image_name}.{self.extension}"
+		self.img_object = self.img_object.resize(conf['insta_res'], Image.ANTIALIAS)
+		self.filename = f"{conf['out_image_path']}/{conf['out_image_name']}.{conf['extension']}"
 		try:
 			self.img_object.save(self.filename)
 		except FileNotFoundError:
 			Notify(q_list=self.q_list,error="CANT_SAVE_IMG")
-			self.logger.error(f" couldn't save image, {self.filename}")
+			conf['logger'].error(f" couldn't save image, {self.filename}")
 
 			try:
-				self.filename = f"{self.out_image_path_BACKUP}/{self.out_image_name}.{self.extension}"
+				self.filename = f"{conf['out_image_path_BACKUP']}/{conf['out_image_name']}.{conf['extension']}"
 
 				self.img_object.save(self.filename)
 			except FileNotFoundError:
 				Notify(q_list=self.q_list,error="CANT_SAVE_IMG_BACK")
-				self.logger.critical(f" couldn't save image in backup location, {self.filename}")
+				conf['logger'].critical(f" couldn't save image in backup location, {self.filename}")
 
 				sys.exit(1)
 
@@ -125,19 +128,19 @@ class Make_img(Censorship, Db_connector):
 
 
 	def save_tumbnail(self):
-		self.img_object = self.img_object.resize(self.thumb_res, Image.ANTIALIAS)
-		self.img_object.save(f"{self.thumb_path}/{self.out_image_name}_thumbnail.{self.extension}")
+		self.img_object = self.img_object.resize(conf['thumb_res'], Image.ANTIALIAS)
+		self.img_object.save(f"{conf['thumb_path']}/{conf['out_image_name']}_thumbnail.{conf['extension']}")
 		
 	def get_bg_color(self):
-		if isinstance(self.colorBackground, list):
-			x = random.randrange(0, len(self.colorBackground)-1)
-			self.bg_color = self.colorBackground[x]
+		if isinstance(conf['colorBackground'], list):
+			x = random.randrange(0, len(conf['colorBackground'])-1)
+			self.bg_color = conf['colorBackground'][x]
 		else:
-			self.bg_color = self.colorBackground
+			self.bg_color = conf['colorBackground']
 
 	def edit_ratio(self):
-		# self.POST_RATIO += 1
-		self.POST_COUNT += 1
+		# conf['POST_RATIO'] += 1
+		conf['POST_COUNT'] += 1
 
 		if self.FIRST_POST == None:
 			self.FIRST_POST = int(time.time())
@@ -147,20 +150,20 @@ class Make_img(Censorship, Db_connector):
 
 		# if self.HOURS_PASSED:
 		if self.HOURS_PASSED > 1:
-			self.POST_RATIO = int(self.POST_COUNT / self.HOURS_PASSED)
+			conf['POST_RATIO'] = int(conf['POST_COUNT'] / self.HOURS_PASSED)
 		else:
-			self.POST_RATIO = int(self.POST_COUNT / 1)
+			conf['POST_RATIO'] = int(conf['POST_COUNT'] / 1)
 
-		print(self.POST_RATIO)
+		print(conf['POST_RATIO'])
 
 		
-		if self.POST_RATIO >= self.POST_RATIO_ALERT:
-			self.logger.warning(f" post ratio alert, autorun off, {self.POST_RATIO}")
+		if conf['POST_RATIO'] >= conf['POST_RATIO_ALERT']:
+			conf['logger'].warning(f" post ratio alert, autorun off, {conf['POST_RATIO']}")
 
 			print('-------------  TO MAY POSTS, AUTO RUN OFF')
 			self.db_set_approved(state=None)
 			# self.set_autorun(False)
-			self.AUTORUN = False
+			conf['AUTORUN'] = False
 			# self.get_autorun()
 
 			if self.ALERT_SEND == False:
@@ -169,17 +172,17 @@ class Make_img(Censorship, Db_connector):
 				self.ALERT_SEND = True
 
 
-		elif self.POST_RATIO >= self.POST_RATIO_WARNING:
+		elif conf['POST_RATIO'] >= conf['POST_RATIO_WARNING']:
 			print("POSTS ALERT ALERTTTT!!!!")
-			self.logger.warning(f" post ratio warning, {self.POST_RATIO}")		
+			conf['logger'].warning(f" post ratio warning, {conf['POST_RATIO']}")		
 
 			if self. WARNING_SEND == False:
 				# d.put(self.req)
 				Notify(q_list=self.q_list ,error="POST_RATIO_WARNING", img=self.req.get("filename"))
 				self.WARNING_SEND = True
 		
-		if self.POST_RATIO < self.POST_RATIO_WARNING:
-			self.AUTORUN = True
+		if conf['POST_RATIO'] < conf['POST_RATIO_WARNING']:
+			conf['AUTORUN'] = True
 			# self.set_autorun(True)
 
 
@@ -198,11 +201,11 @@ class Make_img(Censorship, Db_connector):
 		self.heightTXT = height
 		self.widthTXT = width
 		
-		# self.width = height if height > width else width
-		# self.height = width if width > height else height
+		# conf['width'] = height if height > width else width
+		# conf['height'] = width if width > height else height
 
-		self.width = self.insta_res[0]
-		self.height = self.insta_res[1]
+		conf['width'] = conf['insta_res'][0]
+		conf['height'] = conf['insta_res'][1]
 
 	def hex_to_rgb(self, value) -> tuple:
 		"convert hex value to rgb"
@@ -214,37 +217,37 @@ class Make_img(Censorship, Db_connector):
 	def get_fonts(self) -> None:
 		"import fonts"
 		
-		self.font = ImageFont.truetype(self.fontname, self.fontsize)
-		self.font_footer = ImageFont.truetype(self.font_footer_name, self.font_footer_size)
-		self.font_header = ImageFont.truetype(self.font_header_name, self.header_font_size)
+		self.font = ImageFont.truetype(conf['fontname'], conf['fontsize'])
+		self.font_footer = ImageFont.truetype(conf['font_footer_name'], conf['font_footer_size'])
+		self.font_header = ImageFont.truetype(conf['font_header_name'], conf['header_font_size'])
 
 	def set_margins(self) -> None:
 		"margins"
-
-		self.margin["top"] = (self.height - self.heightTXT) / 2 
-		self.margin["left"] = (self.width * 5) / 100
 		
-		self.width = int(self.width+(self.margin["left"]*2))
+		conf['margin']["top"] = (conf['height'] - self.heightTXT) / 2 
+		conf['margin']["left"] = (conf['width'] * 5) / 100
+		conf['width'] = int(conf['width']+(conf['margin']["left"]*2))
 	
 	def create_footer(self) -> None:
 		"creating image's footer"
 
 		ftr = ImageDraw.Draw(self.img_object)
-		footer_coords = (self.margin["left"], self.insta_res[1]*self.footer_position_ratio)
+		footer_coords = (conf['margin']["left"], conf['insta_res'][1]*conf['footer_position_ratio'])
 		# print(footer_coords)
-		ftr.text(footer_coords, self.TEXT_footer, fill=self.hex_to_rgb(self.colorText), font=self.font_footer)
+		ftr.text(footer_coords, conf['TEXT_footer'], fill=self.hex_to_rgb(conf['colorText']), font=self.font_footer)
 
 	def create_header(self) -> None:
 		"creating footer with posting date"
 		self.create_data()
 		header = ImageDraw.Draw(self.img_object)
-		header_coords = (self.margin["left"], self.insta_res[1]*self.header_position_ratio)
-		header.text(header_coords, self.DATE, fill=self.hex_to_rgb(self.colorText), font=self.font_header)
+		header_coords = (conf['margin']["left"], conf['insta_res'][1]*conf['header_position_ratio'])
+		# header.text(header_coords, conf['DATE'], fill=self.hex_to_rgb(conf['colorText']), font=conf['font_header'])
+		header.text(header_coords, conf['DATE'], fill=self.hex_to_rgb(conf['colorText']), font=self.font_header)
 
 		
 	def create_data(self) -> None:
 		"create data if not specified for header"
-		if self.DATE == None:
+		if conf['DATE'] == None:
 			date = time.localtime()
 			yr = date.tm_year
 			month  = str(date.tm_mon) if len(str(date.tm_mon)) == 2 else f"0{date.tm_mon}"
@@ -252,7 +255,7 @@ class Make_img(Censorship, Db_connector):
 			hour  = str(date.tm_hour) if len(str(date.tm_hour)) == 2 else f"0{date.tm_hour}"
 			minutes  = str(date.tm_min) if len(str(date.tm_min)) == 2 else f"0{date.tm_min}"
 			mil = int(round(time.time() * 1000))
-			self.DATE = f"{hour}:{minutes} {day}/{month}/{yr}"
+			conf['DATE'] = f"{hour}:{minutes} {day}/{month}/{yr}"
 
 
 
@@ -261,7 +264,7 @@ class Make_img(Censorship, Db_connector):
 
 		txt = self.TEXT.rsplit(" ")
 		res_txt = ""
-		words = self.word_break
+		words = conf['word_break']
 		i = 0 
 		for elem in txt:
 			i+=1
@@ -271,8 +274,7 @@ class Make_img(Censorship, Db_connector):
 			if not i%words:
 				res_txt = res_txt + "\n"
 
-		self.TEXT = str(res_txt)
-		
+		self.TEXT = str(res_txt)	
 
 
 		if self.censor_flag == True:
@@ -292,12 +294,12 @@ class Make_img(Censorship, Db_connector):
 			#res =  q2.get()
 
 			data = res["text"]
-			self.out_image_name = res["title"]
+			conf['out_image_name'] = res["title"]
 			t = res["title"]
 			self.censor_flag = res["censure_flag"]
 
 			#2021 10 22 11 03 53
-			self.DATE = f"{t[8]}{t[9]}:{t[10]}{t[11]} {t[6]}{t[7]}/{t[4]}{t[5]}/{t[0:4]}"
+			conf['DATE'] = f"{t[8]}{t[9]}:{t[10]}{t[11]} {t[6]}{t[7]}/{t[4]}{t[5]}/{t[0:4]}"
 
 			self.TEXT_tmp = data
 			if data:
@@ -306,8 +308,8 @@ class Make_img(Censorship, Db_connector):
 				self.gen()
 			if res.get("send") and not self.SENT:
 				res = {
-				"title": self.out_image_name,
-				"filename": f"{self.out_image_name}.{self.extension}"
+				"title": conf['out_image_name'],
+				"filename": f"{conf['out_image_name']}.{conf['extension']}"
 				}
 
 	
@@ -327,4 +329,5 @@ class Make_img(Censorship, Db_connector):
 if __name__ == '__main__':
 
 	asd = Make_img()
-	asd.gen("LOREM IPSUM")
+	asd.TEXT = "LOREM IPSUM ąśðæżćź„"
+	asd.gen()
