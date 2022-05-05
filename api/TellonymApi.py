@@ -4,7 +4,7 @@ from threading import Thread
 import importlib
 from models.TellModels import Tellonym_user, Tellonym_tell
 from config import conf
-from censorship import Censorship
+from censorship.censorship import Censorship
 
 from notifications import Notify
 
