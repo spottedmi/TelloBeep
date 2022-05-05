@@ -1,5 +1,5 @@
 from instagrapi import Client
-from notifications import Notify
+from discord.notifications import Notify
 
 from config import conf
 

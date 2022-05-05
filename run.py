@@ -13,7 +13,7 @@ from api.Instagram_Api import Instagram_api
 from discord.discord_bot import Discord_bot
 from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError
 from config import conf
-from notifications import Notify
+from discord.notifications import Notify
 
 #_____________________________________________________________
 #

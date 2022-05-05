@@ -5,8 +5,8 @@ import importlib
 from models.TellModels import Questionmi_user, Questionmi_tell
 
 from config import conf
+from discord.notifications import Notify
 
-from notifications import Notify
 
 from exceptions import TokenInvalidQuestionmi, ConnectionTimeout, CaptchaRequired
 

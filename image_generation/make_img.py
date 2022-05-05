@@ -12,7 +12,7 @@ from db_connector import Db_connector
 
 from config import conf
 
-from notifications import Notify
+from discord.notifications import Notify
 
 class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
