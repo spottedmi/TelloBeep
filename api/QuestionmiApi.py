@@ -8,7 +8,7 @@ from config import conf
 from discord.notifications import Notify
 
 
-from exceptions import TokenInvalidQuestionmi, ConnectionTimeout, CaptchaRequired
+from exceptions.exceptions import TokenInvalidQuestionmi, ConnectionTimeout, CaptchaRequired
 
 
 

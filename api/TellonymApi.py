@@ -8,8 +8,7 @@ from censorship.censorship import Censorship
 
 from discord.notifications import Notify
 
-from exceptions import TokenInvalidTellonym, ConnectionTimeout, CaptchaRequired, TokenReadImpossible
-
+from exceptions.exceptions import TokenInvalidQuestionmi, ConnectionTimeout, CaptchaRequired
 
 
 
