@@ -8,7 +8,7 @@ from censorship.censorship import Censorship
 
 from discord.notifications import Notify
 
-from exceptions.exceptions import TokenInvalidQuestionmi, ConnectionTimeout, CaptchaRequired
+from exceptions.exceptions import TokenInvalidTellonym, ConnectionTimeout, CaptchaRequired
 
 
 
@@ -91,6 +91,7 @@ class Tellonym_api():
 	def load_token(self, file=None):
 		# use pre-defined file location
 		"load token from file"
+		print("loading token")
 		file = conf['token_file_tellonym']
 		try:
 			with open(file, "r") as f:

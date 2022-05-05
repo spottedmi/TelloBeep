@@ -101,6 +101,7 @@ class Tello_api():
 				try:
 					self.tello = self.fetch_class(q_list=self.q_list)
 					content = self.tello.run()
+					
 					# print(f"content {content}")
 					conf['logger'].info(f"new fetch: {content}")
 					break
