@@ -7,7 +7,7 @@ import random, time, sys, json
 from queue import Queue
 import _thread
 
-from censorship import Censorship
+from censorship.censorship import Censorship
 from db_connector import Db_connector
 
 from config import conf
