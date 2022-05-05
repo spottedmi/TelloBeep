@@ -3,13 +3,14 @@ from queue import Queue
 from threading import Thread
 import time, random, json, os
 
-from make_img import Make_img
+from image_generation.make_img import Make_img
 from backend.server import back_server
 
-from TellonymApi import Tellonym_api
-from QuestionmiApi import Questionmi_api
-from Instagram_Api import Instagram_api
-from discord_bot import Discord_bot
+from api.TellonymApi import Tellonym_api
+from api.QuestionmiApi import Questionmi_api
+from api.Instagram_Api import Instagram_api
+
+from discord.discord_bot import Discord_bot
 from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError
 from config import conf
 from notifications import Notify

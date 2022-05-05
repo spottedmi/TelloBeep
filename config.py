@@ -35,7 +35,7 @@ def make_absolute_path(filepath):
 
 
 
-f = open("config.json", "r")
+f = open("config/config.json", "r")
 config = f.read()
 f.close()
 conf = json.loads(config)
