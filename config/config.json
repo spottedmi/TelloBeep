@@ -1,6 +1,6 @@
 {
     "AUTORUN": true,
-    "BAD_WORDS": "swears_list.txt",
+    "BAD_WORDS": "config/swears_list.txt",
     "LOG_FILE": "tellobeep.log",
     "DATE": null,
     "CAPTION":"",
@@ -83,7 +83,7 @@
         300,
         300
     ],
-    "token_file_tellonym": "token.txt",
+    "token_file_tellonym": "config/token.txt",
     "token_questionmi": "",
     "questionmi_api_base_url":"",
     "user": null,
