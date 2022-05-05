@@ -26,7 +26,7 @@ path = os.path.dirname(absolute_path) + "/"
 path = f"{path}/.."
 
 sys.path.insert(0,path)
-from config import conf
+from config import conf, dump_json
 
 #_____________________________________________________________
 #
@@ -185,7 +185,7 @@ def accept(id_post):
         gen.put(req)
 
     else:
-        filename = f"{title}.{conf.extension}"
+        filename = f"{title}.{conf['extension']}"
         req = {
         "title": title,
         "filename": filename
@@ -229,7 +229,7 @@ def token_list():
     token = '{"accessToken": "'+token+'", "lang": "en", "type": "LOGIN", "userId": 12345678}'
 
 
-    with open(conf.token_file, "w") as f:
+    with open(conf["token_file_tellonym"], "w") as f:
         f.write(token)
 
     return "<p>restricted area!</p>"
@@ -241,7 +241,7 @@ def bad_words():
     data = json.loads(txt)
     word = data.get("word")
     
-    with open(conf.BAD_WORDS, "a") as f:
+    with open(conf["BAD_WORDS"], "a") as f:
         f.write(f"\n{word}")
 
     return "<p>restricted area!</p>"
@@ -267,8 +267,8 @@ def autorun():
     data = json.loads(txt)
     run = data.get("autorun")
 
-    conf.AUTORUN = run
-    conf.dump_json()
+    conf["AUTORUN"] = run
+    dump_json()
 
     return "OK"
 
@@ -389,7 +389,7 @@ def json_parser(headers, txt)-> dict:
                 tmp[col] = str(x)
             elif col == "title":
                 tmp[col] = str(eval(f"elem.{col}"))
-                tmp["thumb"] = str("thumbnails/"+eval(f"elem.{col}")+ f"_thumbnails.{conf.extension}")
+                tmp["thumb"] = str("thumbnails/"+eval(f"elem.{col}")+ f"_thumbnails.{conf['xtension']}")
 
             else:
                 tmp[col] = str(eval(f"elem.{col}"))

@@ -40,19 +40,17 @@ class Tellonym_api():
 				time.sleep(loop)
 				loop += loop
 
-
-
 			if self.user:
 				try:
-					self.get_tells()
-					
+					self.get_tells()					
 					break
 
 				except ConnectionTimeout as e:
 					# conf['logger'].error(f"connection timeout")
-					print("connection timeout")
+					print(f"connection timeout {e}")
 					time.sleep(loop)
 					loop += loop
+					print(f"sleep {loop}")
 					raise Exception("xD") from None
 
 				except TokenInvalidTellonym as e:
@@ -132,7 +130,7 @@ class Tellonym_api():
 		headers = conf['headers']
 		conf['headers']["Content-Length"] = f"{len(str(data_login))}"
 
-		response = requests.post(url, headers=headers, json=data_login, timeout=5000)
+		response = requests.post(url, headers=headers, json=data_login, timeout=15)
 
 		data = response.json()
 
@@ -175,8 +173,9 @@ class Tellonym_api():
 			"limit": "25"
 		}
 		try:
-			response = requests.get(url, headers=headers, params=params, timeout=100 )
+			response = requests.get(url, headers=headers, params=params )
 		except requests.ConnectionError as e:
+			print(f"error {e}")
 			raise ConnectionTimeout(q_list=self.q_list) 
 
 		except Exception as e:

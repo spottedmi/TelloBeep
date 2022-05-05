@@ -53,6 +53,13 @@ conf['thumb_path'] = make_absolute_path(conf['thumb_path'])
 conf['out_image_path'] = make_absolute_path(conf['out_image_path'])
 
 
+def dump_json(self):
+
+
+
+	f = open("config.json", "w+")
+	json.dump(conf, fp=f, indent=4)
+	f.close()
 
 
 # class Config(object):

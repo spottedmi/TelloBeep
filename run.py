@@ -95,18 +95,19 @@ class Tello_api():
 		
 		while 1:
 			
-			
 			delay = 10
 			while 1:
 				try:
 					self.tello = self.fetch_class(q_list=self.q_list)
 					content = self.tello.run()
-					# conf['logger'].info(f"new fetch: {content}")
-					
+					# print(f"content {content}")
+					conf['logger'].info(f"new fetch: {content}")
 					break
+
 				except Exception as e:
 					time.sleep(delay)
 					delay+=delay
+					del self.tello
 					print(f"fetch: error: {e}")
 
 					# content = self.tello.run()
