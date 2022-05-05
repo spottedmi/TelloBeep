@@ -1,1 +1,0 @@
-{"accessToken": "", "lang": "en", "type": "LOGIN", "userId": 12345678, "createdAt": ""}

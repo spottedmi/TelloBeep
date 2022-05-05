@@ -2,23 +2,24 @@ import requests, json, sys, time
 from queue import Queue
 from threading import Thread
 import importlib
-from TellModels import Tellonym_user, Tellonym_tell
-from config import Config
-from censorship import Censorship
+from models.TellModels import Tellonym_user, Tellonym_tell
+from config import conf
+from censorship.censorship import Censorship
 
-from notifications import Notify
+from discord.notifications import Notify
 
-from exceptions import TokenInvalidTellonym, ConnectionTimeout, CaptchaRequired
-
-
+from exceptions.exceptions import TokenInvalidQuestionmi, ConnectionTimeout, CaptchaRequired
 
 
 
 
-class Tellonym_api(Config):
+
+class Tellonym_api():
 	q_list = None
 	def __init__(self, q_list=None):
-		super().__init__(child_class=__class__.__name__)
+		self.user = None
+		self.tells = list()
+		
 		if q_list != None:
 			self.q_list = q_list
 
@@ -32,29 +33,28 @@ class Tellonym_api(Config):
 
 			except TokenReadImpossible:
 				print("cannot read a token")
-				self.logger.error(f"cannot load token")
+				conf['logger'].error(f"cannot load token")
 
 				return False
 				time.sleep(loop)
 				loop += loop
 
-
 			if self.user:
 				try:
-					self.get_tells(self.user.token)
-					
+					self.get_tells()					
 					break
 
 				except ConnectionTimeout as e:
-					# self.logger.error(f"connection timeout")
-					print("conneciton timeout")
+					# conf['logger'].error(f"connection timeout")
+					print(f"connection timeout {e}")
 					time.sleep(loop)
 					loop += loop
+					print(f"sleep {loop}")
 					raise Exception("xD") from None
 
 				except TokenInvalidTellonym as e:
 					print("Tellonym token invalid")
-					self.logger.error(f"Tellonym token invalid")
+					conf['logger'].error(f"Tellonym token invalid")
 
 					try:
 						self.get_token()
@@ -62,7 +62,7 @@ class Tellonym_api(Config):
 
 					except CaptchaRequired:
 						print("captcha required")
-						self.logger.error(f"captcha required")
+						conf['logger'].error(f"captcha required")
 
 						time.sleep(loop)
 						loop += loop
@@ -81,27 +81,25 @@ class Tellonym_api(Config):
 	def get_login_credentials(self):
 
 		Notify(q_list=self.q_list, error="TELLO_RELOGIN")
-		self.logger.error(f"tellonym relogin")
+		conf['logger'].error(f"tellonym relogin")
 
-		if not self.LOGIN_TELLONYM and not self.PASSWORD_TELLONYM:
-			self.LOGIN_TELLONYM = input("login: ")
-			self.PASSWORD_TELLONYM = input("password: ")
+		if not conf['LOGIN_TELLONYM'] and not conf['PASSWORD_TELLONYM']:
+			conf['LOGIN_TELLONYM'] = input("login: ")
+			conf['PASSWORD_TELLONYM'] = input("password: ")
 
 
 	def load_token(self, file=None):
 		# use pre-defined file location
 		"load token from file"
-		file = self.token_file_tellonym
+		file = conf['token_file_tellonym']
 		try:
 			with open(file, "r") as f:
 				res = f.read()
-			res = json.loads(res)
-
-			
+			res = json.loads(res)			
 			self.user = Tellonym_user(res)
 
 		except Exception as e:
-			# return self.ERRORS.get("load_token")
+			# return conf['ERRORS'].get("load_token")
 			raise TokenInvalidTellonym(q_list=self.q_list)
 
 		return True
@@ -109,7 +107,7 @@ class Tellonym_api(Config):
 	def save_token(self, file=None, data=""):
 		"save token to a file"
 
-		file = file if file  else self.token_file_tellonym
+		file = file if file  else conf['token_file_tellonym']
 		with open(file, "w+") as f:
 			f.write(json.dumps(data))
 
@@ -123,24 +121,24 @@ class Tellonym_api(Config):
 			"deviceType": "web",
 			"lang": "en",
 			"captcha": "",#m3gon
-			"email": self.LOGIN_TELLONYM,
-			"password": self.PASSWORD_TELLONYM,
+			"email": conf['LOGIN_TELLONYM'],
+			"password": conf['PASSWORD_TELLONYM'],
 			"limit": "25"
 		}
 
-		headers = self.headers
-		self.headers["Content-Length"] = f"{len(str(data_login))}"
+		headers = conf['headers']
+		conf['headers']["Content-Length"] = f"{len(str(data_login))}"
 
-		response = requests.post(url, headers=headers, json=data_login, timeout=5000)
+		response = requests.post(url, headers=headers, json=data_login, timeout=15)
 
 		data = response.json()
 
 		close = False
 
-		if data.get("code") == self.ERRORS.get("captcha"):
+		if data.get("code") == conf['ERRORS'].get("captcha"):
 			raise CaptchaRequired(q_list=self.q_list)
 			# Notify(q_list=self.q_list, error="CAPTCHA_REQUIRED")
-			# return self.ERRORS.get("captcha")
+			# return conf['ERRORS'].get("captcha")
 		else: 
 			self.user = Tellonym_user(data)
 			self.save_token(data=data)
@@ -156,26 +154,27 @@ class Tellonym_api(Config):
 				"tellId": tell_id,
 				"limit": limit,
 				}
-		headers = self.headers
+		headers = conf['headers']
 		headers["authorization"] = f"Bearer {self.user.token}"
 
 		r = requests.post(url, json=data, headers=headers)
 		return r.content
 
 
-	def get_tells(self, token=""):
+	def get_tells(self):
 		importlib.reload(requests)
 		self.tells = list()
 		url = "https://api.tellonym.me/tells"
-		headers = self.headers
+		headers = conf['headers']
 		headers["authorization"] = f"Bearer {self.user.token}"
 
 		params = {
 			"limit": "25"
 		}
 		try:
-			response = requests.get(url, headers=headers, params=params, )
+			response = requests.get(url, headers=headers, params=params )
 		except requests.ConnectionError as e:
+			print(f"error {e}")
 			raise ConnectionTimeout(q_list=self.q_list) 
 
 		except Exception as e:
@@ -184,12 +183,12 @@ class Tellonym_api(Config):
 		if response.ok:
 			data = response.json()
 		else:
-			self.logger.error(f"tellonym get tells failed")
+			conf['logger'].error(f"tellonym get tells failed")
 
 			x = response.json()["err"]
 			x = x["code"]
 
-			if x == self.ERRORS.get("token"):
+			if x == conf['ERRORS'].get("token"):
 				raise TokenInvalidTellonym
 			return x
 
@@ -203,7 +202,7 @@ class Tellonym_api(Config):
 			
 			self.tells.append(tell)
 			# self.remove_tell(token, tell.id)
-
+		
 		return self.tells
 
 

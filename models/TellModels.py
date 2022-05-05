@@ -1,19 +1,17 @@
-from censorship import Censorship
 
 class Questionmi_user():
 	def __init__(self, tokenJSON):		
-		self.user_id = tokenJSON["userId"]
+		user_id = tokenJSON["userId"]
 		self.token = tokenJSON["accessToken"]
 
 class Questionmi_tell():
 	def __init__(self, tellJSON):
-		self.cen = Censorship()
 
 		self.id = tellJSON["id"]
 		self.tell = tellJSON["text"]
 		self.created_at = tellJSON["created_at"]
-		self.user_ip = tellJSON["users_ip"]
-		# self.users_fingerprint = tellJSON["users_fp"]
+		user_ip = tellJSON["users_ip"]
+		# conf['user']s_fingerprint = tellJSON["users_fp"]
 		
 
 		self.cen.TEXT = self.tell
@@ -22,7 +20,7 @@ class Questionmi_tell():
 
 class Tellonym_user():
 	def __init__(self, tokenJSON):
-		self.user_id = tokenJSON["userId"]
+		user_id = tokenJSON["userId"]
 		self.token = tokenJSON["accessToken"]
 
 class Tellonym_tell():

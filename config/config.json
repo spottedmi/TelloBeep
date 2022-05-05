@@ -1,7 +1,7 @@
 {
     "AUTORUN": true,
-    "BAD_WORDS": "swears_list.txt",
-    "LOG_FILE": "tellobeep.log",
+    "BAD_WORDS": "config/swears_list.txt",
+    "LOG_FILE": "logs/tellobeep.log",
     "DATE": null,
     "CAPTION":"",
     "ERRORS": {
@@ -19,7 +19,7 @@
     "colorBackground": ["#23282D", "#1C4E80", "#6AB187", "#5211D4", "#4CB5F5", "#EA6A47", "#D32D41", "#85044F", "#8A7b0b", "#631313", "#993355", "#084013", "#2E1C1B", "#e0a500","#797fab","#5b7570","#5c1433","#910000","#a85865","#566b3e","#692f6b","#588182","#4d2d7a","#94448d","#944444","#945f44","#449453","#448494"],
     "colorOutline": "#ffffff",
     "colorText": "#ffffff",
-    "db_name": "db.sqlite",
+    "db_name": "database/db.sqlite",
     "db_tables": {
         "posts": "posts",
         "users": "users"
@@ -27,15 +27,15 @@
     "extension": "jpg",
     "font": null,
     "font_footer": null,
-    "font_footer_name": "Kollektif/Kollektif.ttf",
+    "font_footer_name": "fonts/Kollektif/Kollektif.ttf",
     "font_footer_size": 55,
     "footer_position_ratio": 0.03,
-    "fontname": "Roboto/Roboto-Black.ttf",
+    "fontname": "fonts/Roboto/Roboto-Black.ttf",
     "fontsize": 35,
     "footer_height": 1000,
     "header_position_ratio": 0.08,
     "header_font_size": 39,
-    "font_header_name": "Kollektif/Kollektif.ttf",
+    "font_header_name": "fonts/Kollektif/Kollektif.ttf",
     "POST_RATIO": 0,
     "POST_COUNT": 0,
     "POST_RATIO_WARNING": 5,
@@ -54,7 +54,7 @@
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0"
     },
     "height": 0,
-    "image_path": "temp.png",
+    "image_path": "config/temp.png",
     "image_size": [
         200,
         200
@@ -83,7 +83,7 @@
         300,
         300
     ],
-    "token_file_tellonym": "token.txt",
+    "token_file_tellonym": "config/token.txt",
     "token_questionmi": "",
     "questionmi_api_base_url":"",
     "user": null,
