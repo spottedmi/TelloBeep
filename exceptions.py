@@ -43,7 +43,7 @@ class TokenReadImpossible(Exception_base):
 
 class ConnectionTimeout(Exception_base):
 	def __init__(self, q_list=None, error=None):
-		super().__init__(q_list=q_list, error="tellonym conneciotn timeout")
+		super().__init__(q_list=q_list, error="tellonym connection timeout")
 
 class CaptchaRequired(Exception_base):
 	def __init__(self, q_list=None, error=None):

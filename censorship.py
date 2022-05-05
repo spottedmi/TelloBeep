@@ -1,28 +1,28 @@
-from config import Config
+from config import conf
 
 from notifications import Notify
 
-class Censorship(Config):
+class Censorship():
 
 	# swears_list = None
 	q_list=None
 	def __init__(self, bad_words="", text="", q_list=None):
 		super().__init__()
-		Config().__init__(child_class=__class__.__name__)
+		
 		
 		if q_list != None:
 			self.q_list=q_list
 
-		self.load_file(self.BAD_WORDS)
+		self.load_file(conf['BAD_WORDS'])
 		
 	def load_file(self, link) -> None:
 		try:
 			with open(link, "r") as f:
 				txt = f.read()
-				self.swears_list = txt.rsplit("\n")
+				conf['swears_list'] = txt.rsplit("\n")
 		except:
 			Notify(q_list=self.q_list, error="CENSORSHIP_DICT_NOT_FOUND")
-			self.logger.error(f"couldn't find censorship dictionary")
+			conf['logger'].error(f"couldn't find censorship dictionary")
 
 
 
@@ -41,7 +41,7 @@ class Censorship(Config):
 			elem = elem.replace(" ", "")
 			elem_low = elem.lower()
 
-			for swear in self.swears_list:
+			for swear in conf['swears_list']:
 				if swear in elem.lower() and len(swear) > 0:
 					s = elem[0]
 					e = elem[-1]

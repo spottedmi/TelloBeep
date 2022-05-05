@@ -4,7 +4,7 @@ from threading import Thread
 import importlib
 from TellModels import Questionmi_user, Questionmi_tell
 
-from config import Config
+from config import conf
 
 from notifications import Notify
 
@@ -15,10 +15,10 @@ from exceptions import TokenInvalidQuestionmi, ConnectionTimeout, CaptchaRequire
 
 
 
-class Questionmi_api(Config):
+class Questionmi_api():
 	q_list = None
 	def __init__(self, q_list=None):
-		super().__init__(child_class=__class__.__name__)
+		
 		if q_list != None:
 			self.q_list = q_list
 
@@ -33,20 +33,20 @@ class Questionmi_api(Config):
 			# except TokenReadImpossible:
 			except Exception as e:
 				print(f"cannot read a token {e}")
-				self.logger.error(f"cannot load token")
+				conf['logger'].error(f"cannot load token")
 
 				time.sleep(loop)
 				loop += loop
 				return False
 
 
-			if self.user:
+			if conf['user']:
 				try:
-					self.get_tells(self.user.token)
+					self.get_tells(conf['user'].token)
 					break
 
 				except ConnectionTimeout as e:
-					# self.logger.error(f"connection timeout")
+					# conf['logger'].error(f"connection timeout")
 					print("conneciton timeout")
 					time.sleep(loop)
 					loop += loop
@@ -54,7 +54,7 @@ class Questionmi_api(Config):
 
 				except TokenInvalidQuestionmi as e:
 					print("questionmi token invalid")
-					self.logger.error(f"questionmi  token invalid")
+					conf['logger'].error(f"questionmi  token invalid")
 
 					# try:
 					# 	self.get_token()
@@ -62,38 +62,38 @@ class Questionmi_api(Config):
 
 					# except CaptchaRequired:
 					# 	print("captcha required")
-					# 	self.logger.error(f"captcha required")
+					# 	conf['logger'].error(f"captcha required")
 
 					# 	time.sleep(loop)
 					# 	loop += loop
 
 	
 
-		for elem in self.tells:
+		for elem in conf['tells']:
 			self.remove_tell(elem.id)
 			
 			
 		# self.load_locals()
 
 		
-		return self.tells
+		return conf['tells']
 
 
 	# def get_login_credentials(self):
 
 	# 	Notify(q_list=self.q_list, error="TELLO_RELOGIN")
-	# 	self.logger.error(f"tellonym relogin")
+	# 	conf['logger'].error(f"tellonym relogin")
 
-	# 	if not self.LOGIN_TELLONYM and not self.PASSWORD_TELLONYM:
-	# 		self.LOGIN_TELLONYM = input("login: ")
-	# 		self.PASSWORD_TELLONYM = input("password: ")
+	# 	if not conf['LOGIN_TELLONYM'] and not conf['PASSWORD_TELLONYM']:
+	# 		conf['LOGIN_TELLONYM'] = input("login: ")
+	# 		conf['PASSWORD_TELLONYM'] = input("password: ")
 
 
 	def load_token(self, file=None):
 		# use pre-defined file location
 		"load token from file"
 
-		file = self.token_questionmi
+		file = conf['token_questionmi']
 		
 		if file == "" or file == None:
 			raise TokenInvalidQuestionmi(q_list=self.q_list)
@@ -103,7 +103,7 @@ class Questionmi_api(Config):
 			"accessToken": file
 			}
 
-		self.user = Questionmi_user(res)
+		conf['user'] = Questionmi_user(res)
 
 	
 		# try:
@@ -112,10 +112,10 @@ class Questionmi_api(Config):
 		# 	res = json.loads(res)
 
 			
-		# 	self.user = Tellonym_user(res)
+		# 	conf['user'] = Tellonym_user(res)
 
 		# except Exception as e:
-		# 	# return self.ERRORS.get("load_token")
+		# 	# return conf['ERRORS'].get("load_token")
 		# 	raise TokenInvalid(q_list=self.q_list)
 
 		return True
@@ -137,13 +137,13 @@ class Questionmi_api(Config):
 	# 		"deviceType": "web",
 	# 		"lang": "en",
 	# 		"captcha": "",#m3gon
-	# 		"email": self.LOGIN_TELLONYM,
-	# 		"password": self.PASSWORD_TELLONYM,
+	# 		"email": conf['LOGIN_TELLONYM'],
+	# 		"password": conf['PASSWORD_TELLONYM'],
 	# 		"limit": "25"
 	# 	}
 
-	# 	headers = self.headers
-	# 	self.headers["Content-Length"] = f"{len(str(data_login))}"
+	# 	headers = conf['headers']
+	# 	conf['headers']["Content-Length"] = f"{len(str(data_login))}"
 
 	# 	response = requests.post(url, headers=headers, json=data_login, timeout=5000)
 
@@ -151,12 +151,12 @@ class Questionmi_api(Config):
 
 	# 	close = False
 
-	# 	if data.get("code") == self.ERRORS.get("captcha"):
+	# 	if data.get("code") == conf['ERRORS'].get("captcha"):
 	# 		raise CaptchaRequired(q_list=self.q_list)
 	# 		# Notify(q_list=self.q_list, error="CAPTCHA_REQUIRED")
-	# 		# return self.ERRORS.get("captcha")
+	# 		# return conf['ERRORS'].get("captcha")
 	# 	else: 
-	# 		self.user = Questionmi_user(data)
+	# 		conf['user'] = Questionmi_user(data)
 	# 		self.save_token(data=data)
 				
 	# 	if close:
@@ -164,12 +164,12 @@ class Questionmi_api(Config):
 		
 
 	def remove_tell(self, tell_id, limit=25):
-		url = f"{self.questionmi_api_base_url}Tells"
+		url = f"{conf['questionmi_api_base_url']}Tells"
 		payload = {
 				"id": tell_id,
 				}
 		headers = {}
-		headers["token"] = f"{self.user.token}"
+		headers["token"] = f"{conf['user'].token}"
 
 
 		r = requests.delete(url, headers=headers, params=payload)
@@ -179,11 +179,11 @@ class Questionmi_api(Config):
 
 	def get_tells(self, token=""):
 		# importlib.reload(requests)
-		self.tells = list()
-		url = f"{self.questionmi_api_base_url}Tells"
+		conf['tells'] = list()
+		url = f"{conf['questionmi_api_base_url']}Tells"
 	
 		headers = {}
-		headers["token"] = f"{self.user.token}"
+		headers["token"] = f"{conf['user'].token}"
 
 		params = {
 			"page_id": 1,
@@ -203,12 +203,12 @@ class Questionmi_api(Config):
 		if response.ok:
 			data = response.json()
 		else:
-			self.logger.error(f"questionmi get tells failed")
+			conf['logger'].error(f"questionmi get tells failed")
 
 			x = response.json()["err"]
 			x = x["code"]
 
-			if x == self.ERRORS.get("token"):
+			if x == conf['ERRORS'].get("token"):
 				raise TokenInvalidQuestionmi
 			return x
 
@@ -221,10 +221,10 @@ class Questionmi_api(Config):
 			# tell.flag = FLAG
 			# print(f"parsed tell: {tell}")
 			
-			self.tells.append(tell)
+			conf['tells'].append(tell)
 			self.remove_tell(tell_id=tell.id)
 
-		return self.tells
+		return conf['tells']
 
 
 
