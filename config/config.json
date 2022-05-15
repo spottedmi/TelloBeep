@@ -30,7 +30,7 @@
     "font_footer_name": "fonts/Kollektif/Kollektif.ttf",
     "font_footer_size": 55,
     "footer_position_ratio": 0.03,
-    "fontname": "fonts/Roboto/Roboto-Black.ttf",
+    "fontname": "fonts/Roboto-modified/Roboto-modified.ttf",
     "fontsize": 35,
     "footer_height": 1000,
     "header_position_ratio": 0.08,
