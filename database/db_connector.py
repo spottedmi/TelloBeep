@@ -3,12 +3,11 @@ from  base64  import b64encode
 from backend.server import User, Posts, db
 from sqlalchemy import exc
 
-from config import Config
+from config import conf
 from datetime import datetime
 
-class Db_connector(Config):
-	def __init__(self):
-		super().__init__(child_class=__class__.__name__)
+class Db_connector():
+			
 
 	def db_add_img(self):
 		txt = self.TEXT		
@@ -16,8 +15,8 @@ class Db_connector(Config):
 			post = Posts()
 			
 			post.content = txt
-			post.title = self.out_image_name
-			if self.AUTORUN and not self.censor_flag:
+			post.title = conf['out_image_name']
+			if conf['AUTORUN'] and not self.censor_flag:
 				post.approved = True
 				post.approved_by = 0
 			else:
@@ -39,7 +38,7 @@ class Db_connector(Config):
 
 	def db_set_approved(self, state=True):
 
-		post = Posts.query.filter_by(title=self.out_image_name).one()
+		post = Posts.query.filter_by(title=conf['out_image_name']).one()
 		if state:
 			post.approved_by = 1
 		else:

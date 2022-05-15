@@ -26,7 +26,7 @@ path = os.path.dirname(absolute_path) + "/"
 path = f"{path}/.."
 
 sys.path.insert(0,path)
-from config import Config
+from config import conf, dump_json
 
 #_____________________________________________________________
 #
@@ -39,7 +39,7 @@ import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../db.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../database/db.sqlite"
 app.config["SECRET_KEY"] = "SECRET"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -54,7 +54,6 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-config = Config()
 
 #_____________________________________________________________
 #
@@ -186,7 +185,7 @@ def accept(id_post):
         gen.put(req)
 
     else:
-        filename = f"{title}.{config.extension}"
+        filename = f"{title}.{conf['extension']}"
         req = {
         "title": title,
         "filename": filename
@@ -230,7 +229,7 @@ def token_list():
     token = '{"accessToken": "'+token+'", "lang": "en", "type": "LOGIN", "userId": 12345678}'
 
 
-    with open(config.token_file, "w") as f:
+    with open(conf["token_file_tellonym"], "w") as f:
         f.write(token)
 
     return "<p>restricted area!</p>"
@@ -242,7 +241,7 @@ def bad_words():
     data = json.loads(txt)
     word = data.get("word")
     
-    with open(config.BAD_WORDS, "a") as f:
+    with open(conf["BAD_WORDS"], "a") as f:
         f.write(f"\n{word}")
 
     return "<p>restricted area!</p>"
@@ -268,8 +267,8 @@ def autorun():
     data = json.loads(txt)
     run = data.get("autorun")
 
-    config.AUTORUN = run
-    config.dump_json()
+    conf["AUTORUN"] = run
+    dump_json()
 
     return "OK"
 
@@ -390,7 +389,7 @@ def json_parser(headers, txt)-> dict:
                 tmp[col] = str(x)
             elif col == "title":
                 tmp[col] = str(eval(f"elem.{col}"))
-                tmp["thumb"] = str("thumbnails/"+eval(f"elem.{col}")+ f"_thumbnails.{config.extension}")
+                tmp["thumb"] = str("thumbnails/"+eval(f"elem.{col}")+ f"_thumbnails.{conf['xtension']}")
 
             else:
                 tmp[col] = str(eval(f"elem.{col}"))
@@ -398,7 +397,7 @@ def json_parser(headers, txt)-> dict:
 
 
 #function executed in thread
-def back_server(q_list, host="localhost", port=12345):
+def back_server(q_list, host="127.0.0.1", port=5001):
     global queue_list
     queue_list = q_list
 
