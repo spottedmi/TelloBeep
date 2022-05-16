@@ -59,6 +59,11 @@ class Make_img(Censorship, Db_connector):
 
 		#text 
 		coords =(conf['margin']["left"] ,conf['margin']["top"])
+		
+		if coords[1] < 20:
+			coords =(coords[0] ,130)
+
+		self.check_height()
 		d.text(coords, self.TEXT, fill=self.hex_to_rgb(conf['colorText']), font=self.font)
 		d.rectangle((0, 0, conf['width']-conf['outline_thickness'], conf['height']-conf['outline_thickness']),width= conf['outline_thickness'], fill=None, outline=self.hex_to_rgb(conf['colorOutline']))
 
@@ -100,6 +105,19 @@ class Make_img(Censorship, Db_connector):
 
 		self.edit_ratio()
 	
+	def check_height(self):
+		if self.TEXT.count("\n") > 20:
+			x = self.TEXT.split("\n")
+			ret = ""
+			for index, elem in enumerate(x):
+				ret = ret+elem+"\n"
+				if index > 20:
+					self.TEXT = ret
+					break
+
+		self.TEXT = self.TEXT[0:1000]
+
+
 
 	def save_img(self):
 		self.img_object = self.img_object.resize(conf['insta_res'], Image.ANTIALIAS)
