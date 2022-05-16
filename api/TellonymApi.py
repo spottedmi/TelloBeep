@@ -91,7 +91,6 @@ class Tellonym_api():
 	def load_token(self, file=None):
 		# use pre-defined file location
 		"load token from file"
-		print("loading token")
 		file = conf['token_file_tellonym']
 		try:
 			with open(file, "r") as f:
