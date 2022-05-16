@@ -195,10 +195,15 @@ form > textarea {
 		font-size: 2em;
 		height: 7vh;
 	}
-
 	header > div > a{
 		padding: 10px;
+		font-size: 1.5 em;
 	}
+	header > div > a > button {
+		padding: 10px;
+		font-size: 1.2em;
+	}
+
 
 	header > div > p{
 		display: none;
