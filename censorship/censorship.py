@@ -44,8 +44,11 @@ class Censorship():
 
 			for swear in conf['swears_list']:
 				if swear in elem.lower() and len(swear) > 0:
-					s = elem[0]
-					e = elem[-1]
+					# s = elem[0]
+					# e = elem[-1]
+					s = swear[0]
+					e = swear[-1]
+
 
 					elem_rep = s+(len(swear)-2)*"*" + e
 					
