@@ -40,10 +40,12 @@ class Insta_api():
 			except PleaseWaitFewMinutes :
 				Notify(q_list=self.q_list, error="PLEASE_WAIT_FEW_MINUTES")
 				time.sleep(delay)
-				delay += 2*delay
 			except RateLimitError:
 				Notify(q_list=self.q_list, error="RATE_LIMIT_ERROR")
-				time.sleep(60)
+				conf['logger'].info(f"instagram login delay: {delay}")
+				time.sleep(delay)
+				delay += 2 * delay
+
 			except Exception as e:
 				# print(e)
 				Notify(q_list=self.q_list, error="INSTAGRAM_ERROR")
