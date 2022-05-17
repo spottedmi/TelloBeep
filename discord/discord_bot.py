@@ -57,11 +57,11 @@ class Discord_bot():
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
 
-				await channel.send(f"{res.get('bot_comment')}", file=picture)
+				await channel.send(f"{res.get('bot_comment')[0:1000]}", file=picture)
 				conf['logger'].info(f"discord post send with picture, {res.get('bot_comment')}, {conf['out_image_path']}/{res.get('filename')}")
 
 			else:
-				await channel.send(f"{res.get('bot_comment')}")
+				await channel.send(f"{res.get('bot_comment')[0:1000]}")
 				conf['logger'].info(f"discord post send {res.get('bot_comment')}")
 
 
