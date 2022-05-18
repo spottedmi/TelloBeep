@@ -164,7 +164,7 @@ class Questionmi_api():
 		
 
 	def remove_tell(self, tell_id, limit=25):
-		url = f"{conf['questionmi_api_base_url']}Tells"
+		url = f"{conf['questionmi_api_base_url']}api/Tells"
 		payload = {
 				"id": tell_id,
 				}
@@ -173,15 +173,15 @@ class Questionmi_api():
 
 
 		r = requests.delete(url, headers=headers, params=payload)
-
+		
 		return r
 
 
 	def get_tells(self, token=""):
 		# importlib.reload(requests)
 		conf['tells'] = list()
-		url = f"{conf['questionmi_api_base_url']}Tells"
-	
+		url = f"{conf['questionmi_api_base_url']}api/Tells"
+
 		headers = {}
 		headers["token"] = f"{conf['user'].token}"
 
@@ -192,7 +192,7 @@ class Questionmi_api():
 		try:
 			# response = requests.get(url, headers=headers, params=params)
 			response = requests.get(url, headers=headers,  params=params)
-
+			
 
 		except requests.ConnectionError as e:
 			raise ConnectionTimeout(q_list=self.q_list) 

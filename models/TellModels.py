@@ -1,4 +1,4 @@
-
+from censorship.censorship import Censorship
 class Questionmi_user():
 	def __init__(self, tokenJSON):		
 		user_id = tokenJSON["userId"]
@@ -14,6 +14,7 @@ class Questionmi_tell():
 		# conf['user']s_fingerprint = tellJSON["users_fp"]
 		
 
+		self.cen = Censorship()
 		self.cen.TEXT = self.tell
 		self.flag  = self.cen.flag_word()
 
