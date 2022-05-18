@@ -164,7 +164,7 @@ class Questionmi_api():
 		
 
 	def remove_tell(self, tell_id, limit=25):
-		url = f"{conf['questionmi_api_base_url']}api/Tells"
+		url = f"{conf['questionmi_api_base_url']}Tells"
 		payload = {
 				"id": tell_id,
 				}
@@ -180,7 +180,7 @@ class Questionmi_api():
 	def get_tells(self, token=""):
 		# importlib.reload(requests)
 		conf['tells'] = list()
-		url = f"{conf['questionmi_api_base_url']}api/Tells"
+		url = f"{conf['questionmi_api_base_url']}Tells"
 
 		headers = {}
 		headers["token"] = f"{conf['user'].token}"
