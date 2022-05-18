@@ -55,12 +55,15 @@ class Make_img(Censorship, Db_connector):
 		# img = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(conf['colorBackground']))
 		self.get_bg_color()
 		self.img_object = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(self.bg_color))
-		print((conf['width'], conf['height']))
 		d = ImageDraw.Draw(self.img_object)
 
 		#text 
 		coords =(conf['margin']["left"] ,conf['margin']["top"])
-		print(coords)
+		
+		if coords[1] < 20:
+			coords =(coords[0] ,130)
+
+		self.check_height()
 		d.text(coords, self.TEXT, fill=self.hex_to_rgb(conf['colorText']), font=self.font)
 		d.rectangle((0, 0, conf['width']-conf['outline_thickness'], conf['height']-conf['outline_thickness']),width= conf['outline_thickness'], fill=None, outline=self.hex_to_rgb(conf['colorOutline']))
 
@@ -87,7 +90,6 @@ class Make_img(Censorship, Db_connector):
 	
 
 		insta = self.q_list.get("2insta")  if self.q_list else None
-		print(self.TEXT)
 		self.req = {
 			"filename": f"{conf['out_image_name']}.{conf['extension']}",
 			"title": self.TEXT,
@@ -101,9 +103,21 @@ class Make_img(Censorship, Db_connector):
 			conf['logger'].info(f"image send automatically, {self.req['filename']}")
 			self.SENT = True
 
-		print("edit_ratio")
 		self.edit_ratio()
 	
+	def check_height(self):
+		if self.TEXT.count("\n") > 20:
+			x = self.TEXT.split("\n")
+			ret = ""
+			for index, elem in enumerate(x):
+				ret = ret+elem+"\n"
+				if index > 20:
+					self.TEXT = ret
+					break
+
+		self.TEXT = self.TEXT[0:1000]
+
+
 
 	def save_img(self):
 		self.img_object = self.img_object.resize(conf['insta_res'], Image.ANTIALIAS)
@@ -154,7 +168,7 @@ class Make_img(Censorship, Db_connector):
 		else:
 			conf['POST_RATIO'] = int(conf['POST_COUNT'] / 1)
 
-		print(conf['POST_RATIO'])
+
 
 		
 		if conf['POST_RATIO'] >= conf['POST_RATIO_ALERT']:
