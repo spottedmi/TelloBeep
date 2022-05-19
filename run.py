@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 from queue import Queue
 from threading import Thread
-import time, random, json, os
+import time, random, json, os, sys
 
 from image_generation.make_img import Make_img
 from backend.server import back_server
@@ -215,6 +215,7 @@ if __name__ == "__main__":
 			print("cannot log into bot")
 			t3 = Thread(target = Insta_api, kwargs={"q_list":q_list}).start()
 			time.sleep(10)
+
 
 
 
