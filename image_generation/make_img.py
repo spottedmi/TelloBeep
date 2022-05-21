@@ -2,10 +2,11 @@
 #by RandomGuy90 A.D.2021
 
 from PIL import Image, ImageDraw, ImageFont
+import numpy as np
 import random, time, sys, json
 
 from queue import Queue
-import _thread
+import _thread, random
 
 from censorship.censorship import Censorship
 from database.db_connector import Db_connector
@@ -54,7 +55,14 @@ class Make_img(Censorship, Db_connector):
 	
 		# img = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(conf['colorBackground']))
 		self.get_bg_color()
+		
 		self.img_object = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(self.bg_color))
+		rand = random.randrange(0, 100)
+
+		if rand == 1:
+			self.img_object = self.gen_gradient_img(conf['height'], conf['width'])
+
+		
 		d = ImageDraw.Draw(self.img_object)
 
 		#text 
@@ -204,6 +212,28 @@ class Make_img(Censorship, Db_connector):
 
 		# if (self.FIRST_POST - time.time()) > 3600000:
 		# 	self.HOURS_PASSED +=1
+	def gen_gradient_img(self, height, width) -> Image:
+		def get_gradient_2d(start, stop, width, height, is_horizontal):
+			if is_horizontal:
+				return np.tile(np.linspace(start, stop, width), (height, 1))
+			else:
+				return np.tile(np.linspace(start, stop, height), (width, 1)).T
+
+
+		def get_gradient_3d(width, height, start_list, stop_list, is_horizontal_list):
+			result = np.zeros((height, width, len(start_list)), dtype=np.float)
+			for i, (start, stop, is_horizontal) in enumerate(zip(start_list, stop_list, is_horizontal_list)):
+				result[:, :, i] = get_gradient_2d(start, stop, width, height, is_horizontal)
+			return result
+
+		
+		array = get_gradient_3d(int(height*1.5), int(width*1.5), (255, 0, 255), (108,64,121), (True, False, False))
+		# array = get_gradient_2d(512, 256, 500, 500,False)
+		img = Image.fromarray(np.uint8(array))
+		img = img.rotate(-75, resample=0, expand=0, center=None, translate=None, fillcolor=None)
+		img = img.crop((width*0.17,height*0.2,1350,1350))
+
+		return img
 
 
 	def get_size_txt(self)-> None:
