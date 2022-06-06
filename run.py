@@ -43,12 +43,15 @@ class Insta_api():
 			except RateLimitError:
 				Notify(q_list=self.q_list, error="RATE_LIMIT_ERROR")
 				conf['logger'].info(f"instagram login delay: {delay}")
-				time.sleep(delay)
-				delay += 2 * delay
+				# time.sleep(delay)
 
 			except Exception as e:
-				# print(e)
+				print(e)
 				Notify(q_list=self.q_list, error="INSTAGRAM_ERROR")
+			
+			time.sleep(delay)
+			delay += 2 * delay
+
 
 
 
@@ -196,8 +199,8 @@ if __name__ == "__main__":
 	t3 = Thread(target = Insta_api, kwargs={"q_list":q_list}).start()
 	
 	#teloym thread
-	# t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Questionmi_api}).start()
-	t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
+	t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Questionmi_api}).start()
+	# t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
 	
 	# #discord notifications
 	# t5 = Thread(target = Discord_bot, kwargs={"q_list":q_list}).start()
