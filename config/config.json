@@ -14,8 +14,9 @@
     "PASSWORD_TELLONYM": "",
     "LOGIN_INSTAGRAM": "",
     "PASSWORD_INSTAGRAM": "",
-    "TEXT_footer": "#footer_text",
-    "TIMEZONE": 1,
+    "INSTAGRAM_SESSION": "config/instagram_sesison.json",
+    "TEXT_footer": "#tellobeep_footer",
+    "TIMEZONE": 2,
     "colorBackground": ["#23282D", "#1C4E80", "#6AB187", "#5211D4", "#4CB5F5", "#EA6A47", "#D32D41", "#85044F", "#8A7b0b", "#631313", "#993355", "#084013", "#2E1C1B", "#e0a500","#797fab","#5b7570","#5c1433","#910000","#a85865","#566b3e","#692f6b","#588182","#4d2d7a","#94448d","#944444","#945f44","#449453","#448494"],
     "colorOutline": "#ffffff",
     "colorText": "#ffffff",
@@ -92,3 +93,4 @@
     "DISCORD_CHANNEL_ID":"",
     "DISCORD_TOKEN":""
 }
+

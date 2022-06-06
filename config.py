@@ -51,6 +51,7 @@ conf['token_file_tellonym'] = make_absolute_path(conf['token_file_tellonym'])
 conf['BAD_WORDS'] = make_absolute_path(conf['BAD_WORDS'])
 conf['thumb_path'] = make_absolute_path(conf['thumb_path'])
 conf['out_image_path'] = make_absolute_path(conf['out_image_path'])
+conf['INSTAGRAM_SESSION'] = make_absolute_path(conf['INSTAGRAM_SESSION'])
 
 
 def dump_json(self):
