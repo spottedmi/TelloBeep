@@ -39,10 +39,13 @@ class Insta_api():
 				break
 			except PleaseWaitFewMinutes :
 				Notify(q_list=self.q_list, error="PLEASE_WAIT_FEW_MINUTES")
+				conf['logger'].warning(f"PLEASE_WAIT_FEW_MINUTES instagram login delay: {delay}")
+
 				time.sleep(delay)
 			except RateLimitError:
 				Notify(q_list=self.q_list, error="RATE_LIMIT_ERROR")
-				conf['logger'].info(f"instagram login delay: {delay}")
+				conf['logger'].warning(f"RATE_LIMIT_ERROR instagram login delay: {delay}")
+
 				# time.sleep(delay)
 
 			except Exception as e:
@@ -112,6 +115,8 @@ class Tello_api():
 					break
 
 				except Exception as e:
+					conf['logger'].info(f"exception when fetching {fetch_class}: {e}")
+					
 					time.sleep(delay)
 					delay+=delay
 					del self.tello

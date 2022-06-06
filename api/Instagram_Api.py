@@ -29,6 +29,7 @@ class Instagram_api():
             self.bot.login(conf['LOGIN_INSTAGRAM'], conf['PASSWORD_INSTAGRAM'])
             conf['logger'].info(f"instagram logged")
             self.bot.dump_settings(conf["INSTAGRAM_SESSION"])
+            conf['logger'].info(f"session dumped")
 
             print("bot logged")
             Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")

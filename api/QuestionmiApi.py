@@ -19,6 +19,8 @@ class Questionmi_api():
 	q_list = None
 	def __init__(self, q_list=None):
 		
+        conf['logger'].warning(f"questionmi api initialized")
+
 		if q_list != None:
 			self.q_list = q_list
 
@@ -29,6 +31,7 @@ class Questionmi_api():
 		while True:
 			try:
 				self.load_token()
+		        conf['logger'].info(f"token loaded")
 
 			# except TokenReadImpossible:
 			except Exception as e:
@@ -43,6 +46,8 @@ class Questionmi_api():
 			if conf['user']:
 				try:
 					self.get_tells(conf['user'].token)
+			        conf['logger'].info(f"tells fetched")
+
 					break
 
 				except ConnectionTimeout as e:
@@ -71,6 +76,7 @@ class Questionmi_api():
 
 		for elem in conf['tells']:
 			self.remove_tell(elem.id)
+
 			
 			
 		# self.load_locals()
@@ -170,6 +176,7 @@ class Questionmi_api():
 				}
 		headers = {}
 		headers["token"] = f"{conf['user'].token}"
+        conf['logger'].info(f"remove fetched tells")
 
 
 		r = requests.delete(url, headers=headers, params=payload)
@@ -202,11 +209,15 @@ class Questionmi_api():
 			raise e
 		if response.ok:
 			data = response.json()
+	        conf['logger'].info(f"tellonym fetched propertly")
+
 		else:
 			conf['logger'].error(f"questionmi get tells failed")
 
 			x = response.json()["err"]
 			x = x["code"]
+			conf['logger'].error(f"error: {x}" )
+
 
 			if x == conf['ERRORS'].get("token"):
 				raise TokenInvalidQuestionmi

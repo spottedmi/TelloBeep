@@ -44,6 +44,8 @@ class Make_img(Censorship, Db_connector):
 
 		try:
 			self.get_fonts()
+			conf['logger'].error(f"fonts imported")
+
 		except:
 			Notify(q_list=self.q_list, error="FONT_NOT_FOUfND")
 			conf['logger'].error(f"font not found")
@@ -55,12 +57,18 @@ class Make_img(Censorship, Db_connector):
 	
 		# img = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(conf['colorBackground']))
 		self.get_bg_color()
+		conf['logger'].error(f"image background color {self.bg_color}")
+
 		
 		self.img_object = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(self.bg_color))
 		rand = random.randrange(0, 100)
+		conf['logger'].error(f"image random generating {rand} == 1")
+
 
 		if rand == 1:
 			self.img_object = self.gen_gradient_img(conf['height'], conf['width'])
+			conf['logger'].error(f"image generate special gradient")
+
 
 		
 		d = ImageDraw.Draw(self.img_object)
@@ -77,13 +85,20 @@ class Make_img(Censorship, Db_connector):
 
 		#header
 		self.create_header()
+		conf['logger'].error(f"image: create header")
+
 
 		#footer
 		self.create_footer()
+		conf['logger'].error(f"image: create footer")
+
 
 		img = Image.open(conf['image_path'], "r")
 		img = img.resize(conf['image_size'], Image.ANTIALIAS)
+		conf['logger'].info(f"image: resizing")
+
 		img = img.convert("RGBA")
+		conf['logger'].info(f"image: converting to RGBA")
 
 		coords = (int(conf['insta_res'][1]*conf['logo_X_ratio']), int(conf['insta_res'][0]*conf['logo_Y_ratio']))
 
@@ -93,8 +108,14 @@ class Make_img(Censorship, Db_connector):
 		img = img.convert("RGB")
 		
 		self.save_img()
+		conf['logger'].info(f"image: saving image")
+
 		self.save_tumbnail()
+		conf['logger'].info(f"image: saving thumbnail")
+
 		self.db_add_img()
+		conf['logger'].info(f"image: adding to database")
+
 	
 
 		insta = self.q_list.get("2insta")  if self.q_list else None
@@ -103,6 +124,7 @@ class Make_img(Censorship, Db_connector):
 			"title": self.TEXT,
 			"send": False
 		}
+
 
 		if conf['AUTORUN'] and not self.censor_flag:
 			self.req["send"] = True
@@ -178,6 +200,7 @@ class Make_img(Censorship, Db_connector):
 
 
 
+
 		
 		if conf['POST_RATIO'] >= conf['POST_RATIO_ALERT']:
 			conf['logger'].warning(f" post ratio alert, autorun off, {conf['POST_RATIO']}")
@@ -192,6 +215,9 @@ class Make_img(Censorship, Db_connector):
 				# d.put(self.req)
 				Notify(q_list=self.q_list,error="POST_RATIO_ALERT", img=self.req.get("filename"))
 				self.ALERT_SEND = True
+				conf['logger'].warning(f"image: post ratio - ALERT")
+
+
 
 
 		elif conf['POST_RATIO'] >= conf['POST_RATIO_WARNING']:
@@ -207,6 +233,7 @@ class Make_img(Censorship, Db_connector):
 			conf['AUTORUN'] = True
 			# self.set_autorun(True)
 
+		conf['logger'].info(f"image: post ratio: {conf['POST_RATIO']}")
 
 
 
