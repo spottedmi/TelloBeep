@@ -115,7 +115,7 @@ class Tello_api():
 					break
 
 				except Exception as e:
-					conf['logger'].info(f"exception when fetching {fetch_class}: {e}")
+					conf['logger'].info(f"exception when fetching {self.fetch_class}: {e}")
 					
 					time.sleep(delay)
 					delay+=delay
