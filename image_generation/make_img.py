@@ -61,7 +61,7 @@ class Make_img(Censorship, Db_connector):
 
 		
 		self.img_object = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(self.bg_color))
-		rand = random.randrange(0, 100)
+		rand = random.randrange(0, 10)
 		conf['logger'].error(f"image random generating {rand} == 1")
 
 
