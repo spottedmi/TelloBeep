@@ -195,13 +195,14 @@ class StartUp():
 
 if __name__ == "__main__":
 	# Config()
+	manager = multiprocessing.Manager()
 
 	q_list = {
-		"2gen": Queue(),
-		"2flask": Queue(),
-		"2tello": Queue(),
-		"2insta": Queue(),
-		"2main_thread": Queue(),
+		"2gen": manager.Queue(),
+		"2flask": manager.Queue(),
+		"2tello": manager.Queue(),
+		"2insta": manager.Queue(),
+		"2main_thread": manager.Queue(),
 	}
 	
 	
