@@ -90,7 +90,10 @@ class Tello_api():
 	def __init__(self, q_list, fetch_class):
 		
 		"fetching api function's going to replace this"
+		conf['logger'].info(f"Tello_api init, fetch_class: {fetch_class}")
+
 		self.fetch_class = fetch_class
+
 
 		# time.sleep(10)
 
@@ -109,22 +112,22 @@ class Tello_api():
 				try:
 					self.tello = self.fetch_class(q_list=self.q_list)
 					content = self.tello.run()
-					
-					# print(f"content {content}")
+					print(f"content {content}")
 					conf['logger'].info(f"new fetch: {content}")
 					break
 
 				except Exception as e:
-					conf['logger'].info(f"exception when fetching {self.fetch_class}: {e}")
-					
+					conf['logger'].info(f"exception when fetching {self.fetch_class}: {e}, delay: {delay}")
 					time.sleep(delay)
 					delay+=delay
 					del self.tello
+					conf['logger'].info(f"tellonym user deleted")
+
 					print(f"fetch: error: {e}")
 
 					# content = self.tello.run()
+					time.sleep(10)
 
-			time.sleep(5)
 
 
 
@@ -133,8 +136,8 @@ class Tello_api():
 				# print(f"fetched: {content[0].tell} ")
 
 
-			for elem in content:
-
+			for elem in content:	
+				conf['logger'].info(f"loop of tellonyms")
 				#generate file name
 				if "." not in elem.created_at:
 					elem.created_at += ".00Z"
@@ -151,10 +154,11 @@ class Tello_api():
 				if len(s) == 1: s = f"0{s}"
 		
 				if h == 24:
+					conf['logger'].info(f"24 hour detected")
 					h = "00"
 
 				title = f"{y}{M}{d}{h}{m}{s}_{elem.id}"
-				
+				conf['logger'].info(f"title: {title}")
 				req = {
 					"text": elem.tell,
 					"title": title,
@@ -162,12 +166,16 @@ class Tello_api():
 					"send": False,
 					"censure_flag": elem.flag
 				}
+				req_log = req.replace('\n', '')
+				conf['logger'].info(f"{req_log}")
 
 				q = q_list.get("2gen")
 				Notify(q_list=self.q_list, error=f"new tellonym ({elem.tell})")
-
+				conf["logger"].info("pushed to queue")
 
 				q.put(req)
+			time.sleep(5)
+
 				
 
 class StartUp():
@@ -178,6 +186,8 @@ class StartUp():
 		# os.popen(f"prlimit -n4 -p {pid}")
 		# print(f"prlimit -n524288 -p {pid}")
 		conf["logger"].critical("_____Tellobeep INIT___________________________________")
+		conf["logger"].info("prlimit set")
+
 
 
 if __name__ == "__main__":
