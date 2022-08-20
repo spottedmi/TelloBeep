@@ -1,6 +1,8 @@
-import json, os
+import json
+import os
+import shutil
 import logging
-
+import time
 
 
 class CustomFormatter(logging.Formatter):
@@ -34,11 +36,28 @@ def make_absolute_path(filepath):
 	return path
 
 
-
 f = open("config/config.json", "r")
 config = f.read()
 f.close()
 conf = json.loads(config)
+
+conf['token_file_tellonym'] = make_absolute_path(conf['token_file_tellonym'])
+conf['BAD_WORDS'] = make_absolute_path(conf['BAD_WORDS'])
+conf['thumb_path'] = make_absolute_path(conf['thumb_path'])
+conf['out_image_path'] = make_absolute_path(conf['out_image_path'])
+conf['INSTAGRAM_SESSION'] = make_absolute_path(conf['INSTAGRAM_SESSION'])
+
+
+
+
+
+
+created = os.path.getctime(conf.get("LOG_FILE"))
+year,month,day,hour,minute,second=time.localtime(created)[:-3]
+
+new_filename = "%02d:%02d:%d_%02d-%02d-%02d_tellobeep.log"%(second, minute, hour, day, month,year)
+new_filename = conf["LOG_FILE"].replace("tellobeep.log", new_filename)
+shutil.move(conf["LOG_FILE"], new_filename)
 
 conf["logger"] = logging.getLogger(__name__)
 fh = logging.FileHandler(conf['LOG_FILE'])
@@ -47,11 +66,6 @@ fh.setFormatter(CustomFormatter())
 conf["logger"].addHandler(fh)
 conf["logger"].setLevel(logging.DEBUG)
 
-conf['token_file_tellonym'] = make_absolute_path(conf['token_file_tellonym'])
-conf['BAD_WORDS'] = make_absolute_path(conf['BAD_WORDS'])
-conf['thumb_path'] = make_absolute_path(conf['thumb_path'])
-conf['out_image_path'] = make_absolute_path(conf['out_image_path'])
-conf['INSTAGRAM_SESSION'] = make_absolute_path(conf['INSTAGRAM_SESSION'])
 
 
 def dump_json(self):
