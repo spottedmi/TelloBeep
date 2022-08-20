@@ -1,6 +1,5 @@
 #! /usr/bin/python3
 from queue import Queue
-from threading import Thread
 import time, random, json, os, sys
 
 from image_generation.make_img import Make_img
@@ -15,6 +14,8 @@ from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError
 from config import conf
 from discord.notifications import Notify
 
+from logs.logger import Logger
+import multiprocessing
 #_____________________________________________________________
 #
 #               INSTAGRAM API
@@ -111,7 +112,9 @@ class Tello_api():
 			while 1:
 				try:
 					self.tello = self.fetch_class(q_list=self.q_list)
+					
 					content = self.tello.run()
+					
 					print(f"content {content}")
 					conf['logger'].info(f"new fetch: {content}")
 					break
@@ -166,8 +169,7 @@ class Tello_api():
 					"send": False,
 					"censure_flag": elem.flag
 				}
-				req_log = req.replace('\n', '')
-				conf['logger'].info(f"{req_log}")
+				conf['logger'].info(f"{req}")
 
 				q = q_list.get("2gen")
 				Notify(q_list=self.q_list, error=f"new tellonym ({elem.tell})")
@@ -180,6 +182,7 @@ class Tello_api():
 
 class StartUp():
 	def __init__(self):
+		Logger()
 		pid = os.getpid()
 		
 		os.popen(f"prlimit -n524288 -p {pid}")
@@ -205,33 +208,43 @@ if __name__ == "__main__":
 	start = StartUp()
 	
 	#generating images
-	t1 = Thread(target = Make_img, kwargs={"q_list":q_list}).start()
-
+	t1 = multiprocessing.Process(target = Make_img, kwargs={"q_list":q_list})
+	t1.daemon = True
+	t1.start()
+	
 	#backend
-	t2 = Thread(target = back_server, kwargs={"q_list":q_list}).start()
+	t2 = multiprocessing.Process(target = back_server, kwargs={"q_list":q_list})
+	t2.daemon = True
+	t2.start()
 	
 	#insta thread
-	t3 = Thread(target = Insta_api, kwargs={"q_list":q_list}).start()
+	t3 = multiprocessing.Process(target = Insta_api, kwargs={"q_list":q_list})
+	t3.daemon = True
+	t3.start()
 	
 	#teloym thread
-	t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Questionmi_api}).start()
-	# t4 = Thread(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
+	# t4 = multiprocessing.Proces(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
+	t4 = multiprocessing.Process(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Questionmi_api})
+	t4.daemon = True
+	t4.start()
 	
 	# #discord notifications
 	# t5 = Thread(target = Discord_bot, kwargs={"q_list":q_list}).start()
 
-
-	while 1 :		
-
+	while 1:		
 		try:
 			Discord_bot(q_list)
+
 		except OSError:
-			start.logger.critical("closing OSError Too many open files")
+			conf['logger'].critical(f"closing... OSError Too many open files")
+			for elem in multiprocessing.active_children():
+				elem.terminate()
+			conf['logger'].critical(f"all processes killed, exiting main thread")
+
 			sys.exit(0)
 
 		except Exception as e:
 			print("cannot log into bot")
-			t3 = Thread(target = Insta_api, kwargs={"q_list":q_list}).start()
 			time.sleep(10)
 
 

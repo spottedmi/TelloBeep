@@ -1,6 +1,5 @@
 import requests, json, sys, time
 from queue import Queue
-from threading import Thread
 import importlib
 from models.TellModels import Questionmi_user, Questionmi_tell
 
@@ -40,7 +39,8 @@ class Questionmi_api():
 
 				time.sleep(loop)
 				loop += loop
-				return False
+				raise e
+				# return False
 
 
 			if conf['user']:
