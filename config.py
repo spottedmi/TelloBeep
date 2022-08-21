@@ -8,8 +8,7 @@ def make_absolute_path(filepath):
     path = f"{path}{filepath}"
     return path
 
-
-f = open("config/config.json", "r")
+f = open(f"{os.path.dirname(__file__)}/config/config.json", "r")
 config = f.read()
 f.close()
 conf = json.loads(config)
