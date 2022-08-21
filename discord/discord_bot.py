@@ -47,12 +47,16 @@ class Discord_bot():
 
 		while True:
 			res = queue.get()
+			conf['logger'].info(f"got discord info")
 			if res.get("filename"):
+				conf['logger'].info(f"discord post has filename {res.get('filename')}")
 				try:
 					x = f"{conf['out_image_path']}/{res.get('filename')}"
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
+					conf['logger'].info(f"picture read propertly")
 				except:
+					conf['logger'].info(f"couldn't find picture in first location, searching for backup")
 					x = f"{conf['out_image_path_BACKUP']}/{res.get('filename')}"
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
