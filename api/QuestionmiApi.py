@@ -18,7 +18,7 @@ class Questionmi_api():
 	q_list = None
 	def __init__(self, q_list=None):
 		
-		conf['logger'].warning(f"questionmi api initialized")
+		
 
 		if q_list != None:
 			self.q_list = q_list
@@ -30,7 +30,6 @@ class Questionmi_api():
 		while True:
 			try:
 				self.load_token()
-				conf['logger'].info(f"token loaded")
 
 			# except TokenReadImpossible:
 			except Exception as e:

@@ -116,7 +116,7 @@ class Tello_api():
 					content = self.tello.run()
 					
 					# print(f"content {content}")
-					conf['logger'].info(f"new fetch: {content}")
+					# conf['logger'].info(f"new fetch: {content}")
 					break
 
 				except Exception as e:
