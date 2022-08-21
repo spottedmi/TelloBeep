@@ -220,7 +220,7 @@ class Make_img(Censorship, Db_connector):
 
 
 
-		elif conf['POST_RATIO'] >= conf['POST_RATIO_WARNING']:
+		elif conf['POST_RATIO'] > conf['POST_RATIO_WARNING']:
 			print("POSTS ALERT ALERTTTT!!!!")
 			conf['logger'].warning(f" post ratio warning, {conf['POST_RATIO']}")		
 
