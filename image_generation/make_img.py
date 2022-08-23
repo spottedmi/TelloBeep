@@ -28,6 +28,7 @@ class Make_img(Censorship, Db_connector):
 		self.ALERT_SEND = False
 		self.WARNING_SEND = False
 		self.censor_flag = False
+		self.tell_ip = ""
 		
 
 		if q_list:
@@ -125,6 +126,7 @@ class Make_img(Censorship, Db_connector):
 			"send": False
 		}
 
+		self.edit_ratio()
 
 		if conf['AUTORUN'] and not self.censor_flag:
 			self.req["send"] = True
@@ -133,7 +135,7 @@ class Make_img(Censorship, Db_connector):
 			conf['logger'].info(f"image send automatically, {self.req['filename']}")
 			self.SENT = True
 
-		self.edit_ratio()
+
 	
 	def check_height(self):
 		if self.TEXT.count("\n") > 20:
@@ -188,20 +190,28 @@ class Make_img(Censorship, Db_connector):
 
 		if self.FIRST_POST == None:
 			self.FIRST_POST = int(time.time())
+			conf['logger'].warning(f"first post {self.FIRST_POST}")		
+
 
 		self.HOURS_PASSED = int(time.time()) 
 		self.HOURS_PASSED = ( self.HOURS_PASSED - self.FIRST_POST )/ 3600
+		# self.HOURS_PASSED = self.HOURS_PASSED * 40
+		conf['logger'].warning(f"HOURS_PASSED {self.HOURS_PASSED} ({self.HOURS_PASSED*60})")		
+
 
 		# if self.HOURS_PASSED:
 		if self.HOURS_PASSED > 1:
 			conf['POST_RATIO'] = int(conf['POST_COUNT'] / self.HOURS_PASSED)
+			# conf['POST_RATIO'] = conf['POST_RATIO'] * 100
 		else:
+			# self.HOURS_PASSED = 1.1
 			conf['POST_RATIO'] = int(conf['POST_COUNT'] / 1)
 
 
 
+
 		print(conf['POST_RATIO'])
-		conf['logger'].info(f"post ratio: {conf['POST_RATIO']}")		
+		conf['logger'].warning(f"post ratio: {conf['POST_RATIO']} posts: {conf['POST_COUNT']} hours: {self.HOURS_PASSED}")		
 
 		
 		if conf['POST_RATIO'] >= conf['POST_RATIO_ALERT']:
@@ -231,11 +241,11 @@ class Make_img(Censorship, Db_connector):
 				Notify(q_list=self.q_list ,error="POST_RATIO_WARNING", img=self.req.get("filename"))
 				self.WARNING_SEND = True
 		
-		if conf['POST_RATIO'] < conf['POST_RATIO_WARNING']:
+		if conf['POST_RATIO'] < conf['POST_RATIO_ALERT']:
 			conf['AUTORUN'] = True
 			# self.set_autorun(True)
 
-		conf['logger'].info(f"image: post ratio: {conf['POST_RATIO']}")
+		conf['logger'].info(f"image: post ratio: {conf['POST_RATIO']} autorun: {conf['AUTORUN']}")
 
 
 
@@ -370,6 +380,7 @@ class Make_img(Censorship, Db_connector):
 			conf['out_image_name'] = res["title"]
 			t = res["title"]
 			self.censor_flag = res["censure_flag"]
+			self.tell_ip = res["users_ip"]
 
 			#2021 10 22 11 03 53
 			conf['DATE'] = f"{t[8]}{t[9]}:{t[10]}{t[11]} {t[6]}{t[7]}/{t[4]}{t[5]}/{t[0:4]}"

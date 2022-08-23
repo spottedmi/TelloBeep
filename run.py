@@ -167,7 +167,8 @@ class Tello_api():
 					"title": title,
 					"metadata":elem,
 					"send": False,
-					"censure_flag": elem.flag
+					"censure_flag": elem.flag,
+					"users_ip": elem.users_ip,
 				}
 				conf['logger'].info(f"{req}")
 

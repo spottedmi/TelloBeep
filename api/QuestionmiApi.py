@@ -45,7 +45,7 @@ class Questionmi_api():
 			if conf['user']:
 				try:
 					self.get_tells(conf['user'].token)
-					conf['logger'].info(f"tells fetched")
+					# conf['logger'].info(f"tells fetched")
 
 					break
 
@@ -208,7 +208,6 @@ class Questionmi_api():
 			raise e
 		if response.ok:
 			data = response.json()
-			conf['logger'].info(f"tellonym fetched propertly")
 
 		else:
 			conf['logger'].error(f"questionmi get tells failed")

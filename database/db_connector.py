@@ -26,6 +26,9 @@ class Db_connector():
 
 
 			post.approved_date = datetime.now()
+			post.users_ip = self.tell_ip
+			print(post.users_ip)
+
 			db.session.add(post)
 			db.session.commit()
 

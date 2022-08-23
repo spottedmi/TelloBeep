@@ -108,6 +108,7 @@ class Posts(db.Model, UserMixin):
     approved = db.Column(db.Boolean(), nullable=True)
     approved_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     approved_date = db.Column(db.DateTime(timezone=True), nullable=True)
+    users_ip = db.Column(db.String(100))
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
