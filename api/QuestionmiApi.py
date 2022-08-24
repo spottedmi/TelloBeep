@@ -73,7 +73,7 @@ class Questionmi_api():
 
 	
 
-		for elem in conf['tells']:
+		# for elem in conf['tells']:
 			# self.remove_tell(elem.id)
 
 			
