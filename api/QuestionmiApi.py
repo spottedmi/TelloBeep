@@ -186,7 +186,8 @@ class Questionmi_api():
 	def get_tells(self, token=""):
 		# importlib.reload(requests)
 		conf['tells'] = list()
-		url = f"{conf['questionmi_api_base_url']}Tells"
+		# url = f"{conf['questionmi_api_base_url']}Tells"
+		url = f"{conf['questionmi_api_base_url']}GetTellsForPost"
 
 		headers = {}
 		headers["token"] = f"{conf['user'].token}"
@@ -231,7 +232,7 @@ class Questionmi_api():
 			# print(f"parsed tell: {tell}")
 			
 			conf['tells'].append(tell)
-			self.remove_tell(tell_id=tell.id)
+			# self.remove_tell(tell_id=tell.id)
 
 		return conf['tells']
 
