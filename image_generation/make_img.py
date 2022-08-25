@@ -195,22 +195,25 @@ class Make_img(Censorship, Db_connector):
 
 		self.HOURS_PASSED = int(time.time()) 
 		self.HOURS_PASSED = ( self.HOURS_PASSED - self.FIRST_POST )/ 3600
-		# self.HOURS_PASSED = self.HOURS_PASSED * 40
+		self.HOURS_PASSED = self.HOURS_PASSED * 40
 		conf['logger'].warning(f"HOURS_PASSED {self.HOURS_PASSED} ({self.HOURS_PASSED*60})")		
 
 
+		conf['POST_RATIO'] = int(conf['POST_COUNT'] / 1)
 		# if self.HOURS_PASSED:
-		if self.HOURS_PASSED > 1:
-			conf['POST_RATIO'] = int(conf['POST_COUNT'] / self.HOURS_PASSED)
-			# conf['POST_RATIO'] = conf['POST_RATIO'] * 100
-		else:
-			# self.HOURS_PASSED = 1.1
-			conf['POST_RATIO'] = int(conf['POST_COUNT'] / 1)
+		if self.HOURS_PASSED > 1:	
+			self.FIRST_POST = int(time.time())
+			conf['POST_COUNT'] = 1
+			conf['POST_RATIO'] = 1
 
 
+		# 	conf['POST_RATIO'] = int(conf['POST_COUNT'] / self.HOURS_PASSED)
+		# 	# conf['POST_RATIO'] = conf['POST_RATIO'] * 100
+		# else:
+		# 	# self.HOURS_PASSED = 1.1
+		# 	conf['POST_RATIO'] = int(conf['POST_COUNT'] / 1)
 
 
-		print(conf['POST_RATIO'])
 		conf['logger'].warning(f"post ratio: {conf['POST_RATIO']} posts: {conf['POST_COUNT']} hours: {self.HOURS_PASSED}")		
 
 		
