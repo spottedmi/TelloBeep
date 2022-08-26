@@ -195,7 +195,7 @@ class Make_img(Censorship, Db_connector):
 
 		self.HOURS_PASSED = int(time.time()) 
 		self.HOURS_PASSED = ( self.HOURS_PASSED - self.FIRST_POST )/ 3600
-		self.HOURS_PASSED = self.HOURS_PASSED * 40
+		# self.HOURS_PASSED = self.HOURS_PASSED * 40
 		conf['logger'].warning(f"HOURS_PASSED {self.HOURS_PASSED} ({self.HOURS_PASSED*60})")		
 
 
