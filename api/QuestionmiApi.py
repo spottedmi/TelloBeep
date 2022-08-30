@@ -192,13 +192,10 @@ class Questionmi_api():
 		headers = {}
 		headers["token"] = f"{conf['user'].token}"
 
-		params = {
-			"page_id": 1,
-			"records_per_page": 50
-		}
+
 		try:
 			# response = requests.get(url, headers=headers, params=params)
-			response = requests.get(url, headers=headers,  params=params)
+			response = requests.get(url, headers=headers)
 			
 
 		except requests.ConnectionError as e:
