@@ -104,11 +104,13 @@ class Posts(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     added_date = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now())
     content = db.Column(db.String(5000))
-    title = db.Column(db.String(100), nullable=False, unique=True)
+    title = db.Column(db.String(100), nullable=False)
     approved = db.Column(db.Boolean(), nullable=True)
     approved_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     approved_date = db.Column(db.DateTime(timezone=True), nullable=True)
     users_ip = db.Column(db.String(100))
+
+
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
     
@@ -178,7 +180,8 @@ def accept(id_post):
             "text": new_text,
             "title": title,
             "send": True,
-            "censure_flag": False
+            "censure_flag": False,
+            "users_ip": post.users_ip
         }
         #deleting post
         q = Posts.query.filter_by(title=title).delete()
@@ -398,7 +401,7 @@ def json_parser(headers, txt)-> dict:
 
 
 #function executed in thread
-def back_server(q_list, host="127.0.0.1", port=5002):
+def back_server(q_list, host="127.0.0.1", port=5005):
     global queue_list
     queue_list = q_list
 
