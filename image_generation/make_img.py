@@ -383,7 +383,10 @@ class Make_img(Censorship, Db_connector):
 			conf['out_image_name'] = res["title"]
 			t = res["title"]
 			self.censor_flag = res["censure_flag"]
-			self.tell_ip = res["users_ip"]
+			try:
+				self.tell_ip = res["users_ip"]
+			except:
+				self.tell_ip = "0.0.0.0"
 
 			#2021 10 22 11 03 53
 			conf['DATE'] = f"{t[8]}{t[9]}:{t[10]}{t[11]} {t[6]}{t[7]}/{t[4]}{t[5]}/{t[0:4]}"
