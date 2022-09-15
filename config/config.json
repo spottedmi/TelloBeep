@@ -90,6 +90,7 @@
     "user": null,
     "width": 0,
     "word_break": 10,
+    "characters_break",
     "DISCORD_CHANNEL_ID":"",
     "DISCORD_TOKEN":""
 }

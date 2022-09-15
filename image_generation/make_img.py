@@ -351,17 +351,36 @@ class Make_img(Censorship, Db_connector):
 		txt = self.TEXT.rsplit(" ")
 		res_txt = ""
 		words = conf['word_break']
-		i = 0 
-		for elem in txt:
-			i+=1
-			# res_txt.append(elem)
-			res_txt = res_txt +" "+ elem
-			#print(res_txt)
-			if not i%words:
-				res_txt = res_txt + "\n"
+		characters_break = conf['characters_break']
+		i = 0
+		chars = 0
 
-		self.TEXT = str(res_txt)	
+		if len(txt) <= 1:
+			txt = txt[0]
+			for i in range(0, int(len(txt) / characters_break)):
+				res_txt += f"{txt[0: 53]}-\n"
+				txt = txt[53:]
+			if res_txt.endswith("-"):
+				res_txt = res_txt[0:-1]
+			elif res_txt.endswith("-\n"):
+				res_txt = res_txt[0:-2]
 
+		else:
+
+			for elem in txt:
+				i += 1
+
+				chars += len(elem) + 1
+
+				if chars >= characters_break or i == words:
+					chars = i
+					i = 0
+					res_txt = res_txt + "\n"
+
+				res_txt = res_txt + " " + elem
+
+		self.TEXT = str(res_txt)
+		return self.TEXT
 
 		if self.censor_flag == True:
 			self.censure_txt()
