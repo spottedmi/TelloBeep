@@ -380,7 +380,6 @@ class Make_img(Censorship, Db_connector):
 				res_txt = res_txt + " " + elem
 
 		self.TEXT = str(res_txt)
-		return self.TEXT
 
 		if self.censor_flag == True:
 			self.censure_txt()
