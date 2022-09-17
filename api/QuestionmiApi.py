@@ -1,6 +1,5 @@
 import requests, json, sys, time
 from queue import Queue
-from threading import Thread
 import importlib
 from models.TellModels import Questionmi_user, Questionmi_tell
 
@@ -19,6 +18,8 @@ class Questionmi_api():
 	q_list = None
 	def __init__(self, q_list=None):
 		
+		
+
 		if q_list != None:
 			self.q_list = q_list
 
@@ -37,12 +38,15 @@ class Questionmi_api():
 
 				time.sleep(loop)
 				loop += loop
-				return False
+				raise e
+				# return False
 
 
 			if conf['user']:
 				try:
 					self.get_tells(conf['user'].token)
+					# conf['logger'].info(f"tells fetched")
+
 					break
 
 				except ConnectionTimeout as e:
@@ -69,8 +73,9 @@ class Questionmi_api():
 
 	
 
-		for elem in conf['tells']:
-			self.remove_tell(elem.id)
+		# for elem in conf['tells']:
+			# self.remove_tell(elem.id)
+
 			
 			
 		# self.load_locals()
@@ -170,6 +175,7 @@ class Questionmi_api():
 				}
 		headers = {}
 		headers["token"] = f"{conf['user'].token}"
+		conf['logger'].info(f"remove fetched tells")
 
 
 		r = requests.delete(url, headers=headers, params=payload)
@@ -180,18 +186,16 @@ class Questionmi_api():
 	def get_tells(self, token=""):
 		# importlib.reload(requests)
 		conf['tells'] = list()
-		url = f"{conf['questionmi_api_base_url']}Tells"
+		# url = f"{conf['questionmi_api_base_url']}Tells"
+		url = f"{conf['questionmi_api_base_url']}GetTellsForPost"
 
 		headers = {}
 		headers["token"] = f"{conf['user'].token}"
 
-		params = {
-			"page_id": 1,
-			"records_per_page": 50
-		}
+
 		try:
 			# response = requests.get(url, headers=headers, params=params)
-			response = requests.get(url, headers=headers,  params=params)
+			response = requests.get(url, headers=headers)
 			
 
 		except requests.ConnectionError as e:
@@ -202,11 +206,15 @@ class Questionmi_api():
 			raise e
 		if response.ok:
 			data = response.json()
-		else:
-			conf['logger'].error(f"questionmi get tells failed")
 
-			x = response.json()["err"]
-			x = x["code"]
+		else:
+			conf['logger'].error(f"questionmi get tells failed: response not ok {response.status_code} content: {response.content}")
+			try:
+				x = response.json()["err"]
+				x = x["code"]
+			except:
+				x = response.status_code
+			conf['logger'].error(f"error: {x}" )
 
 			if x == conf['ERRORS'].get("token"):
 				raise TokenInvalidQuestionmi
@@ -222,7 +230,7 @@ class Questionmi_api():
 			# print(f"parsed tell: {tell}")
 			
 			conf['tells'].append(tell)
-			self.remove_tell(tell_id=tell.id)
+			# self.remove_tell(tell_id=tell.id)
 
 		return conf['tells']
 
