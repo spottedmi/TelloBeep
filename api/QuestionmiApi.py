@@ -206,15 +206,15 @@ class Questionmi_api():
 			raise e
 		if response.ok:
 			data = response.json()
-
 		else:
-			conf['logger'].error(f"questionmi get tells failed")
-
-			x = response.json()["err"]
-			x = x["code"]
+			conf['logger'].error(f"questionmi get tells failed: response not ok {response.status_code} content: {response.content}")
+			try:
+				x = response.json()["err"]
+				x = x["code"]
+			except:
+				x = response.status_code
 			conf['logger'].error(f"error: {x}" )
-
-
+      
 			if x == conf['ERRORS'].get("token"):
 				raise TokenInvalidQuestionmi
 			return x
