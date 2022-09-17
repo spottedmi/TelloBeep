@@ -15,11 +15,24 @@ class Instagram_api():
 
     def login(self):
         self.bot = Client()
-        # self.bot.set_proxy("http://80.211.246.8:8080")
-        # print("proxy set")
+        try:
+            self.bot.load_settings(conf["INSTAGRAM_SESSION"])
+            conf['logger'].info(f"logged from file, soft login")
+            Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
+
+            return self.bot
+
+        except FileNotFoundError:
+            conf['logger'].warning(f"could not log from file, hard login")
+            pass
+
+        
+
         if conf['LOGIN_INSTAGRAM'] != "" and conf['PASSWORD_INSTAGRAM'] != "":
             self.bot.login(conf['LOGIN_INSTAGRAM'], conf['PASSWORD_INSTAGRAM'])
             conf['logger'].info(f"instagram logged")
+            self.bot.dump_settings(conf["INSTAGRAM_SESSION"])
+            conf['logger'].info(f"session dumped")
 
             print("bot logged")
             Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")

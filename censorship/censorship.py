@@ -30,6 +30,8 @@ class Censorship():
 			
 
 	def censure_txt(self) -> str:
+		conf['logger'].info(f"censuring text")
+
 		words = self.TEXT.replace(",", "")
 		words = words.replace(".", "")
 		words = words.replace("\n", " ")
@@ -54,6 +56,8 @@ class Censorship():
 					
 					self.TEXT = self.TEXT.replace(swear, elem_rep)
 					self.TEXT = self.TEXT.replace(elem, elem_rep)
+					conf['logger'].info(f"replacing: {elem} {elem_rep} ")
+
 		return self.TEXT
 
 	def flag_word(self) -> str:

@@ -1,62 +1,26 @@
-import json, os
-import logging
-
-
-
-class CustomFormatter(logging.Formatter):
-
-    grey = "\x1b[38;21m"
-    yellow = "\x1b[33;21m"
-    red = "\x1b[31;21m"
-    bold_red = "\x1b[31;1m"
-    reset = "\x1b[0m"
-    format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
-
-    FORMATS = {
-        logging.DEBUG: grey + format + reset,
-        logging.INFO: grey + format + reset,
-        logging.WARNING: yellow + format + reset,
-        logging.ERROR: red + format + reset,
-        logging.CRITICAL: bold_red + format + reset
-    }
-
-    def format(self, record):
-        log_fmt = self.FORMATS.get(record.levelno)
-        formatter = logging.Formatter(log_fmt)
-        return formatter.format(record)
-
+import json
+import os
 
 
 def make_absolute_path(filepath):
-	absolute_path = os.path.abspath(__file__)
-	path = os.path.dirname(absolute_path) + "/"
-	path = f"{path}{filepath}"
-	return path
+    absolute_path = os.path.abspath(__file__)
+    path = os.path.dirname(absolute_path) + "/"
+    path = f"{path}{filepath}"
+    return path
 
-
-
-f = open("config/config.json", "r")
+f = open(f"{os.path.dirname(__file__)}/config/config.json", "r")
 config = f.read()
 f.close()
 conf = json.loads(config)
-
-conf["logger"] = logging.getLogger(__name__)
-fh = logging.FileHandler(conf['LOG_FILE'])
-fh.setLevel(logging.DEBUG)
-fh.setFormatter(CustomFormatter())
-conf["logger"].addHandler(fh)
-conf["logger"].setLevel(logging.DEBUG)
 
 conf['token_file_tellonym'] = make_absolute_path(conf['token_file_tellonym'])
 conf['BAD_WORDS'] = make_absolute_path(conf['BAD_WORDS'])
 conf['thumb_path'] = make_absolute_path(conf['thumb_path'])
 conf['out_image_path'] = make_absolute_path(conf['out_image_path'])
+conf['INSTAGRAM_SESSION'] = make_absolute_path(conf['INSTAGRAM_SESSION'])
 
 
 def dump_json(self):
-
-
-
 	f = open("config.json", "w+")
 	json.dump(conf, fp=f, indent=4)
 	f.close()

@@ -10,7 +10,7 @@ class Questionmi_tell():
 		self.id = tellJSON["id"]
 		self.tell = tellJSON["text"]
 		self.created_at = tellJSON["created_at"]
-		user_ip = tellJSON["users_ip"]
+		self.users_ip = tellJSON["users_ip"]
 		# conf['user']s_fingerprint = tellJSON["users_fp"]
 		
 
