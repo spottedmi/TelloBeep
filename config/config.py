@@ -1,14 +1,11 @@
 import json
 import os
 
-
 def make_absolute_path(filepath):
-    absolute_path = os.path.abspath(__file__)
-    path = os.path.dirname(absolute_path) + "/"
-    path = f"{path}{filepath}"
+    path = f"{os.path.abspath('.')}/{filepath}"
     return path
 
-f = open(f"{os.path.dirname(__file__)}/config/config.json", "r")
+f = open(f"{os.path.dirname(__file__)}/config.json", "r")
 config = f.read()
 f.close()
 conf = json.loads(config)
@@ -18,6 +15,7 @@ conf['BAD_WORDS'] = make_absolute_path(conf['BAD_WORDS'])
 conf['thumb_path'] = make_absolute_path(conf['thumb_path'])
 conf['out_image_path'] = make_absolute_path(conf['out_image_path'])
 conf['INSTAGRAM_SESSION'] = make_absolute_path(conf['INSTAGRAM_SESSION'])
+
 
 
 def dump_json(self):

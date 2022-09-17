@@ -1,8 +1,9 @@
-from discord.ext import commands
 import discord
+from discord.ext import commands
 import datetime
 import asyncio
 
+# commands = discord.ext.commands
 
 time = datetime.datetime.now
 

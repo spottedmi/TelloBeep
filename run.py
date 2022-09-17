@@ -5,14 +5,19 @@ import time, random, json, os, sys
 from image_generation.make_img import Make_img
 from backend.server import back_server
 
-from api.TellonymApi import Tellonym_api
-from api.QuestionmiApi import Questionmi_api
-from api.Instagram_Api import Instagram_api
+from api import Tellonym_api
+from api import Questionmi_api
+from api import Instagram_api
+# from api.Instagram_Api import Instagram_api
 
-from discord.discord_bot import Discord_bot
 from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError
 from config import conf
-from discord.notifications import Notify
+
+# from discord.discord_bot import Discord_bot
+# from discord.notifications import Notify
+from notify import Discord_bot
+from notify import Notify
+
 
 from logs.logger import Logger
 import multiprocessing
@@ -116,7 +121,7 @@ class Tello_api():
 					content = self.tello.run()
 					
 					# print(f"content {content}")
-					# conf['logger'].info(f"new fetch: {content}")
+					conf['logger'].info(f"new fetch: {content}")
 					break
 
 				except Exception as e:

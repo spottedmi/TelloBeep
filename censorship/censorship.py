@@ -1,6 +1,6 @@
 from config import conf
 
-from discord.notifications import Notify
+from notify import Notify
 
 
 class Censorship():

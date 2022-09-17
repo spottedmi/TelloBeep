@@ -6,7 +6,7 @@ from models.TellModels import Tellonym_user, Tellonym_tell
 from config import conf
 from censorship.censorship import Censorship
 
-from discord.notifications import Notify
+from notify import Notify
 
 from exceptions.exceptions import TokenInvalidTellonym, ConnectionTimeout, CaptchaRequired
 

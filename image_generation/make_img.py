@@ -13,7 +13,7 @@ from database.db_connector import Db_connector
 
 from config import conf
 
-from discord.notifications import Notify
+from notify import Notify
 
 class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
@@ -348,14 +348,22 @@ class Make_img(Censorship, Db_connector):
 	def prepare_text(self) -> str:
 		"cut text and prepare to show"
 
+		conf['logger'].debug(f"prepare text input: {self.TEXT}" )
+
 		txt = self.TEXT.rsplit(" ")
+		conf['logger'].debug(f"prepare text split: {self.TEXT}" )
+
 		res_txt = ""
+
 		words = conf['word_break']
 		characters_break = conf['characters_break']
 		i = 0
 		chars = 0
+		conf['logger'].debug(f"prepare text variables load: : words:{words} characters_break:{characters_break} i:{i} chars:{chars}" )
 
 		if len(txt) <= 1:
+			conf['logger'].debug(f"prepare text: splitted text is too short: text: {txt}" )
+
 			txt = txt[0]
 			for i in range(0, int(len(txt) / characters_break)):
 				res_txt += f"{txt[0: 53]}-\n"
@@ -366,13 +374,17 @@ class Make_img(Censorship, Db_connector):
 				res_txt = res_txt[0:-2]
 
 		else:
+			conf['logger'].debug(f"prepare text: splitted text is long enough to process: text: {txt}")
 
 			for elem in txt:
 				i += 1
-
 				chars += len(elem) + 1
+				conf['logger'].debug(f"chars in i: chars: {chars}  elem: {elem}"  )
+
 
 				if chars >= characters_break or i == words:
+					conf['logger'].debug(f"prepare text: break text {chars} >= {characters_break} or {i} == {words} ")
+
 					chars = i
 					i = 0
 					res_txt = res_txt + "\n"
@@ -380,6 +392,9 @@ class Make_img(Censorship, Db_connector):
 				res_txt = res_txt + " " + elem
 
 		self.TEXT = str(res_txt)
+		conf['logger'].debug(f"text prepared: {self.TEXT}" )
+
+
 
 		if self.censor_flag == True:
 			self.censure_txt()
