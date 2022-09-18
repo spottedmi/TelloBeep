@@ -1,1 +1,0 @@
-from .make_img import Make_img
