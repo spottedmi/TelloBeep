@@ -350,46 +350,24 @@ class Make_img(Censorship, Db_connector):
 
 		conf['logger'].debug(f"prepare text input: {self.TEXT}" )
 
-		txt = self.TEXT.rsplit(" ")
+		# txt = self.TEXT.rsplit(" ")
+		txt = self.TEXT
 		conf['logger'].debug(f"prepare text split: {self.TEXT}" )
-
 		res_txt = ""
+		for i,char in enumerate(txt):
+			if i%(conf["characters_break"]-10) == 0 and i !=0 :
+				if txt[i] == " ":
+					res_txt += f"{char}\n"
+				else:
+					res_txt += f"{char}"
+					index = res_txt.rfind(" ") 
+					if index > 0:
+						res_txt = f"{res_txt[:index]}\n{res_txt[index:]}"
+					else:
+						res_txt = f"{res_txt[:i]}-\n{res_txt[i:]}"
+			else:
+				res_txt = f"{res_txt}{char}"
 
-		words = conf['word_break']
-		characters_break = conf['characters_break']
-		i = 0
-		chars = 0
-		conf['logger'].debug(f"prepare text variables load: : words:{words} characters_break:{characters_break} i:{i} chars:{chars}" )
-
-		if len(txt) <= 1:
-			conf['logger'].debug(f"prepare text: splitted text is too short: text: {txt}" )
-
-			txt = txt[0]
-			for i in range(0, int(len(txt) / characters_break)):
-				res_txt += f"{txt[0: 53]}-\n"
-				txt = txt[53:]
-			if res_txt.endswith("-"):
-				res_txt = res_txt[0:-1]
-			elif res_txt.endswith("-\n"):
-				res_txt = res_txt[0:-2]
-
-		else:
-			conf['logger'].debug(f"prepare text: splitted text is long enough to process: text: {txt}")
-
-			for elem in txt:
-				i += 1
-				chars += len(elem) + 1
-				conf['logger'].debug(f"chars in i: chars: {chars}  elem: {elem}"  )
-
-
-				if chars >= characters_break or i == words:
-					conf['logger'].debug(f"prepare text: break text {chars} >= {characters_break} or {i} == {words} ")
-
-					chars = i
-					i = 0
-					res_txt = res_txt + "\n"
-
-				res_txt = res_txt + " " + elem
 
 		self.TEXT = str(res_txt)
 		conf['logger'].debug(f"text prepared: {self.TEXT}" )
