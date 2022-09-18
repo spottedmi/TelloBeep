@@ -221,7 +221,9 @@ class Make_img(Censorship, Db_connector):
 			conf['logger'].warning(f" post ratio alert, autorun off, {conf['POST_RATIO']}")
 
 			print('-------------  TO MAY POSTS, AUTO RUN OFF')
+			
 			self.db_set_approved(state=None)
+		
 			# self.set_autorun(False)
 			conf['AUTORUN'] = False
 			# self.get_autorun()
@@ -361,7 +363,8 @@ class Make_img(Censorship, Db_connector):
 				else:
 					res_txt += f"{char}"
 					index = res_txt.rfind(" ") 
-					if index > 0:
+					# print(f"break statement {(i%conf['characters_break']-index)}")
+					if index > 0 and (i%conf["characters_break"]-index) > 10:
 						res_txt = f"{res_txt[:index]}\n{res_txt[index:]}"
 					else:
 						res_txt = f"{res_txt[:i]}-\n{res_txt[i:]}"
