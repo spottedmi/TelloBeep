@@ -401,7 +401,7 @@ def json_parser(headers, txt)-> dict:
 
 
 #function executed in thread
-def back_server(q_list, host="127.0.0.1", port=5005):
+def back_server(q_list, host="127.0.0.1", port=5002):
     global queue_list
     queue_list = q_list
 
