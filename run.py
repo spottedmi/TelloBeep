@@ -2,24 +2,24 @@
 from queue import Queue
 import time, random, json, os, sys
 
-from image_generation.make_img import Make_img
-from backend.server import back_server
+from TelloBeep.image_generation.make_img import Make_img
+from TelloBeep.backend.server import back_server
 
-from api import Tellonym_api
-from api import Questionmi_api
-from api import Instagram_api
+from TelloBeep.api import Tellonym_api
+from TelloBeep.api import Questionmi_api
+from TelloBeep.api import Instagram_api
 # from api.Instagram_Api import Instagram_api
 
 from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError
-from config import conf
+from TelloBeep.config import conf
 
 # from discord.discord_bot import Discord_bot
 # from discord.notifications import Notify
-from notify import Discord_bot
-from notify import Notify
+from TelloBeep.notify import Discord_bot
+from TelloBeep.notify import Notify
 
 
-from logs.logger import Logger
+from TelloBeep.logs.logger import Logger
 import multiprocessing
 #_____________________________________________________________
 #

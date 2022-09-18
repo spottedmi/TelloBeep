@@ -1,0 +1,271 @@
+body{
+	display: flex;
+	flex-direction: column;
+	height: auto;
+	width: 100vw;
+	background: #202020;
+	overflow-x: hidden;
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+
+header{
+	width: 100vw;
+	background: #20283E;
+	color:  white;
+	font-size: 3em;
+	display: flex;
+	justify-content: space-around;
+	flex-direction: column;
+	align-items: center;
+}
+
+header > div{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin: 0;
+	color: #DADADA;
+	width: 70%;
+}
+
+header > div > a > p{
+	margin: 0;
+	font-size: 5vh;
+}
+
+header > div > a > button{
+	border: none;
+	background: transparent;
+	color: #DADADA;
+	font-size: 17px;
+}
+
+content{
+		transition: all 0.5s linear;
+}
+
+form > textarea {
+	width: 30vw;
+	background: #20283E;
+	color: #DADADA;
+	border: none;
+	font-size: 17px;
+}
+
+#settingsForm{
+	display: flex;
+	flex-direction: column;
+	align-self: center;
+	width: 50%;
+}
+
+#settingsForm > textarea{
+	width: 100%;
+	height: 17vw;
+	padding: 10px;
+	background: #20283E;
+	color: #DADADA;
+	border: none;
+	font-size: 17px;
+}
+
+#settingsForm > input{
+	background: #20283E;
+	color: #DADADA;
+	border: none;
+	font-size: 17px;
+	padding: 10px;
+}
+
+#settingsForm > p{
+	color: #DADADA;
+	margin-bottom: 5px;
+	font-size: 25px;
+}
+
+#filterInput{
+	width: 100%;
+}
+
+.uploadButton{
+	width: 40%;
+	background: #484848;
+	color: #DADADA;
+	border: none;
+	font-size: 17px;
+	padding: 10px;
+	margin-top: 10px;
+	border-radius: 10px;
+	opacity: 80%;
+	align-self: center;
+}
+
+.uploadButton:hover{
+	  opacity: 100%;
+}
+.remove {
+	z-index: -1;    
+    margin-top:  -75vh;
+    background: linear-gradient(0deg, #ff00008f, white);
+}
+
+.accept {
+	z-index: -1;    
+    margin-top:  -75vh;
+    background: linear-gradient(0deg, #90ff758f, white);
+}
+
+@media  (orientation:landscape){
+	header{
+		height: 10vh;
+	}
+
+	a > button{
+		height: auto;
+	}
+
+
+	content{
+		flex-grow: 1;
+		z-index: 4;
+	}
+
+	br{
+		width: 90%;
+		background-color:  black;
+	}
+
+	form{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+		margin: 2vh 0 ;
+	}
+
+	form > div{
+		display: flex;
+		flex-direction: column;
+	}
+
+	.accReject{
+		width: 10vw;
+
+	}
+
+	.accReject > input{
+		height: 40%;
+		margin:  10%;
+		color:  white;
+		font-size:  1.5em;
+		border: none;
+		border-radius: 10px;
+	}
+
+	.accReject > [name="accept"]{
+		background-color: green;
+	}
+
+	.accReject > [name="reject"]{
+		background-color: #D32D41;
+	}	
+	
+	img{
+		height: 400px;
+		width: 400px;
+	}
+
+	a{
+		height: 4vh;
+		margin:  0 5vw;
+		display:  flex;
+		font-size:  5vh;
+	}
+
+
+}
+@media (orientation:portrait){
+
+	header{
+		font-size: 2em;
+		height: 7vh;
+	}
+	header > div > a{
+		padding: 10px;
+		font-size: 1.5 em;
+	}
+	header > div > a > button {
+		padding: 10px;
+		font-size: 1.2em;
+	}
+
+
+	header > div > p{
+		display: none;
+	}
+
+	#settingsForm{
+		width: 90%;
+	}
+
+	content{
+	    position: absolute;
+	    height: 93vh;
+	    width: 100vw;
+	    background: white;
+	    width: 100vw;
+	    bottom: 0;
+		transition: all 0.5s linear;
+		visibility: hidden;
+
+	}
+	content:last-of-type{
+	 	z-index: 10;
+		visibility: visible;
+	 }
+
+	form{
+		height: auto;
+		width: 100vw;
+		display:  flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	form > textarea { 
+		height: 20vh;
+		width: 90vw;
+		font-size:  2.5em;
+	 }
+	 form > .button_div { 
+		height: 10vh;
+		width: 90vw;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+	 }
+	 form > img {
+	 	width: 100vw;
+	 	margin-bottom: 1vh;
+	 }
+	 .accReject{
+	 	width: 100vw;
+	 	height: 20vh;
+	 	display: flex;
+	 	justify-content: space-around;
+	 	align-items: center;
+	 	/*display: none;*/
+	 }
+	 .accReject > input{
+	 	height: 10vh;
+	 	width: 40vw;
+	 	font-size: 2.5em;
+	 }
+	 
+
+
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mainpage.css') }}"> -->
+	<link rel="stylesheet" type="text/css" href="../static/mainpage.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.0-rc.3/jquery-ui.js"></script>
+	<title>Accepted Tells</title>
+</head>
+<body>
+	<header>
+		<div>
+			<p>TelloBeep</p>
+			<a href="/dashboard"> 
+				<button>dashboard</button>
+			</a>
+			<a href="/accepted"> 
+				<button>accepted</button>
+			</a>
+			<a href="/rejected">
+				<button>rejected</button>
+			</a>    
+			<a href="/settings">
+				<button>settings</button>
+			</a>   
+			<a href="/logout"> 
+				<button>logout</button>
+			</a> 
+		</div>
+	</header>
+
+	{% for post in posts %}
+		<content>
+			<form method="POST" action="/posts/{{ post.id }}">
+				<input type="hidden" name="title" value={{post.title}}>
+				<!-- <img src="{{ url_for('static', filename='{{ thumb }}') }}" > -->
+				<img src="/static/thumbnails/{{ post.title }}_thumbnail.jpg">
+
+				<textarea>{{ post.content }}</textarea>
+				<p>{{ post.approved_by }}</p>
+			</form>
+			<br>
+		</content>
+	{% endfor %}
+	
+	<script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+</body>
+</html>
