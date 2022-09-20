@@ -1,2 +1,11 @@
 print(__package__)
-from TelloBeep.Make_img import Make_img
+
+import unittest
+from TelloBeep.api import Tellonym_api
+
+class TestModule(unittest.TestCase):
+    def test_Tellonym_api(self):
+        pass
+
+if __name__ == '__main__':
+    unittest.main()
