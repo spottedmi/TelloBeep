@@ -343,6 +343,8 @@ class Make_img(Censorship, Db_connector):
 			hour  = str(date.tm_hour) if len(str(date.tm_hour)) == 2 else f"0{date.tm_hour}"
 			minutes  = str(date.tm_min) if len(str(date.tm_min)) == 2 else f"0{date.tm_min}"
 			mil = int(round(time.time() * 1000))
+			if day == "24":
+				day = "00"
 			conf['DATE'] = f"{hour}:{minutes} {day}/{month}/{yr}"
 
 
