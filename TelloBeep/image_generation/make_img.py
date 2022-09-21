@@ -346,7 +346,6 @@ class Make_img(Censorship, Db_connector):
 			conf['DATE'] = f"{hour}:{minutes} {day}/{month}/{yr}"
 
 
-
 	def prepare_text(self) -> str:
 		"cut text and prepare to show"
 
@@ -355,21 +354,31 @@ class Make_img(Censorship, Db_connector):
 		# txt = self.TEXT.rsplit(" ")
 		txt = self.TEXT
 		conf['logger'].debug(f"prepare text split: {self.TEXT}" )
+		
 		res_txt = ""
-		for i,char in enumerate(txt):
-			if i%(conf["characters_break"]-10) == 0 and i !=0 :
-				if txt[i] == " ":
-					res_txt += f"{char}\n"
+		chars_inline = 0
+		space = 0
+
+		for char in txt:
+			chars_inline +=1
+			if char == " ":
+				space += 1
+			if chars_inline >= ((conf['characters_break']-10) + (space/2)):
+				if char == " ":
+					res_txt += f"\n"
 				else:
-					res_txt += f"{char}"
-					index = res_txt.rfind(" ") 
-					# print(f"break statement {(i%conf['characters_break']-index)}")
-					if index > 0 and (i%conf["characters_break"]-index) > 10:
-						res_txt = f"{res_txt[:index]}\n{res_txt[index:]}"
+					if (len(res_txt) - res_txt.rfind(" ")) > 10:
+						res_txt += f"-\n"
+
 					else:
-						res_txt = f"{res_txt[:i]}-\n{res_txt[i:]}"
-			else:
-				res_txt = f"{res_txt}{char}"
+						index = res_txt.rfind(" ")
+						res_txt = f"{res_txt[:index]}\n{res_txt[index:]}"
+				
+				chars_inline = 0
+				space = 0
+
+			
+			res_txt += char
 
 
 		self.TEXT = str(res_txt)
