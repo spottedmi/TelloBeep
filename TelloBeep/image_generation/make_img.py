@@ -413,8 +413,13 @@ class Make_img(Censorship, Db_connector):
 			except:
 				self.tell_ip = "0.0.0.0"
 
-			#2021 10 22 11 03 53
-			conf['DATE'] = f"{t[8]}{t[9]}:{t[10]}{t[11]} {t[6]}{t[7]}/{t[4]}{t[5]}/{t[0:4]}"
+			#2021 10 22 11 03 53			
+			if f"{t[8]}{t[9]}" == "24":
+				hour = f"00"
+			else:
+				hour = f"{t[8]}{t[9]}"
+				
+			conf['DATE'] = f"{hour}:{t[10]}{t[11]} {t[6]}{t[7]}/{t[4]}{t[5]}/{t[0:4]}"
 
 			self.TEXT_tmp = data
 			if data:
