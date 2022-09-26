@@ -211,36 +211,74 @@ if __name__ == "__main__":
 		"2main_thread": manager.Queue(),
 	}
 	
+	class Fetching_api(Tello_api):
+		def __init__(self, q_list):
+			super().__init__(q_list, fetch_class=Questionmi_api)
+
 	
 	start = StartUp()
 	
-	#generating images
-	t1 = multiprocessing.Process(target = Make_img, kwargs={"q_list":q_list})
-	t1.daemon = True
-	t1.start()
-	
-	#backend
-	t2 = multiprocessing.Process(target = back_server, kwargs={"q_list":q_list})
-	t2.daemon = True
-	t2.start()
-	
-	#insta thread
-	t3 = multiprocessing.Process(target = Insta_api, kwargs={"q_list":q_list})
-	t3.daemon = True
-	# t3.start()
-	
-	#teloym thread
-	# t4 = multiprocessing.Proces(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
-	t4 = multiprocessing.Process(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Questionmi_api})
-	t4.daemon = True
-	t4.start()
-	
-	# #discord notifications
-	# from TelloBeep.notify import bot_loop_start
+	processes = {}
+	apps = [Make_img, back_server, Insta_api, Fetching_api, Discord_bot]
+	n = 0
+	for app in apps:
+		conf["logger"].info(f"__init process__ {app}")
+		p = multiprocessing.Process(target = app, kwargs={"q_list": q_list})
+		p.daemon = True
+		p.start()
 
-	t5 = multiprocessing.Process(target = Discord_bot, kwargs={"q_list":q_list})
-	t5.daemon = True
-	t5.start()
+		processes[n] = (p, app) # Keep the process and the app to monitor or restart
+		n += 1
+		conf["logger"].info(f"process run, status ok")
+
+
+
+	# #generating images
+	# t1 = multiprocessing.Process(target = Make_img, kwargs={"q_list":q_list})
+	# t1.daemon = True
+	# t1.start()
+	
+	# #backend
+	# t2 = multiprocessing.Process(target = back_server, kwargs={"q_list":q_list})
+	# t2.daemon = True
+	# t2.start()
+	
+	# #insta thread
+	# t3 = multiprocessing.Process(target = Insta_api, kwargs={"q_list":q_list})
+	# t3.daemon = True
+	# # t3.start()
+	
+	# #teloym thread
+	# # t4 = multiprocessing.Proces(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
+	# t4 = multiprocessing.Process(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Questionmi_api})
+	# t4.daemon = True
+	# t4.start()
+	
+	# # #discord notifications
+	# # from TelloBeep.notify import bot_loop_start
+
+	# t5 = multiprocessing.Process(target = Discord_bot, kwargs={"q_list":q_list})
+	# t5.daemon = True
+	# t5.start()
+
+	while 1 :
+		while len(processes) > 0:
+			for n in processes.keys():
+				(p, a) = processes[n]
+				time.sleep(0.5)
+
+				if not p.is_alive():
+					print(f"class {a} returned error")
+					conf["logger"].warning(f"process raised an error {a}, restarting...")
+
+					p = multiprocessing.Process(target = a, kwargs={"q_list": q_list})
+					p.daemon = True 
+					p.start()
+					
+					processes[n] = (p, a)
+
+		time.sleep(5)
+
 
 	# while 1:		
 	# 	try:
@@ -260,5 +298,4 @@ if __name__ == "__main__":
 
 
 
-while 1 :
-	time.sleep(60)
+
