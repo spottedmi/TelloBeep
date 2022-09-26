@@ -227,7 +227,7 @@ if __name__ == "__main__":
 	#insta thread
 	t3 = multiprocessing.Process(target = Insta_api, kwargs={"q_list":q_list})
 	t3.daemon = True
-	t3.start()
+	# t3.start()
 	
 	#teloym thread
 	# t4 = multiprocessing.Proces(target = Tello_api, kwargs={"q_list":q_list, "fetch_class":Tellonym_api}).start()
@@ -236,24 +236,29 @@ if __name__ == "__main__":
 	t4.start()
 	
 	# #discord notifications
-	# t5 = Thread(target = Discord_bot, kwargs={"q_list":q_list}).start()
+	# from TelloBeep.notify import bot_loop_start
 
-	while 1:		
-		try:
-			Discord_bot(q_list)
+	t5 = multiprocessing.Process(target = Discord_bot, kwargs={"q_list":q_list})
+	t5.daemon = True
+	t5.start()
 
-		except OSError:
-			conf['logger'].critical(f"closing... OSError Too many open files")
-			for elem in multiprocessing.active_children():
-				elem.terminate()
-			conf['logger'].critical(f"all processes killed, exiting main thread")
+	# while 1:		
+	# 	try:
+	# 		Discord_bot(q_list)
 
-			sys.exit(0)
+	# 	except OSError:
+	# 		conf['logger'].critical(f"closing... OSError Too many open files")
+	# 		for elem in multiprocessing.active_children():
+	# 			elem.terminate()
+	# 		conf['logger'].critical(f"all processes killed, exiting main thread")
 
-		except Exception as e:
-			print("cannot log into bot")
-			time.sleep(10)
+	# 		sys.exit(0)
+
+	# 	except Exception as e:
+	# 		print("cannot log into bot")
+	# 		time.sleep(10)
 
 
 
-
+while 1 :
+	time.sleep(60)
