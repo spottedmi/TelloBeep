@@ -14,6 +14,7 @@ from TelloBeep.exceptions.exceptions import TokenInvalidTellonym, ConnectionTime
 
 
 
+
 class Tellonym_api():
 	q_list = None
 	def __init__(self, q_list=None):
