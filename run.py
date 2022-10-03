@@ -132,6 +132,7 @@ class Tello_api():
 					conf['logger'].info(f"tellonym user deleted")
 
 					print(f"fetch: error: {e}")
+					raise e
 
 					# content = self.tello.run()
 					time.sleep(10)
@@ -190,7 +191,7 @@ class StartUp():
 	def __init__(self):
 		Logger()
 		pid = os.getpid()
-		
+
 		os.popen(f"prlimit -n524288 -p {pid}")
 		# os.popen(f"prlimit -n4 -p {pid}")
 		# print(f"prlimit -n524288 -p {pid}")
@@ -226,7 +227,6 @@ if __name__ == "__main__":
 				sys.exit(0)
 
 			conf["logger"].info(f"fetching class is specified: {fetch_class}")
-			sys.exit(0)
 
 			super().__init__(q_list, fetch_class=fetch_class)
 
@@ -284,8 +284,9 @@ if __name__ == "__main__":
 				time.sleep(0.5)
 
 				if not p.is_alive():
-					print(f"class {a} returned error")
-					conf["logger"].warning(f"process raised an error {a}, restarting...")
+					print(f"class {a} returned error, {p}")
+
+					conf["logger"].warning(f"process {a} raised an error {p.exitcode}, restarting...")
 
 					p = multiprocessing.Process(target = a, kwargs={"q_list": q_list})
 					p.daemon = True 
