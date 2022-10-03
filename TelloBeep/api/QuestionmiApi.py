@@ -196,7 +196,7 @@ class Questionmi_api():
 
 		try:
 			# response = requests.get(url, headers=headers, params=params)
-			response = requests.get(url, headers=headers)
+			response = requests.get(url, headers=headers, timeout=20)
 			
 
 		except requests.ConnectionError as e:
