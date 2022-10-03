@@ -213,13 +213,29 @@ if __name__ == "__main__":
 	
 	class Fetching_api(Tello_api):
 		def __init__(self, q_list):
-			super().__init__(q_list, fetch_class=Questionmi_api)
+
+			#questionmi has priority
+			if conf.get("token_questionmi") != ""  or conf.get("questionmi_api_base_url") != "":
+				fetch_class = Questionmi_api
+
+			elif conf.get("LOGIN_TELLONYM") != "" or conf.get("PASSWORD_TELLONYM") != "":
+				fetch_class = Tellonym_api
+			else:
+				conf["logger"].critical(f"fetching class is not specified, shutting down")
+				print("fetching class is not specified, shutting down")
+				sys.exit(0)
+
+			conf["logger"].info(f"fetching class is specified: {fetch_class}")
+			sys.exit(0)
+
+			super().__init__(q_list, fetch_class=fetch_class)
 
 	
 	start = StartUp()
 	
 	processes = {}
 	apps = [Make_img, back_server, Insta_api, Fetching_api, Discord_bot]
+
 	n = 0
 	for app in apps:
 		conf["logger"].info(f"__init process__ {app}")
