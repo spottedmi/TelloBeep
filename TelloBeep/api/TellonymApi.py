@@ -173,7 +173,7 @@ class Tellonym_api():
 			"limit": "25"
 		}
 		try:
-			response = requests.get(url, headers=headers, params=params )
+			response = requests.get(url, headers=headers, params=params, timeout=20 )
 		except requests.ConnectionError as e:
 			print(f"error {e}")
 			raise ConnectionTimeout(q_list=self.q_list) 
