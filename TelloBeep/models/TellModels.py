@@ -29,4 +29,6 @@ class Tellonym_tell():
 		self.id = tellJSON["id"]
 		self.tell = tellJSON["tell"]
 		self.created_at = tellJSON["createdAt"]
+		self.users_ip = "0.0.0.0"
+
 		self.flag = False
