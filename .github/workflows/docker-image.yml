@@ -9,18 +9,14 @@ on:
 jobs:
 
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       -
         name: Build the Docker image
-        uses: actions/checkout@v3
         run: docker build --build-arg user=admin --build-arg password=password --tag tellobeep .
       
       -
         name: show built images
-        uses: actions/checkout@v1
         run: docker images
       -
         name: show secret
