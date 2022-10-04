@@ -1,10 +1,11 @@
 name: Docker Image CI
 
+
 on:
   push:
-    branches: [ "main", "develop", "Docker_integration" ]
+    branches: [ "main", "master"]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "master"]
 
 jobs:
 
@@ -12,8 +13,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: get repo
+        uses: actions/checkout@v3.1.0
+        with:
+          repository: spottedmi/TelloBeep
+          ref: Docker_integration
+      -
+        name: change dir
+        run: cd TelloBeep && tree -a
+      -
+        name: cd
+        run: cd TelloBeep && tree -a
+        
+      -
+        name: print git
+        run: git log
+      -
+        name: change branch
+        run: git checkout Docker_integration
+      -
+        name: tree
+        run: tree
+      -
         name: Build the Docker image
-        run: docker build --build-arg user=admin --build-arg password=password --tag tellobeep .
+        run:  docker build --build-arg user=admin --build-arg password=password --tag tellobeep .
       
       -
         name: show built images
@@ -21,8 +44,25 @@ jobs:
       -
         name: show secret
         env: 
-          secret: ${{ secrets.TEST_SECRET}}
+          secret: ${{ secrets.DOCKER_SECRET}}
         run: |
           echo $secret
-        
-    
+          
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: randomguy090
+          password: ${{ secrets.DOCKER_SECRET }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: user/app:latest
