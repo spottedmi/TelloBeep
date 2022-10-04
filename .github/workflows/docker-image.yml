@@ -1,0 +1,29 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main", "develop", "Docker_integration" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --build-arg user=admin --build-arg password=password --tag tellobeep .
+    
+    - name show built images
+    - run: docker images
+    
+    - name show secret
+    - env: 
+        secret: ${{ secrets.TEST_SECRET}}
+    - run: |
+        echo $secret
+        
+    
