@@ -1,12 +1,13 @@
-FROM python:latest
+FROM debian:latest
 ARG user
 ARG password
 
 WORKDIR /app
 COPY . .
-
-# RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
-RUN pip install -r requirements.txt
+RUN apt-get upgrade -y && apt-get update
+RUN apt-get install python3 sqlite3 python3-pip -y 
+RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
+# RUN pip install -r requirements.txt
 
 RUN python3 init.py -l $user -p $password
 
