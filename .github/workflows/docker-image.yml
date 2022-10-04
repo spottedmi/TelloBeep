@@ -12,42 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: get repo
-        uses: actions/checkout@v3.1.0
-        with:
-          repository: spottedmi/TelloBeep
-          ref: Docker_integration
-      -
-        name: change dir
-        run: cd TelloBeep && tree -a
-      -
-        name: cd
-        run: cd TelloBeep && tree -a
         
-      -
-        name: print git
-        run: git log
-      -
-        name: change branch
-        run: git checkout Docker_integration
-      -
-        name: tree
-        run: tree
-      -
-        name: Build the Docker image
-        run:  docker build --build-arg user=admin --build-arg password=password --tag tellobeep .
-      
-      -
-        name: show built images
-        run: docker images
-      -
-        name: show secret
-        env: 
-          secret: ${{ secrets.DOCKER_SECRET}}
-        run: |
-          echo $secret
-          
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
