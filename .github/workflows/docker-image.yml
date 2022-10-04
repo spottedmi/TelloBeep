@@ -13,17 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build --build-arg user=admin --build-arg password=password --tag tellobeep .
-    
-    - name show built images
-    - run: docker images
-    
-    - name show secret
-    - env: 
-        secret: ${{ secrets.TEST_SECRET}}
-    - run: |
-        echo $secret
+      -
+        name: Build the Docker image
+        uses: actions/checkout@v3
+        run: docker build --build-arg user=admin --build-arg password=password --tag tellobeep .
+      
+      -
+        name: show built images
+        uses: actions/checkout@v1
+        run: docker images
+      -
+        name: show secret
+        env: 
+          secret: ${{ secrets.TEST_SECRET}}
+        run: |
+          echo $secret
         
     
