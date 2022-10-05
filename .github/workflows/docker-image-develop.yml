@@ -1,18 +1,15 @@
-name: Docker Image CI
-
+name: Docker Image CI main branch
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 
 jobs:
-
   build:
-    runs-on: ubuntu-latest
+    runs-on: debian-latest
     steps:
-        
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -29,6 +26,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          platforms: linux/amd64,linux/arm64, linux/arm/v7
+          platforms: linux/amd64, linux/arm/v7
           push: true
-          tags: randomguy090/tellobeep:latest
+          tags: randomguy090/tellobeep:develop
