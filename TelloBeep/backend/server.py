@@ -16,7 +16,10 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
-from flask_bcrypt import Bcrypt
+# from flask_bcrypt import Bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
+
+
 import sys, datetime, json, base64
 
 import os
@@ -43,7 +46,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../database/db.sqlite"
 app.config["SECRET_KEY"] = "SECRET"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
+# bcrypt = Bcrypt(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -83,7 +86,9 @@ def setup():
 
     print(f" l: {login} p: {passwd}")
 
-    hashed_pass = bcrypt.generate_password_hash(passwd)
+    # hashed_pass = bcrypt.generate_password_hash(passwd)
+    hashed_pass = generate_password_hash(passwd)
+
     new_user = User(username=login, password=hashed_pass)
     
     db.session.add(new_user)
@@ -315,7 +320,8 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
 
         if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
+            # if bcrypt.check_password_hash(user.password, form.password.data):
+            if check_password_hash(user.password, form.password.data):
                 login_user(user)
                 return redirect("/")
 
