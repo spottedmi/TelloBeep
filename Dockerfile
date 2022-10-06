@@ -5,7 +5,7 @@ ARG password
 
 WORKDIR /app
 COPY . .
-RUN rm /app/TelloBeep/database/db.sqlite
+RUN rm /app/TelloBeep/database/db.sqlit*
 
 RUN apt-get update && apt-get upgrade -y
 
