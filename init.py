@@ -10,4 +10,8 @@ try:
 	os.mkdir("TelloBeep/backend/static/thumbnails")
 except Exception as e:
 	print(e)
+try:
+	os.remove("TelloBeep/database/db.sqlite")
+except:
+	pass
 setup()
