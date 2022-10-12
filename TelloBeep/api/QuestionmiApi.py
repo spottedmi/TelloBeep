@@ -183,7 +183,7 @@ class Questionmi_api():
 		
 		return r
 
-
+f
 	def get_tells(self, token=""):
 		# importlib.reload(requests)
 		conf['tells'] = list()
@@ -196,7 +196,7 @@ class Questionmi_api():
 
 		try:
 			# response = requests.get(url, headers=headers, params=params)
-			response = requests.get(url, headers=headers, timeout=20)
+			response = requests.get(url, headers=headers, timeout=40)
 			
 
 		except requests.ConnectionError as e:

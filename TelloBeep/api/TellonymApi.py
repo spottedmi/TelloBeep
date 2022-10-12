@@ -130,7 +130,7 @@ class Tellonym_api():
 		headers = conf['headers']
 		conf['headers']["Content-Length"] = f"{len(str(data_login))}"
 
-		response = requests.post(url, headers=headers, json=data_login, timeout=15)
+		response = requests.post(url, headers=headers, json=data_login, timeout=40)
 
 		data = response.json()
 
