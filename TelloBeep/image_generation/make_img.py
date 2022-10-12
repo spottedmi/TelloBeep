@@ -47,7 +47,7 @@ class Make_img(Censorship, Db_connector):
 			self.get_fonts()
 			conf['logger'].error(f"fonts imported")
 
-		except:
+		except Exception as e:
 			print(e)
 			# Notify(q_list=self.q_list, error="FONT_NOT_FOUfND")
 			conf['logger'].error(f"font not found")
