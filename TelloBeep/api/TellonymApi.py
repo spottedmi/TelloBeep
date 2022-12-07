@@ -51,7 +51,7 @@ class Tellonym_api():
 					time.sleep(loop)
 					loop += loop
 					print(f"sleep {loop}")
-					raise Exception("xD") from None
+					raise Exception("xD") 
 
 				except TokenInvalidTellonym as e:
 					print("Tellonym token invalid")
@@ -127,8 +127,8 @@ class Tellonym_api():
 			"limit": "25"
 		}
 
-		headers = conf['headers']
 		conf['headers']["Content-Length"] = f"{len(str(data_login))}"
+		headers = conf['headers']
 
 		response = requests.post(url, headers=headers, json=data_login, timeout=15)
 
