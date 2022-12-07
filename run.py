@@ -147,16 +147,14 @@ class Tello_api():
 
 			for elem in content:	
 				conf['logger'].info(f"loop of tellonyms")
-				#generate file name
-				if "." not in elem.created_at:
-					elem.created_at += ".00Z"
+				
+
 				tm , date = elem.created_at.rsplit("T")
 				y, M, d = tm.rsplit("-")
 				if len(M) == 1: M = f"0{M}"
 				date, mil = date.rsplit(".")
 				
 				h,m,s = date.rsplit(":")
-				h = str(int(h) + conf['TIMEZONE'])
 
 				if len(h) == 1: h = f"0{h}"
 				if len(m) == 1: m = f"0{m}"
