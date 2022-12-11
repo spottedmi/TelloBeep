@@ -404,14 +404,19 @@ class Make_img(Censorship, Db_connector):
 			
 			#res =  q2.get()
 
-			data = res["text"]
-			conf['out_image_name'] = res["title"]
-			t = res["title"]
-			self.censor_flag = res["censure_flag"]
-			try:
-				self.tell_ip = res["users_ip"]
-			except:
-				self.tell_ip = "0.0.0.0"
+			# data = res["text"]
+			data = res.tell
+			# conf['out_image_name'] = res["title"]
+			conf['out_image_name'] = res.title
+			# t = res["title"]
+			t = res.title
+			# self.censor_flag = res["censure_flag"]
+			self.censor_flag = res.flag
+			# try:
+			# 	self.tell_ip = res["users_ip"]
+			# except:
+			# 	self.tell_ip = "0.0.0.0"
+			self.tell_ip = res.users_ip
 
 			#2021 10 22 11 03 53			
 			if f"{t[8]}{t[9]}" == "24":
@@ -426,12 +431,12 @@ class Make_img(Censorship, Db_connector):
 				self.TEXT = data
 		
 				self.gen()
-			if res.get("send") and not self.SENT:
-				res = {
-				"title": conf['out_image_name'],
-				"filename": f"{conf['out_image_name']}.{conf['extension']}"
-				}
-
+			if res.send and not self.SENT:
+				# res = {
+				# "title": conf['out_image_name'],
+				# "filename": f"{conf['out_image_name']}.{conf['extension']}"
+				# }
+				res.filename = f"{conf['out_image_name']}.{conf['extension']}"
 	
 
 				insta.put(res)

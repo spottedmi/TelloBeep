@@ -69,38 +69,40 @@ class Tello_api():
 				conf['logger'].info(f"loop of tellonyms")
 				
 
-				tm , date = elem.created_at.rsplit("T")
-				y, M, d = tm.rsplit("-")
-				if len(M) == 1: M = f"0{M}"
-				date, mil = date.rsplit(".")
+				# tm , date = elem.created_at.rsplit("T")
+				# y, M, d = tm.rsplit("-")
+				# if len(M) == 1: M = f"0{M}"
+				# date, mil = date.rsplit(".")
 				
-				h,m,s = date.rsplit(":")
+				# h,m,s = date.rsplit(":")
 
-				if len(h) == 1: h = f"0{h}"
-				if len(m) == 1: m = f"0{m}"
-				if len(s) == 1: s = f"0{s}"
+				# if len(h) == 1: h = f"0{h}"
+				# if len(m) == 1: m = f"0{m}"
+				# if len(s) == 1: s = f"0{s}"
 		
-				if h == 24:
-					conf['logger'].info(f"24 hour detected")
-					h = "00"
+				# if h == 24:
+				# 	conf['logger'].info(f"24 hour detected")
+				# 	h = "00"
 
-				title = f"{y}{M}{d}{h}{m}{s}_{elem.id}"
-				conf['logger'].info(f"title: {title}")
-				req = {
-					"text": elem.tell,
-					"title": title,
-					"metadata":elem,
-					"send": False,
-					"censure_flag": elem.flag,
-					"users_ip": elem.users_ip,
-				}
-				conf['logger'].info(f"{req}")
+				# title = f"{y}{M}{d}{h}{m}{s}_{elem.id}"
+				conf['logger'].info(f"title: {elem.title}")
+				
+				# req = {
+				# 	"text": elem.tell,
+				# 	"title": title,
+				# 	"metadata":elem,
+				# 	"send": False,
+				# 	"censure_flag": elem.flag,
+				# 	"users_ip": elem.users_ip,
+				# }
+				# conf['logger'].info(f"{req}")
+				conf['logger'].info(f"{elem}")
 
 				q = self.q_list.get("2gen")
-				Notify(q_list=self.q_list, error=f"new tellonym ({elem.tell})")
+				Notify(q_list=self.q_list, error=f"new tellonym ({elem})")
 				conf["logger"].info("pushed to queue")
 
-				q.put(req)
+				q.put(elem)
 			time.sleep(5)
 
 				
