@@ -92,9 +92,15 @@ class Make_img(Censorship, Db_connector):
 
 		#footer
 		self.create_footer()
+
+		#watermark
+		if conf.get("watermark"):
+			self.create_watermark()
+
+
 		conf['logger'].error(f"image: create footer")
 
-
+		#icon generation
 		img = Image.open(conf['image_path'], "r")
 		img = img.resize(conf['image_size'], Image.ANTIALIAS)
 		conf['logger'].info(f"image: resizing")
@@ -108,6 +114,10 @@ class Make_img(Censorship, Db_connector):
 
 		#resizing and prepare to save
 		img = img.convert("RGB")
+		# img = Image.alpha_composite(img, d)    
+		# self.img_object = self.img_object.putalpha(d)
+
+
 		
 		self.save_img()
 		conf['logger'].info(f"image: saving image")
@@ -308,6 +318,16 @@ class Make_img(Censorship, Db_connector):
 		self.font = ImageFont.truetype(conf['fontname'], conf['fontsize'])
 		self.font_footer = ImageFont.truetype(conf['font_footer_name'], conf['font_footer_size'])
 		self.font_header = ImageFont.truetype(conf['font_header_name'], conf['header_font_size'])
+		self.font_watermark = ImageFont.truetype(conf['font_footer_name'], conf['watermark_font_size'])
+
+
+	def create_watermark(self) -> None:
+		mark = ImageDraw.Draw(self.img_object)
+		footer_coords = (conf['margin']["left"], conf['insta_res'][1]*0.93)
+		# print(footer_coords)
+		mark.text(footer_coords, conf['watermark'], fill=self.hex_to_rgb(conf['colorText']), font=self.font_watermark)
+
+
 
 	def set_margins(self) -> None:
 		"margins"
@@ -322,6 +342,7 @@ class Make_img(Censorship, Db_connector):
 		ftr = ImageDraw.Draw(self.img_object)
 		footer_coords = (conf['margin']["left"], conf['insta_res'][1]*conf['footer_position_ratio'])
 		# print(footer_coords)
+
 		ftr.text(footer_coords, conf['TEXT_footer'], fill=self.hex_to_rgb(conf['colorText']), font=self.font_footer)
 
 	def create_header(self) -> None:
