@@ -2,6 +2,8 @@ from TelloBeep.censorship import Censorship
 from TelloBeep.config import conf
 from datetime import datetime
 import time
+from datetime import datetime, time, timezone
+import pytz
 
 class Tells_Utills():
 
@@ -25,26 +27,53 @@ class Tells_Utills():
 
 		self.filename = None
 
+	def time_to_tz_naive(self, t, tz_in, tz_out):
+		return tz_in.localize(datetime.combine(datetime.today(), t)).astimezone(tz_out).time()
+
+	def find_timezone_name(self, minutes_offset_from_utc):
+		for tz in pytz.all_timezones:
+				minutes = pytz.timezone(tz).utcoffset(datetime.now()).total_seconds()/60
+				print(minutes, minutes_offset_from_utc)
+				if minutes == minutes_offset_from_utc:                
+					return tz
+
 
 	def get_date(self, tellJSON):
 		try:
-			d = datetime.strptime(tellJSON, "%Y-%m-%dT%H:%M:%S.000Z")
-			d = d.replace(hour=time.localtime().tm_hour)
-		except:
+
+			tellJSON, offset = tellJSON.split(".")
+			offset = int(offset[:-1])
+			offset = int(offset/60)
+
+			offset = self.find_timezone_name(offset)
+
+			d = datetime.strptime(tellJSON, "%Y-%m-%dT%H:%M:%S")
+			t = d.time()
+
+			LOCAL_TIMEZONE = datetime.now(timezone.utc).astimezone().tzinfo
+
+			t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"{LOCAL_TIMEZONE}"))
+			d = d.replace(hour=t.hour)
+
+			return d.strftime(format="%Y-%m-%dT%H:%M:%S")
+
+		except Exception as e:
+			print(e)
 			pass
+
 		try:	
 			d = datetime.strptime(tellJSON, "%Y-%m-%dT%H:%M:%S.%f")
 			d = d.replace(hour=time.localtime().tm_hour)
+			return d.strftime(format="%Y-%m-%dT%H:%M:%S.000Z")
 		except:
 			pass
 
-		return d.strftime(format="%Y-%m-%dT%H:%M:%S.000Z")
 
 	def get_title(self, datetime):
 			tm , date = datetime.rsplit("T")
 			y, M, d = tm.rsplit("-")
 			if len(M) == 1: M = f"0{M}"
-			date, mil = date.rsplit(".")
+			date = date.rsplit(".")[0]
 			
 			h,m,s = date.rsplit(":")
 
