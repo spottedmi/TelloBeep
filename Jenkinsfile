@@ -23,10 +23,11 @@ pipeline{
 					if (env.BRANCH_NAME == "main"){
 
 						sh 'echo latest > TAG_NAME';
-					}
-
-					if (env.BRANCH_NAME == "develop"){
+					}else if (env.BRANCH_NAME == "develop"){
 						sh 'echo develop > TAG_NAME';
+
+					}else{
+						sh "echo ${env.BRANCH_NAME} > TAG_NAME";
 
 					}
 					
