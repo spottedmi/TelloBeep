@@ -5,7 +5,7 @@ pipeline{
 		
 		// TAG_NAME = 'latest';
 		REPO_USER = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/')[-2].toLowerCase()}";
-		REPO_NAME = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]}";
+		REPO_NAME = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0].toLowerCase()}";
 		
 		// REPO = "$REPO_USER/$REPO_NAME";
 		REPO = "randomguy090/$REPO_NAME";
