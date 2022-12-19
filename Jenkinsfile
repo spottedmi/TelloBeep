@@ -7,8 +7,11 @@ pipeline{
 		REPO_USER = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/')[-2].toLowerCase()}";
 		REPO_NAME = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]}";
 		
+
 		// REPO = "$REPO_USER/$REPO_NAME";
-		REPO = "randomguy090/tellobeep"
+		REPO = "randomguy090/tellobeep";
+		REPO = $REPO.toLowerCase();
+
 		RUN_FOR = "main,develop,jenkins";
 		
 	}
@@ -65,7 +68,7 @@ pipeline{
 					echo "building docker image via built in function";
 					
 					
-					IMG = docker.build("$REPO_USER:$TAG_NAME");
+					IMG = docker.build("$REPO:$TAG_NAME");
 					echo "build image: $IMG";
 
 				}
