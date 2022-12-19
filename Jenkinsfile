@@ -62,10 +62,9 @@ pipeline{
 
 					echo "---------------building---------------";
 					echo "building docker image via built in function";
-					tag=$TAG_NAME.toLowerCase();
-					repo=$REPO.toLowerCase();
+					
 					echo "repo and tag $repo:$tag"
-					IMG = docker.build("$repo:$tag");
+					IMG = docker.build("$REPO_USER:$TAG_NAME");
 					echo "build image: $IMG";
 
 				}
