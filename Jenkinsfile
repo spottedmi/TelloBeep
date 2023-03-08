@@ -11,6 +11,7 @@ pipeline{
 		REPO = "randomguy090/$REPO_NAME";
 		RUN_FOR = "main,develop";
 		
+		HEARTBEAT_CHECK_INTERVAL=300;
 	}
 
 	stages{
@@ -49,6 +50,7 @@ pipeline{
 
 					sh "apt update && apt upgrade -y ";
 					sh "apt install python3-pip -y ";
+					sh "apt install curl -y ";
 					
 					sh "python3 -m pip install -r requirements.txt";
 					sh "apt install docker -y ";
@@ -95,6 +97,18 @@ pipeline{
 			    } 
 		}
 		
+		stage("release"){
+			steps{	
+				script {
+					withCredentials([usernamePassword(credentialsId: "github_token", passwordVariable: 'githubSecret', usernameVariable: 'githubUser')]) {
+							sh "curl https://raw.githubusercontent.com/RandomGuy090/github-auto-release/main/auto-release.sh > run.sh";
+							sh "bash run.sh -r https://api.github.com/repos/RandomGuy090/testing/releases -t $githubSecret "
+						}
+					
+
+				}
+			}
+		}
 
 		stage("deploy"){
 			steps{	
