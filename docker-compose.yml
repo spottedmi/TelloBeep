@@ -2,7 +2,8 @@ version: "3"
 services:
   tellobeep:
     restart: unless-stopped
-    image: randomguy090/tellobeep:develop
+    # image: randomguy090/tellobeep:develop
+    build: .
     container_name: "tellobeep2"
     ports:
       - "5002:5002"
