@@ -42,6 +42,7 @@ class Tello_api():
 					
 					# print(f"content {content}")
 					conf['logger'].info(f"new fetch: {content}")
+					# print(f"new fetch {content}")
 					break
 
 				except Exception as e:

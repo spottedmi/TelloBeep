@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import datetime
 import asyncio
-
+import time as tm
 # commands = discord.ext.commands
 
 time = datetime.datetime.now
@@ -41,14 +41,15 @@ class Discord_bot():
 
 	async def load_from_thread(self):
 		await self.bot.wait_until_ready()
-		channel = self.bot.get_channel(int(conf['DISCORD_CHANNEL_ID']))
+		
 		msg_sent = False
-
 		queue = self.q_list.get("2main_thread")
 
 		while True:
 			res = queue.get()
 			conf['logger'].info(f"got discord info")
+			msg = f"{res.get('bot_comment')[0:1000]}"
+
 			if res.get("filename"):
 				conf['logger'].info(f"discord post has filename {res.get('filename')}")
 				try:
@@ -62,16 +63,48 @@ class Discord_bot():
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
 
-				await channel.send(f"{res.get('bot_comment')[0:1000]}", file=picture)
-				conf['logger'].info(f"discord post send with picture, {res.get('bot_comment')}, {conf['out_image_path']}/{res.get('filename')}")
+				# await channel.send(f"{res.get('bot_comment')[0:1000]}", file=picture)
+				# conf['logger'].info(f"discord post send with picture, {res.get('bot_comment')}, {conf['out_image_path']}/{res.get('filename')}")
+				await  self.send_msg(msg, picture=picture)
 
 			else:
-				await channel.send(f"{res.get('bot_comment')[0:1000]}")
-				conf['logger'].info(f"discord post send {res.get('bot_comment')}")
+				# await channel.send(f"{res.get('bot_comment')[0:1000]}")
+				# conf['logger'].info(f"discord post send {res.get('bot_comment')}")
+				res = await self.send_msg(msg)
+				print(f"msg status {res}")
+
+
 
 
 			await asyncio.sleep(1)
 
+
+	async def send_msg(self, msg, picture=None) -> bool:
+		print(f"received: {msg}")
+		tm.sleep(15)
+		sleep = 1
+		while True:
+			try:
+				await self.send_message_core(msg, picture=picture)
+				return True
+
+			except Exception as e:
+				conf['logger'].info(f"discord connection error, cannot send msg: f{msg}, sleep: {sleep}")	
+
+				tm.sleep(sleep)
+				sleep +=2
+
+
+	async def send_message_core(self, msg, picture=None) -> bool :
+		channel = self.bot.get_channel(int(conf['DISCORD_CHANNEL_ID']))
+		if picture:
+			await channel.send(f"{msg}", file=picture)
+			conf['logger'].info(f"discord post send with picture, {msg}, {picture}")	
+		else:
+			await channel.send(f"{msg}")
+			conf['logger'].info(f"discord post send {msg}")
+
+		return True
 
 
 

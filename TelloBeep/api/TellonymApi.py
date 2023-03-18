@@ -51,7 +51,7 @@ class Tellonym_api():
 					time.sleep(loop)
 					loop += loop
 					print(f"sleep {loop}")
-					raise Exception("xD") 
+					# raise Exception("xD") 
 
 				except TokenInvalidTellonym as e:
 					print("Tellonym token invalid")
@@ -67,6 +67,9 @@ class Tellonym_api():
 
 						time.sleep(loop)
 						loop += loop
+						
+				except Exception as e:
+					print(f"different exception: {e}")
 
 	
 
