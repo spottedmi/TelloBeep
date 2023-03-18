@@ -68,6 +68,8 @@ class Make_img(Censorship, Db_connector):
 
 
 		if rand == 1:
+		# print(rand)
+		# if rand > 1:
 			self.img_object = self.gen_gradient_img(conf['height'], conf['width'])
 			conf['logger'].error(f"image generate special gradient")
 
@@ -276,7 +278,7 @@ class Make_img(Censorship, Db_connector):
 
 
 		def get_gradient_3d(width, height, start_list, stop_list, is_horizontal_list):
-			result = np.zeros((height, width, len(start_list)), dtype=np.float)
+			result = np.zeros((height, width, len(start_list)), dtype=np.float64)
 			for i, (start, stop, is_horizontal) in enumerate(zip(start_list, stop_list, is_horizontal_list)):
 				result[:, :, i] = get_gradient_2d(start, stop, width, height, is_horizontal)
 			return result
