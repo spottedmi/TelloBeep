@@ -50,6 +50,8 @@ class Notify(object):
 			self.instagram_logged()
 		elif error == "RATE_LIMIT_ERROR":
 			self.instagram_rate_limit()
+		elif error == "CANNOT_UPLOAD":
+			self.instagram_error()
 		elif error == "INSTAGRAM_ERROR":
 			self.instagram_error()
 		else:

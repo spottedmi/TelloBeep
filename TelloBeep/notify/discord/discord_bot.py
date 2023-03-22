@@ -71,10 +71,6 @@ class Discord_bot():
 				# await channel.send(f"{res.get('bot_comment')[0:1000]}")
 				# conf['logger'].info(f"discord post send {res.get('bot_comment')}")
 				res = await self.send_msg(msg)
-				print(f"msg status {res}")
-
-
-
 
 			await asyncio.sleep(1)
 

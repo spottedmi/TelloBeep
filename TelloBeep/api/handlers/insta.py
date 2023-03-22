@@ -3,7 +3,7 @@ import time, random, json, os, sys
 
 from TelloBeep.api import Instagram_api
 
-from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError
+from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError, PhotoNotUpload
 from TelloBeep.config import conf
 from TelloBeep.notify import Notify
 
@@ -64,10 +64,36 @@ class Insta_api():
 
 			if conf['CAPTION'] != "":
 				pass
-				self.insta.upload_post(path, caption=conf['CAPTION'])
+				self.send_post(path, caption=conf["CAPTION"])
+				# self.insta.upload_post(path, caption=conf['CAPTION'])
 			else:
 				pass
-				self.insta.upload_post(path)
+				self.send_post(path, caption=conf["CAPTION"])
+				# self.insta.upload_post(path)
 			# print("instagram sent")
 
 			time.sleep(0.1)
+
+	def send_post(self, path, caption=None):
+		sleep = 5
+		while True:
+			try:
+				if caption:
+					self.insta.upload_post(path, caption=caption)
+				else:
+					self.insta.upload_post(path)
+
+				break
+
+			except PhotoNotUpload as e:
+				conf['logger'].warning(f"cannot upload photo: PhotoNotUpload")
+				conf['logger'].warning(f"go to sleep for: {sleep}")
+				# conf['logger'].info(f"cannot upload photo: {e}")
+				Notify(q_list=self.q_list, error="PhotoNotUpload error")
+				time.sleep(sleep)
+				sleep = sleep * 2
+
+				self.insta.login()
+
+
+
