@@ -28,18 +28,24 @@ class Tells_Utills():
 
 		self.filename = None
 
-	def time_to_tz_naive(self, t, tz_in, tz_out):
+	def time_to_tz_naive(self, t, tz_in, tz_out, index=None):
+		if index:
+			out = tz_in.localize(datetime.combine(datetime.today(), t)).astimezone(tz_out).time() 
+			out = out.replace(hour=out.hour+index)
+			return out
+
 		return tz_in.localize(datetime.combine(datetime.today(), t)).astimezone(tz_out).time()
 
 	def find_timezone_name(self, minutes_offset_from_utc):
 		for tz in pytz.all_timezones:
 				minutes = pytz.timezone(tz).utcoffset(datetime.now()).total_seconds()/60
-				print(minutes, minutes_offset_from_utc)
+
 				if minutes == minutes_offset_from_utc:                
 					return tz
 
 
 	def get_date(self, tellJSON):
+	
 		try:
 
 			tellJSON, offset = tellJSON.split(".")
@@ -53,20 +59,33 @@ class Tells_Utills():
 
 			LOCAL_TIMEZONE = datetime.now(timezone.utc).astimezone().tzinfo
 
-			t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"{LOCAL_TIMEZONE}"))
+			
+			# print(f"line6.2 {pytz.timezone(f'{offset}')}")
+			# print(f"line6.3 {pytz.timezone(f'{LOCAL_TIMEZONE}')}")
+
+			if str(LOCAL_TIMEZONE) == "CEST":
+				t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"CET"), index=1)
+			else:
+				t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"{LOCAL_TIMEZONE}"))
+
+
 			d = d.replace(hour=t.hour)
 
 			return d.strftime(format="%Y-%m-%dT%H:%M:%S")
 
 		except Exception as e:
-			print(e)
+			print(f"error {e}")
 			pass
 
 		try:	
 			d = datetime.strptime(tellJSON, "%Y-%m-%dT%H:%M:%S.%f")
+
 			d = d.replace(hour=time.localtime().tm_hour)
+
 			return d.strftime(format="%Y-%m-%dT%H:%M:%S.000Z")
-		except:
+		except Exception as e:
+			print(e)
+
 			pass
 
 
@@ -126,6 +145,8 @@ class Tellonym_tell(Tells_Utills):
 		# self.flag = False
 
 		self.created_at = self.get_date(tellJSON["createdAt"])
+		
+
 		self.title = self.get_title(self.created_at)
 
 		
