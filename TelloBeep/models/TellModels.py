@@ -64,7 +64,7 @@ class Tells_Utills():
 			# print(f"line6.3 {pytz.timezone(f'{LOCAL_TIMEZONE}')}")
 
 			if str(LOCAL_TIMEZONE) == "CEST":
-				t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"CET"), index=1)
+				t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"CET"), index=0)
 			else:
 				t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"{LOCAL_TIMEZONE}"))
 
