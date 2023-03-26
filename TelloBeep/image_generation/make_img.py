@@ -383,12 +383,18 @@ class Make_img(Censorship, Db_connector):
 		res_txt = ""
 		chars_inline = 0
 		space = 0
-
+		chars_total = 0
 		for char in txt:
+			chars_total+=1
 			chars_inline +=1
 			if char == " ":
 				space += 1
 			if chars_inline >= ((conf['characters_break']-10) + (space/2)):
+				t = txt[chars_total:chars_total+20]
+
+				# if "\n" in t:
+				# 	#todo
+				# 	# replace t in txt with t.replace("\n", "")
 				if char == " ":
 					res_txt += f"\n"
 				else:
