@@ -1,9 +1,10 @@
 from TelloBeep.censorship import Censorship
 from TelloBeep.config import conf
-from datetime import datetime
+
 import time
 from datetime import datetime, time, timezone
 import pytz
+
 
 class Tells_Utills():
 
@@ -69,8 +70,8 @@ class Tells_Utills():
 			pass
 
 
-	def get_title(self, datetime):
-			tm , date = datetime.rsplit("T")
+	def get_title(self, dtime):
+			tm , date = dtime.rsplit("T")
 			y, M, d = tm.rsplit("-")
 			if len(M) == 1: M = f"0{M}"
 			date = date.rsplit(".")[0]
