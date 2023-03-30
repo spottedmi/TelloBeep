@@ -64,7 +64,7 @@ pipeline{
 					echo "---------------testing---------------";
 					echo "list all images built";
 					sh "docker images";
-					echo "$IMG";
+					// echo "$IMG";
 				}
 			}
 		}
