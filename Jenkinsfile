@@ -80,20 +80,7 @@ pipeline{
 				}
 			}
 		}
-		stage('Docker Push') {
-			      steps {
-				      script{
-						echo "---------------pushing to docker hub---------------";
 
-					      withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-							echo "deploying: $IMG";
-							IMG.push(TAG_NAME);
-							sh "docker rmi $IMG.id"
-						      
-						}
-					}
-			    } 
-		}
 		stage("Setup-exe"){
 			steps{
 				script {
@@ -133,12 +120,34 @@ pipeline{
 					withCredentials([usernamePassword(credentialsId: "github_token", passwordVariable: 'githubSecret', usernameVariable: 'githubUser')]) {
 							sh "cp dist/run run.exe"
 							sh "curl https://raw.githubusercontent.com/RandomGuy090/github-auto-release/main/auto-release.sh > run.sh";
-							sh "bash run.sh -u spottedmi -r TelloBeep -t $githubSecret -e run.exe "
+							sh "bash run.sh -u spottedmi -r TelloBeep -t $githubSecret -e run.exe  > VERSION"
+							VERSION = readFile('VERSION').trim()					
+
 						}
 					
 
 				}
 			}
+		}
+				stage('Docker Push') {
+			      steps {
+				      script{
+						echo "---------------pushing to docker hub---------------";
+
+					      withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+							echo "deploying: $IMG:latest";
+							IMG.push(TAG_NAME);
+							// sh "docker rmi $IMG.id"
+						      
+						}
+						withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+							echo "deploying: $IMG:$VERSION";
+							IMG.push(VERSION);
+							sh "docker rmi $IMG.id"
+						      
+						}
+					}
+			    } 
 		}
 
 		stage("deploy"){
