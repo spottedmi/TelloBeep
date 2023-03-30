@@ -68,8 +68,8 @@ class Tellonym_api():
 						time.sleep(loop)
 						loop += loop
 						
-				except Exception as e:
-					print(f"different exception: {e}")
+				# except Exception as e:
+				# 	print(f"different exception: {e}")
 
 	
 

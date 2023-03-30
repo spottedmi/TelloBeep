@@ -28,8 +28,7 @@ class StartUp():
 		conf["logger"].info("prlimit set")
 
 
-
-if __name__ == "__main__":
+def start():	
 	# Config()
 	manager = multiprocessing.Manager()
 
@@ -82,3 +81,5 @@ if __name__ == "__main__":
 		time.sleep(5)
 
 
+if __name__ == "__main__":
+	start()

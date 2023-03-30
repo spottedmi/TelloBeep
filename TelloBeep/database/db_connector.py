@@ -59,7 +59,7 @@ class Db_connector():
 
 	def if_logged(self,user=None, db_name=None, password=""):
 
-		con = connect("db.sqlite")
+		con = connect({conf['db_name']})
 
 		curs = con.cursor()
 		curs.execute(""" 

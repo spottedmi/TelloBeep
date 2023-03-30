@@ -2,15 +2,23 @@ import json
 import os, sys
 
 def make_absolute_path(filepath):
-    path  = os.path.dirname(os.path.dirname(__file__))
-    path = f"{path}/{filepath}"
-    # print(f"{__package__}")
-    return path
+	if filepath.startswith("/"):
+		return filepath
+	path  = os.path.dirname(os.path.dirname(__file__))
+	path = f"{path}/{filepath}"
+	# print(f"{__package__}")
+	return path
 
-f = open(f"{os.path.dirname(__file__)}/config.json", "r")
-config = f.read()
-f.close()
-conf = json.loads(config)
+if os.path.exists(f"{os.path.dirname(__file__)}/config.json"):
+	with open(f"{os.path.dirname(__file__)}/config.json", "r") as f:
+		config = f.read()
+		conf = json.loads(config)
+elif os.path.exists(f"/etc/tellobeep/config.json"):
+	with open(f"/etc/tellobeep/config.json", "r") as f:
+		config = f.read()
+		conf = json.loads(config)
+else:
+	print("--------	NO CONFIGURATION FILE---------\n put config file in /etc/tellobeep/config.json")
 
 conf['token_file_tellonym'] = make_absolute_path(conf['token_file_tellonym'])
 conf['BAD_WORDS'] = make_absolute_path(conf['BAD_WORDS'])

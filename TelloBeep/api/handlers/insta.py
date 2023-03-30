@@ -47,10 +47,6 @@ class Insta_api():
 			time.sleep(delay)
 			delay += 2 * delay
 
-
-
-
-
 		self.recv_mgs()
 
 	def recv_mgs(self) -> None:

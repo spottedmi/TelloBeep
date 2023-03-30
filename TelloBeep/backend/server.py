@@ -42,9 +42,16 @@ import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../database/db.sqlite"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../database/db.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{conf['db_name']}"
+
+print(app.config["SQLALCHEMY_DATABASE_URI"])
+print(app.config["SQLALCHEMY_DATABASE_URI"])
+print(app.config["SQLALCHEMY_DATABASE_URI"])
+
 app.config["SECRET_KEY"] = "SECRET"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 # bcrypt = Bcrypt(app)
 
