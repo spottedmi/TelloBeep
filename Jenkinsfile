@@ -133,7 +133,7 @@ pipeline{
 					withCredentials([usernamePassword(credentialsId: "github_token", passwordVariable: 'githubSecret', usernameVariable: 'githubUser')]) {
 							sh "cp dist/run run.exe"
 							sh "curl https://raw.githubusercontent.com/RandomGuy090/github-auto-release/main/auto-release.sh > run.sh";
-							sh "bash run.sh -r https://api.github.com/repos/spottedmi/TelloBeep/releases -t $githubSecret -e run.exe "
+							sh "bash run.sh -u spottedmi -r TelloBeep -t $githubSecret -e run.exe "
 						}
 					
 
