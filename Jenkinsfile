@@ -108,6 +108,7 @@ pipeline{
 					sh "python3 setup.py build";
 					sh "python3 setup.py install";
 
+
 				}
 			}
 		}
@@ -118,7 +119,8 @@ pipeline{
 					echo "---------------building exe ---------------";
 					echo "building exe image via built in function";
 					sh 'ls';
-					sh 'sudo pyinstaller --hidden-import=TelloBeep --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements --hidden-import=packaging.utils run.py'
+					sh "python3 -m pip install pyinstaller"
+					sh 'pyinstaller --onefile  --hidden-import=TelloBeep --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements --hidden-import=packaging.utils run.py'
 					sh 'ls';
 					sh 'ls dist/run';
 
@@ -129,8 +131,9 @@ pipeline{
 			steps{	
 				script {
 					withCredentials([usernamePassword(credentialsId: "github_token", passwordVariable: 'githubSecret', usernameVariable: 'githubUser')]) {
+							sh "cp dist/run/run run.exe"
 							sh "curl https://raw.githubusercontent.com/RandomGuy090/github-auto-release/main/auto-release.sh > run.sh";
-							sh "bash run.sh -r https://api.github.com/repos/RandomGuy090/testing/releases -t $githubSecret "
+							sh "bash run.sh -r https://api.github.com/repos/RandomGuy090/testing/releases -t $githubSecret -e run.exe "
 						}
 					
 
