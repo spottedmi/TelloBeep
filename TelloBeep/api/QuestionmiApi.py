@@ -6,7 +6,7 @@ from TelloBeep.models.TellModels import Questionmi_user, Questionmi_tell
 from TelloBeep.config import conf
 from TelloBeep.notify import Notify
 
-
+from TelloBeep.logs.logger import logger
 
 from TelloBeep.exceptions import TokenInvalidQuestionmi, ConnectionTimeout, CaptchaRequired
 
@@ -18,8 +18,7 @@ from TelloBeep.exceptions import TokenInvalidQuestionmi, ConnectionTimeout, Capt
 class Questionmi_api():
 	q_list = None
 	def __init__(self, q_list=None):
-		
-		
+		self.logger = logger(name=__name__)	
 
 		if q_list != None:
 			self.q_list = q_list
@@ -35,7 +34,7 @@ class Questionmi_api():
 			# except TokenReadImpossible:
 			except Exception as e:
 				print(f"cannot read a token {e}")
-				conf['logger'].error(f"cannot load token")
+				self.logger.error(f"cannot load token")
 
 				time.sleep(loop)
 				loop += loop
@@ -46,12 +45,12 @@ class Questionmi_api():
 			if conf['user']:
 				try:
 					self.get_tells(conf['user'].token)
-					# conf['logger'].info(f"tells fetched")
+					# self.logger.info(f"tells fetched")
 
 					break
 
 				except ConnectionTimeout as e:
-					# conf['logger'].error(f"connection timeout")
+					# self.logger.error(f"connection timeout")
 					print("conneciton timeout")
 					time.sleep(loop)
 					loop += loop
@@ -59,7 +58,7 @@ class Questionmi_api():
 
 				except TokenInvalidQuestionmi as e:
 					print("questionmi token invalid")
-					conf['logger'].error(f"questionmi  token invalid")
+					self.logger.error(f"questionmi  token invalid")
 
 					# try:
 					# 	self.get_token()
@@ -67,7 +66,7 @@ class Questionmi_api():
 
 					# except CaptchaRequired:
 					# 	print("captcha required")
-					# 	conf['logger'].error(f"captcha required")
+					# 	self.logger.error(f"captcha required")
 
 					# 	time.sleep(loop)
 					# 	loop += loop
@@ -88,7 +87,7 @@ class Questionmi_api():
 	# def get_login_credentials(self):
 
 	# 	Notify(q_list=self.q_list, error="TELLO_RELOGIN")
-	# 	conf['logger'].error(f"tellonym relogin")
+	# 	self.logger.error(f"tellonym relogin")
 
 	# 	if not conf['LOGIN_TELLONYM'] and not conf['PASSWORD_TELLONYM']:
 	# 		conf['LOGIN_TELLONYM'] = input("login: ")
@@ -176,7 +175,7 @@ class Questionmi_api():
 				}
 		headers = {}
 		headers["token"] = f"{conf['user'].token}"
-		conf['logger'].info(f"remove fetched tells")
+		self.logger.info(f"remove fetched tells")
 
 
 		r = requests.delete(url, headers=headers, params=payload)
@@ -208,13 +207,13 @@ class Questionmi_api():
 		if response.ok:
 			data = response.json()
 		else:
-			conf['logger'].error(f"questionmi get tells failed: response not ok {response.status_code} content: {response.content}")
+			self.logger.error(f"questionmi get tells failed: response not ok {response.status_code} content: {response.content}")
 			try:
 				x = response.json()["err"]
 				x = x["code"]
 			except:
 				x = response.status_code
-			conf['logger'].error(f"error: {x}" )
+			self.logger.error(f"error: {x}" )
       
 			if x == conf['ERRORS'].get("token"):
 				raise TokenInvalidQuestionmi

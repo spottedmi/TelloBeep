@@ -1,4 +1,4 @@
-import os
+import os, sys
 import shutil
 import logging
 import time
@@ -29,26 +29,27 @@ class CustomFormatter(logging.Formatter):
 
 
 
-class Logger():
-    def __init__(self):
-
-        created = os.path.getctime(conf.get("LOG_FILE"))
-        year,month,day,hour,minute,second=time.localtime(created)[:-3]
-
-
-        new_filename = "%02d:%02d:%d_%02d-%02d-%02d_tellobeep.log"%(second, minute, hour, day, month,year)
-        new_filename = conf["LOG_FILE"].replace("tellobeep.log", new_filename)
-        shutil.move(conf["LOG_FILE"], new_filename)
-
-        conf["logger"] = logging.getLogger(__name__)
-        fh = logging.FileHandler(conf['LOG_FILE'])
-        fh.setLevel(logging.DEBUG)
-        fh.setFormatter(CustomFormatter())
+def logger(name=__name__):
+   
+    # created = os.path.getctime(conf.get("LOG_FILE"))
+    # year,month,day,hour,minute,second=time.localtime(created)[:-3]
 
 
+    # new_filename = "%02d%02d%d%02d%02d%02dtellobeep.log"%(second, minute, hour, day, month,year)
+    # new_filename = conf["LOG_FILE"].replace("tellobeep.log", new_filename)
+    # shutil.move(conf["LOG_FILE"], new_filename)
 
-        conf["logger"].addHandler(fh)
-        conf["logger"].setLevel(logging.DEBUG)
-        print(f"logger run")
+    logger = logging.getLogger(name)
+    # fh = logging.FileHandler(conf['LOG_FILE'])
+    fh = logging.StreamHandler(sys.stdout)
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(CustomFormatter())
+
+
+
+    logger.addHandler(fh)
+    logger.setLevel(logging.DEBUG)
+    
+    return logger
 
 

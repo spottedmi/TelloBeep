@@ -2,6 +2,8 @@ from TelloBeep.config import conf
 
 from TelloBeep.notify import Notify
 
+from TelloBeep.logs.logger import logger
+
 
 class Censorship():
 
@@ -9,6 +11,7 @@ class Censorship():
 	q_list=None
 	def __init__(self, bad_words="", text="", q_list=None):
 		super().__init__()
+		self.logger = logger(name=__name__)
 		
 		
 		if q_list != None:
@@ -23,14 +26,14 @@ class Censorship():
 				conf['swears_list'] = txt.rsplit("\n")
 		except:
 			Notify(q_list=self.q_list, error="CENSORSHIP_DICT_NOT_FOUND")
-			conf['logger'].error(f"couldn't find censorship dictionary")
+			self.logger.error(f"couldn't find censorship dictionary")
 
 
 
 			
 
 	def censure_txt(self) -> str:
-		conf['logger'].info(f"censuring text")
+		self.logger.info(f"censuring text")
 
 		words = self.TEXT.replace(",", "")
 		words = words.replace(".", "")
@@ -56,7 +59,7 @@ class Censorship():
 					
 					self.TEXT = self.TEXT.replace(swear, elem_rep)
 					self.TEXT = self.TEXT.replace(elem, elem_rep)
-					conf['logger'].info(f"replacing: {elem} {elem_rep} ")
+					self.logger.info(f"replacing: {elem} {elem_rep} ")
 
 		return self.TEXT
 

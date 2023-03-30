@@ -6,6 +6,8 @@ from TelloBeep.api import Instagram_api
 from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError, PhotoNotUpload
 from TelloBeep.config import conf
 from TelloBeep.notify import Notify
+from TelloBeep.logs.logger import logger
+
 
 #_____________________________________________________________
 #
@@ -14,7 +16,7 @@ from TelloBeep.notify import Notify
 
 class Insta_api():
 	def __init__(self, q_list):
-		
+		self.logger = logger(name=__name__)
 		
 		print("instaapi")
 
@@ -31,12 +33,12 @@ class Insta_api():
 				break
 			except PleaseWaitFewMinutes :
 				Notify(q_list=self.q_list, error="PLEASE_WAIT_FEW_MINUTES")
-				conf['logger'].warning(f"PLEASE_WAIT_FEW_MINUTES instagram login delay: {delay}")
+				self.logger.warning(f"PLEASE_WAIT_FEW_MINUTES instagram login delay: {delay}")
 
 				time.sleep(delay)
 			except RateLimitError:
 				Notify(q_list=self.q_list, error="RATE_LIMIT_ERROR")
-				conf['logger'].warning(f"RATE_LIMIT_ERROR instagram login delay: {delay}")
+				self.logger.warning(f"RATE_LIMIT_ERROR instagram login delay: {delay}")
 
 				# time.sleep(delay)
 
@@ -82,9 +84,9 @@ class Insta_api():
 				break
 
 			except PhotoNotUpload as e:
-				conf['logger'].warning(f"cannot upload photo: PhotoNotUpload")
-				conf['logger'].warning(f"go to sleep for: {sleep}")
-				# conf['logger'].info(f"cannot upload photo: {e}")
+				self.logger.warning(f"cannot upload photo: PhotoNotUpload")
+				self.logger.warning(f"go to sleep for: {sleep}")
+				# self.logger.info(f"cannot upload photo: {e}")
 				Notify(q_list=self.q_list, error="PhotoNotUpload error")
 				time.sleep(sleep)
 				sleep = sleep * 2

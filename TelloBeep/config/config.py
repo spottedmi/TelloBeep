@@ -1,36 +1,69 @@
 import json
 import os, sys
 
+
 def make_absolute_path(filepath):
-	if filepath.startswith("/"):
+	
+	
+	if os.path.isabs(filepath):
 		return filepath
+	
 	path  = os.path.dirname(os.path.dirname(__file__))
 	path = f"{path}/{filepath}"
 	# print(f"{__package__}")
+
+	if os.name == "nt":
+		filepath = filepath.replace("/", "\\")
 	return path
+
+
+
 
 if os.name == "posix":
 	if os.path.exists(f"{os.path.dirname(__file__)}/config.json"):
+
 		with open(f"{os.path.dirname(__file__)}/config.json", "r") as f:
 			config = f.read()
 			conf = json.loads(config)
+
 	elif os.path.exists(f"/etc/tellobeep/config.json"):
+
 		with open(f"/etc/tellobeep/config.json", "r") as f:
 			config = f.read()
 			conf = json.loads(config)
 	else:
+
 		print("--------	NO CONFIGURATION FILE---------\n put config file in /etc/tellobeep/config.json")
+
 elif os.name == "nt":
-	if os.path.exists(f"{os.path.dirname(__file__)}/config.json"):
-		with open(f"{os.path.dirname(__file__)}/config.json", "r") as f:
+	APPDATA = os.getenv('APPDATA')
+
+	if os.path.exists(f"{os.path.dirname(__file__)}\\config.json"):
+		with open(f"{os.path.dirname(__file__)}\\config.json", "r") as f:
+
 			config = f.read()
+			config = config.replace("/etc/tellobeep/", f"{APPDATA}/tellobeep")
+			config = config.replace("/", "\\")
 			conf = json.loads(config)
-	elif os.path.exists(f"%appdata%\\tellobeep\\config.json"):
-		with open(f"%appdata%\\tellobeep\\config.json", "r") as f:
+
+	elif os.path.exists(f"{APPDATA}\\tellobeep\\config.json"):
+		with open(f"{APPDATA}\\tellobeep\\config.json", "r") as f:
+			
 			config = f.read()
+			config = config.replace("/etc/tellobeep/", f"{APPDATA}/tellobeep/")
+			config = config.replace("/", "\\")
+			config = config.replace("\\", "\\\\")
+			
 			conf = json.loads(config)
+			for elem in conf.keys():
+				if isinstance(conf.get(elem), str):
+					if "\\\\" in conf.get(elem):
+						conf[elem] = conf[elem].replace("\\\\", "\\")
+
 	else:
 		print("--------	NO CONFIGURATION FILE---------\n put config file in %appdata%\\tellobeep\\config.json")
+
+
 
 conf['token_file_tellonym'] = make_absolute_path(conf['token_file_tellonym'])
 conf['BAD_WORDS'] = make_absolute_path(conf['BAD_WORDS'])
@@ -47,6 +80,7 @@ conf['db_name'] = make_absolute_path(conf['db_name'])
 conf['image_path'] = make_absolute_path(conf['image_path'])
 conf['out_image_path_BACKUP'] = make_absolute_path(conf['out_image_path_BACKUP'])
 conf['out_image_name'] = make_absolute_path(conf['out_image_name'])
+conf['logger'] = None
 
 
 # for elem in conf:

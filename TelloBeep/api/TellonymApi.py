@@ -8,16 +8,19 @@ from TelloBeep.censorship.censorship import Censorship
 
 from TelloBeep.notify import Notify
 
-from TelloBeep.exceptions.exceptions import TokenInvalidTellonym, ConnectionTimeout, CaptchaRequired
+from TelloBeep.exceptions.exceptions import TokenInvalidTellonym, ConnectionTimeout, CaptchaRequired, TokenReadImpossible
 
-
-
+from TelloBeep.logs.logger import logger
 
 
 
 class Tellonym_api():
 	q_list = None
 	def __init__(self, q_list=None):
+		# if self.logger == None:
+		self.logger = logger(name=__name__)
+
+
 		self.user = None
 		self.tells = list()
 		
@@ -33,8 +36,7 @@ class Tellonym_api():
 				self.load_token()
 
 			except TokenReadImpossible:
-				print("cannot read a token")
-				conf['logger'].error(f"cannot load token")
+				self.logger.error(f"cannot load token")
 
 				return False
 				time.sleep(loop)
@@ -46,7 +48,7 @@ class Tellonym_api():
 					break
 
 				except ConnectionTimeout as e:
-					# conf['logger'].error(f"connection timeout")
+					# self.logger.error(f"connection timeout")
 					print(f"connection timeout {e}")
 					time.sleep(loop)
 					loop += loop
@@ -55,7 +57,7 @@ class Tellonym_api():
 
 				except TokenInvalidTellonym as e:
 					print("Tellonym token invalid")
-					conf['logger'].error(f"Tellonym token invalid")
+					self.logger.error(f"Tellonym token invalid")
 
 					try:
 						self.get_token()
@@ -63,7 +65,7 @@ class Tellonym_api():
 
 					except CaptchaRequired:
 						print("captcha required")
-						conf['logger'].error(f"captcha required")
+						self.logger.error(f"captcha required")
 
 						time.sleep(loop)
 						loop += loop
@@ -85,7 +87,7 @@ class Tellonym_api():
 	def get_login_credentials(self):
 
 		Notify(q_list=self.q_list, error="TELLO_RELOGIN")
-		conf['logger'].error(f"tellonym relogin")
+		self.logger.error(f"tellonym relogin")
 
 		if not conf['LOGIN_TELLONYM'] and not conf['PASSWORD_TELLONYM']:
 			conf['LOGIN_TELLONYM'] = input("login: ")
@@ -131,7 +133,19 @@ class Tellonym_api():
 		}
 
 		conf['headers']["Content-Length"] = f"{len(str(data_login))}"
-		headers = conf['headers']
+		headers =  {
+	        "Accept-Language": "pl,en-US;q=0.7,en;q=0.3",
+	        "content-type": "application/json;charset=utf-8",
+	        "Host": "api.tellonym.me",
+	        "Origin": "https://tellonym.me",
+	        "Sec-Fetch-Dest": "empty",
+	        "Sec-Fetch-Mode": "cors",
+	        "Sec-Fetch-Site": "same-site",
+	        "Sec-GPC": "1",
+	        "TE": "trailers",
+	        "tellonym-client": "web:0.59.4",
+	        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0"
+	    }
 
 		response = requests.post(url, headers=headers, json=data_login, timeout=15)
 
@@ -158,7 +172,19 @@ class Tellonym_api():
 				"tellId": tell_id,
 				"limit": limit,
 				}
-		headers = conf['headers']
+		headers =  {
+	        "Accept-Language": "pl,en-US;q=0.7,en;q=0.3",
+	        "content-type": "application/json;charset=utf-8",
+	        "Host": "api.tellonym.me",
+	        "Origin": "https://tellonym.me",
+	        "Sec-Fetch-Dest": "empty",
+	        "Sec-Fetch-Mode": "cors",
+	        "Sec-Fetch-Site": "same-site",
+	        "Sec-GPC": "1",
+	        "TE": "trailers",
+	        "tellonym-client": "web:0.59.4",
+	        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0"
+	    }
 		headers["authorization"] = f"Bearer {self.user.token}"
 
 		r = requests.post(url, json=data, headers=headers)
@@ -169,7 +195,19 @@ class Tellonym_api():
 		importlib.reload(requests)
 		self.tells = list()
 		url = "https://api.tellonym.me/tells"
-		headers = conf['headers']
+		headers =  {
+	        "Accept-Language": "pl,en-US;q=0.7,en;q=0.3",
+	        "content-type": "application/json;charset=utf-8",
+	        "Host": "api.tellonym.me",
+	        "Origin": "https://tellonym.me",
+	        "Sec-Fetch-Dest": "empty",
+	        "Sec-Fetch-Mode": "cors",
+	        "Sec-Fetch-Site": "same-site",
+	        "Sec-GPC": "1",
+	        "TE": "trailers",
+	        "tellonym-client": "web:0.59.4",
+	        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0"
+	    }
 		headers["authorization"] = f"Bearer {self.user.token}"
 
 		params = {
@@ -187,13 +225,15 @@ class Tellonym_api():
 		if response.ok:
 			data = response.json()
 		else:
-			conf['logger'].error(f"tellonym get tells failed")
+			self.logger.error(f"tellonym get tells failed")
 
 			x = response.json()["err"]
 			x = x["code"]
 
 			if x == conf['ERRORS'].get("token"):
+				self.logger("invalid token")
 				raise TokenInvalidTellonym
+
 			return x
 
 		for x in data["tells"]:		

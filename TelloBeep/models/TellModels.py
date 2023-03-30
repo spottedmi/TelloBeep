@@ -5,10 +5,13 @@ import time
 from datetime import datetime, time, timezone
 import pytz
 
+from TelloBeep.logs.logger import logger
+
 
 class Tells_Utills():
 
 	def __init__(self, tellJSON):
+		self.logger = logger(name=__name__)
 
 		# self.title = title
 		self.send = False
@@ -62,8 +65,9 @@ class Tells_Utills():
 			
 			# print(f"line6.2 {pytz.timezone(f'{offset}')}")
 			# print(f"line6.3 {pytz.timezone(f'{LOCAL_TIMEZONE}')}")
-
-			if str(LOCAL_TIMEZONE) == "CEST":
+			self.logger.critical(LOCAL_TIMEZONE)
+			self.logger.critical(LOCAL_TIMEZONE)
+			if str(LOCAL_TIMEZONE) == "CEST" or str(LOCAL_TIMEZONE) == "Central European Daylight Time":
 				t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"CET"), index=0)
 			else:
 				t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"{LOCAL_TIMEZONE}"))
@@ -102,7 +106,7 @@ class Tells_Utills():
 			if len(s) == 1: s = f"0{s}"
 	
 			if h == 24:
-				conf['logger'].info(f"24 hour detected")
+				self.logger.info(f"24 hour detected")
 				h = "00"
 
 			title = f"{y}{M}{d}{h}{m}{s}_{self.id}"

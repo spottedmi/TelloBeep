@@ -19,6 +19,8 @@ from wtforms.validators import InputRequired, Length, ValidationError
 # from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from TelloBeep.logs.logger import logger
+
 
 import sys, datetime, json, base64
 
@@ -44,10 +46,6 @@ log.setLevel(logging.ERROR)
 
 # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../database/db.sqlite"
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{conf['db_name']}"
-
-print(app.config["SQLALCHEMY_DATABASE_URI"])
-print(app.config["SQLALCHEMY_DATABASE_URI"])
-print(app.config["SQLALCHEMY_DATABASE_URI"])
 
 app.config["SECRET_KEY"] = "SECRET"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

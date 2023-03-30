@@ -15,10 +15,13 @@ from TelloBeep.config import conf
 
 from TelloBeep.notify import Notify
 
+from TelloBeep.logs.logger import logger
+
+
 class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None):
 		super().__init__(q_list=q_list)
-
+		self.logger = logger(name=__name__)
 		
 
 		print("init")
@@ -38,19 +41,19 @@ class Make_img(Censorship, Db_connector):
 	def gen(self) -> None:
 		"generate image"
 		xd = conf
-		conf['logger'].info(f"generating new image")
+		self.logger.info(f"generating new image")
 
 	
 		self.prepare_text()
 
 		try:
 			self.get_fonts()
-			conf['logger'].error(f"fonts imported")
+			self.logger.error(f"fonts imported")
 
 		except Exception as e:
 			print(e)
 			# Notify(q_list=self.q_list, error="FONT_NOT_FOUfND")
-			conf['logger'].error(f"font not found")
+			self.logger.error(f"font not found")
 
 			sys.exit(1)
 
@@ -59,19 +62,19 @@ class Make_img(Censorship, Db_connector):
 	
 		# img = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(conf['colorBackground']))
 		self.get_bg_color()
-		conf['logger'].error(f"image background color {self.bg_color}")
+		self.logger.error(f"image background color {self.bg_color}")
 
 		
 		self.img_object = Image.new('RGB', (conf['width'], conf['height']), self.hex_to_rgb(self.bg_color))
 		rand = random.randrange(0, 50)
-		conf['logger'].error(f"image random generating {rand} == 1")
+		self.logger.error(f"image random generating {rand} == 1")
 
 
 		if rand == 1:
 		# print(rand)
 		# if rand > 1:
 			self.img_object = self.gen_gradient_img(conf['height'], conf['width'])
-			conf['logger'].error(f"image generate special gradient")
+			self.logger.error(f"image generate special gradient")
 
 
 		
@@ -89,7 +92,7 @@ class Make_img(Censorship, Db_connector):
 
 		#header
 		self.create_header()
-		conf['logger'].error(f"image: create header")
+		self.logger.error(f"image: create header")
 
 
 		#footer
@@ -100,15 +103,15 @@ class Make_img(Censorship, Db_connector):
 			self.create_watermark()
 
 
-		conf['logger'].error(f"image: create footer")
+		self.logger.error(f"image: create footer")
 
 		#icon generation
 		img = Image.open(conf['image_path'], "r")
 		img = img.resize(conf['image_size'], Image.ANTIALIAS)
-		conf['logger'].info(f"image: resizing")
+		self.logger.info(f"image: resizing")
 
 		img = img.convert("RGBA")
-		conf['logger'].info(f"image: converting to RGBA")
+		self.logger.info(f"image: converting to RGBA")
 
 		coords = (int(conf['insta_res'][1]*conf['logo_X_ratio']), int(conf['insta_res'][0]*conf['logo_Y_ratio']))
 
@@ -122,13 +125,13 @@ class Make_img(Censorship, Db_connector):
 
 		
 		self.save_img()
-		conf['logger'].info(f"image: saving image")
+		self.logger.info(f"image: saving image")
 
 		self.save_tumbnail()
-		conf['logger'].info(f"image: saving thumbnail")
+		self.logger.info(f"image: saving thumbnail")
 
 		self.db_add_img()
-		conf['logger'].info(f"image: adding to database")
+		self.logger.info(f"image: adding to database")
 
 	
 
@@ -145,7 +148,7 @@ class Make_img(Censorship, Db_connector):
 			self.req["send"] = True
 
 			if insta: insta.put(self.req)
-			conf['logger'].info(f"image send automatically, {self.req['filename']}")
+			self.logger.info(f"image send automatically, {self.req['filename']}")
 			self.SENT = True
 
 
@@ -171,7 +174,7 @@ class Make_img(Censorship, Db_connector):
 			self.img_object.save(self.filename)
 		except FileNotFoundError:
 			Notify(q_list=self.q_list,error="CANT_SAVE_IMG")
-			conf['logger'].error(f" couldn't save image, {self.filename}")
+			self.logger.error(f" couldn't save image, {self.filename}")
 
 			try:
 				self.filename = f"{conf['out_image_path_BACKUP']}/{conf['out_image_name']}.{conf['extension']}"
@@ -179,7 +182,7 @@ class Make_img(Censorship, Db_connector):
 				self.img_object.save(self.filename)
 			except FileNotFoundError:
 				Notify(q_list=self.q_list,error="CANT_SAVE_IMG_BACK")
-				conf['logger'].critical(f" couldn't save image in backup location, {self.filename}")
+				self.logger.critical(f" couldn't save image in backup location, {self.filename}")
 
 				sys.exit(1)
 
@@ -203,13 +206,13 @@ class Make_img(Censorship, Db_connector):
 
 		if self.FIRST_POST == None:
 			self.FIRST_POST = int(time.time())
-			conf['logger'].warning(f"first post {self.FIRST_POST}")		
+			self.logger.warning(f"first post {self.FIRST_POST}")		
 
 
 		self.HOURS_PASSED = int(time.time()) 
 		self.HOURS_PASSED = ( self.HOURS_PASSED - self.FIRST_POST )/ 3600
 		# self.HOURS_PASSED = self.HOURS_PASSED * 40
-		conf['logger'].warning(f"HOURS_PASSED {self.HOURS_PASSED} ({self.HOURS_PASSED*60})")		
+		self.logger.warning(f"HOURS_PASSED {self.HOURS_PASSED} ({self.HOURS_PASSED*60})")		
 
 
 		conf['POST_RATIO'] = int(conf['POST_COUNT'] / 1)
@@ -227,11 +230,11 @@ class Make_img(Censorship, Db_connector):
 		# 	conf['POST_RATIO'] = int(conf['POST_COUNT'] / 1)
 
 
-		conf['logger'].warning(f"post ratio: {conf['POST_RATIO']} posts: {conf['POST_COUNT']} hours: {self.HOURS_PASSED}")		
+		self.logger.warning(f"post ratio: {conf['POST_RATIO']} posts: {conf['POST_COUNT']} hours: {self.HOURS_PASSED}")		
 
 		
 		if conf['POST_RATIO'] >= conf['POST_RATIO_ALERT']:
-			conf['logger'].warning(f" post ratio alert, autorun off, {conf['POST_RATIO']}")
+			self.logger.warning(f" post ratio alert, autorun off, {conf['POST_RATIO']}")
 
 			print('-------------  TO MAY POSTS, AUTO RUN OFF')
 			
@@ -245,14 +248,14 @@ class Make_img(Censorship, Db_connector):
 				# d.put(self.req)
 				Notify(q_list=self.q_list,error="POST_RATIO_ALERT", img=self.req.get("filename"))
 				self.ALERT_SEND = True
-				conf['logger'].warning(f"image: post ratio - ALERT")
+				self.logger.warning(f"image: post ratio - ALERT")
 
 
 
 
 		elif conf['POST_RATIO'] >= conf['POST_RATIO_WARNING']:
 			print("POSTS ALERT ALERTTTT!!!!")
-			conf['logger'].warning(f" post ratio warning, {conf['POST_RATIO']}")		
+			self.logger.warning(f" post ratio warning, {conf['POST_RATIO']}")		
 
 			if self. WARNING_SEND == False:
 				# d.put(self.req)
@@ -263,7 +266,7 @@ class Make_img(Censorship, Db_connector):
 			conf['AUTORUN'] = True
 			# self.set_autorun(True)
 
-		conf['logger'].info(f"image: post ratio: {conf['POST_RATIO']} autorun: {conf['AUTORUN']}")
+		self.logger.info(f"image: post ratio: {conf['POST_RATIO']} autorun: {conf['AUTORUN']}")
 
 
 
@@ -374,11 +377,11 @@ class Make_img(Censorship, Db_connector):
 	def prepare_text(self) -> str:
 		"cut text and prepare to show"
 
-		conf['logger'].debug(f"prepare text input: {self.TEXT}" )
+		self.logger.debug(f"prepare text input: {self.TEXT}" )
 
 		# txt = self.TEXT.rsplit(" ")
 		txt = self.TEXT
-		conf['logger'].debug(f"prepare text split: {self.TEXT}" )
+		self.logger.debug(f"prepare text split: {self.TEXT}" )
 		
 		res_txt = ""
 		chars_inline = 0
@@ -413,7 +416,7 @@ class Make_img(Censorship, Db_connector):
 
 
 		self.TEXT = str(res_txt)
-		conf['logger'].debug(f"text prepared: {self.TEXT}" )
+		self.logger.debug(f"text prepared: {self.TEXT}" )
 
 
 

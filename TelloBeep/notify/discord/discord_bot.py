@@ -8,6 +8,8 @@ import time as tm
 time = datetime.datetime.now
 
 from TelloBeep.config import conf
+from TelloBeep.logs.logger import logger
+
 
 async def timer():
 	await bot.wait_until_ready()
@@ -28,10 +30,11 @@ async def timer():
 class Discord_bot():
 	def __init__(self, q_list):
 		
+		self.logger = logger(name=__name__)
 
 		print("INIT: DISCORD")
 		self.q_list = q_list
-		conf['logger'].info(f"discord bot init")
+		self.logger.info(f"discord bot init")
 
 		self.bot = commands.Bot(command_prefix='!')
 
@@ -47,29 +50,29 @@ class Discord_bot():
 
 		while True:
 			res = queue.get()
-			conf['logger'].info(f"got discord info")
+			self.logger.info(f"got discord info")
 			msg = f"{res.get('bot_comment')[0:1000]}"
 
 			if res.get("filename"):
-				conf['logger'].info(f"discord post has filename {res.get('filename')}")
+				self.logger.info(f"discord post has filename {res.get('filename')}")
 				try:
 					x = f"{conf['out_image_path']}/{res.get('filename')}"
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
-					conf['logger'].info(f"picture read propertly")
+					self.logger.info(f"picture read propertly")
 				except:
-					conf['logger'].info(f"couldn't find picture in first location, searching for backup")
+					self.logger.info(f"couldn't find picture in first location, searching for backup")
 					x = f"{conf['out_image_path_BACKUP']}/{res.get('filename')}"
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
 
 				# await channel.send(f"{res.get('bot_comment')[0:1000]}", file=picture)
-				# conf['logger'].info(f"discord post send with picture, {res.get('bot_comment')}, {conf['out_image_path']}/{res.get('filename')}")
+				# self.logger.info(f"discord post send with picture, {res.get('bot_comment')}, {conf['out_image_path']}/{res.get('filename')}")
 				await  self.send_msg(msg, picture=picture)
 
 			else:
 				# await channel.send(f"{res.get('bot_comment')[0:1000]}")
-				# conf['logger'].info(f"discord post send {res.get('bot_comment')}")
+				# self.logger.info(f"discord post send {res.get('bot_comment')}")
 				res = await self.send_msg(msg)
 
 			await asyncio.sleep(1)
@@ -85,7 +88,7 @@ class Discord_bot():
 				return True
 
 			except Exception as e:
-				conf['logger'].info(f"discord connection error, cannot send msg: f{msg}, sleep: {sleep}")	
+				self.logger.info(f"discord connection error, cannot send msg: f{msg}, sleep: {sleep}")	
 
 				tm.sleep(sleep)
 				sleep +=2
@@ -95,10 +98,10 @@ class Discord_bot():
 		channel = self.bot.get_channel(int(conf['DISCORD_CHANNEL_ID']))
 		if picture:
 			await channel.send(f"{msg}", file=picture)
-			conf['logger'].info(f"discord post send with picture, {msg}, {picture}")	
+			self.logger.info(f"discord post send with picture, {msg}, {picture}")	
 		else:
 			await channel.send(f"{msg}")
-			conf['logger'].info(f"discord post send {msg}")
+			self.logger.info(f"discord post send {msg}")
 
 		return True
 

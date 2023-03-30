@@ -6,8 +6,12 @@ from sqlalchemy import exc
 from TelloBeep.config import conf
 from datetime import datetime
 
+from TelloBeep.logs.logger import logger
+
+
 class Db_connector():
-			
+	def __init__(self):
+		self.logger = logger(name=__name__)
 
 	def db_add_img(self):
 		txt = self.TEXT		
@@ -41,7 +45,11 @@ class Db_connector():
 
 	def db_set_approved(self, state=True):
 
-		post = Posts.query.filter_by(title=conf['out_image_name']).one()
+		post = Posts.query.filter_by(title=conf['out_image_name'])
+		try:
+			post = post.one()
+		except:
+			post = post.first()
 		if state:
 			post.approved_by = 1
 		else:
