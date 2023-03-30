@@ -21,7 +21,6 @@ pipeline{
 
 				script{
 
-
 					if (env.BRANCH_NAME == "main"){
 
 						sh 'echo latest > TAG_NAME';
@@ -47,7 +46,6 @@ pipeline{
 					}
 					
 
-
 					sh "apt update && apt upgrade -y ";
 					sh "apt install python3-pip -y ";
 					sh "apt install curl -y ";
@@ -60,7 +58,17 @@ pipeline{
 				}
 			}
 		}
-		stage("Building"){
+		stage("Testing"){
+			steps{
+				script {
+					echo "---------------testing---------------";
+					echo "list all images built";
+					sh "docker images";
+					echo "$IMG";
+				}
+			}
+		}
+		stage("Building-Docker"){
 			steps{
 				script {
 
@@ -69,16 +77,6 @@ pipeline{
 					IMG = docker.build("$REPO:$TAG_NAME");
 					echo "build image: $IMG";
 
-				}
-			}
-		}
-		stage("Testing"){
-			steps{
-				script {
-					echo "---------------testing---------------";
-					echo "list all images built";
-					sh "docker images";
-					echo "$IMG";
 				}
 			}
 		}
@@ -96,7 +94,37 @@ pipeline{
 					}
 			    } 
 		}
-		
+		stage("Setup-exe"){
+			steps{
+				script {
+
+					echo "---------------setting up exe ---------------";
+					echo "building python package";
+
+					// IMG = docker.build("$REPO:$TAG_NAME");
+					// echo "build image: $IMG";
+					sh 'ls';
+
+					sh "python3 setup.py build";
+					sh "python3 setup.py install";
+
+				}
+			}
+		}
+		stage("Building-exe"){
+			steps{
+				script {
+
+					echo "---------------building exe ---------------";
+					echo "building exe image via built in function";
+					sh 'ls';
+					sh 'sudo pyinstaller --hidden-import=TelloBeep --hidden-import=packaging --hidden-import=packaging.version --hidden-import=packaging.specifiers --hidden-import=packaging.requirements --hidden-import=packaging.utils run.py'
+					sh 'ls';
+					sh 'ls dist/run';
+
+				}
+			}
+		}
 		stage("release"){
 			steps{	
 				script {
