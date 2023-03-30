@@ -1,7 +1,6 @@
 from setuptools import setup, find_packages
 from distutils.core import setup
-from run import start
-# import py2exe
+
 
 setup(scripts=['run.py'])
 
