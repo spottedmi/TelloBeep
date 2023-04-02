@@ -122,8 +122,8 @@ pipeline{
 							sh "curl https://raw.githubusercontent.com/RandomGuy090/github-auto-release/main/auto-release.sh > run.sh";
 							sh "bash run.sh -u spottedmi -r TelloBeep -t $githubSecret -b $TAG_NAME -e run.exe  > VERSION"
 							VERSION = readFile('VERSION').trim()
-							echo $VERSION;					
-							echo $VERSION;					
+							echo VERSION;					
+							echo VERSION;					
 
 						}
 					
