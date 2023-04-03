@@ -79,7 +79,6 @@ class Discord_bot():
 
 
 	async def send_msg(self, msg, picture=None) -> bool:
-		print(f"received: {msg}")
 		tm.sleep(15)
 		sleep = 1
 		while True:
