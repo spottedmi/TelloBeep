@@ -5,6 +5,7 @@ from TelloBeep.api import Tellonym_api
 from TelloBeep.api.handlers.tellonym import Tello_api
 from TelloBeep.logs.logger import logger
 
+import sys
 
 class Fetching_api(Tello_api):
 	def __init__(self, q_list):
