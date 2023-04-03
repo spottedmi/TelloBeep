@@ -43,8 +43,7 @@ class Insta_api():
 				# time.sleep(delay)
 
 			except Exception as e:
-				print(e)
-				Notify(q_list=self.q_list, error="INSTAGRAM_ERROR")
+				Notify(q_list=self.q_list, error=f"INSTAGRAM_ERROR {e}")
 			
 			time.sleep(delay)
 			delay += 2 * delay
@@ -92,6 +91,8 @@ class Insta_api():
 				sleep = sleep * 2
 
 				self.insta.login()
+			except Exception as e:
+				print(f"---------> {e}  ")
 
 
 

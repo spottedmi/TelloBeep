@@ -24,12 +24,13 @@ class Instagram_api():
 		self.bot = Client()
 		try:
 			self.bot.load_settings(conf["INSTAGRAM_SESSION"])
+			
 			self.logger.info(f"logged from file, soft login")
 			Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
 
 			return self.bot
 
-		except FileNotFoundError:
+		except :
 			self.logger.warning(f"could not log from file, hard login")
 			pass
 
@@ -63,11 +64,9 @@ class Instagram_api():
 				time.sleep(sl)
 				sl = sl*2
 
-			print("bot logged")
 			Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
 		else:
 			Notify(q_list=self.q_list, error="INSTAGRAM_LOGIN_SKIPPED")
-			print("bot login skipped")
 
 		return self.bot
 

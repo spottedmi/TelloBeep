@@ -231,7 +231,7 @@ class Tellonym_api():
 			x = x["code"]
 
 			if x == conf['ERRORS'].get("token"):
-				self.logger("invalid token")
+				self.logger.warning("invalid token")
 				raise TokenInvalidTellonym
 
 			return x
