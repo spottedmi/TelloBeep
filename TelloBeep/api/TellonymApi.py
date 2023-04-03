@@ -37,7 +37,7 @@ class Tellonym_api():
 
 			except TokenReadImpossible:
 				self.logger.error(f"cannot load token")
-
+				self.get_token()
 				return False
 				time.sleep(loop)
 				loop += loop
@@ -106,7 +106,8 @@ class Tellonym_api():
 
 		except Exception as e:
 			# return conf['ERRORS'].get("load_token")
-			raise TokenInvalidTellonym(q_list=self.q_list)
+			# raise TokenInvalidTellonym(q_list=self.q_list)
+			self.get_token()
 
 		return True
 
@@ -150,6 +151,7 @@ class Tellonym_api():
 		response = requests.post(url, headers=headers, json=data_login, timeout=15)
 
 		data = response.json()
+
 
 		close = False
 
