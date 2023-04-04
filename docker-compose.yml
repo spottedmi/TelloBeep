@@ -2,17 +2,21 @@ version: "3"
 services:
   tellobeep:
     restart: unless-stopped
-    # image: randomguy090/tellobeep:develop
-    build: .
+    image: randomguy090/tellobeep:develop
+    # build: .
     container_name: "tellobeep2"
     ports:
       - "5002:5002"
     volumes:
-      - "/etc/tellobeep/config.json:/app/TelloBeep/config/config.json"
-      - "/etc/tellobeep/instagram_sesison.json:/app/TelloBeep/config/instagram_sesison.json"
-      - "/etc/tellobeep/db.sqlite:/app/TelloBeep/database/db.sqlite"
-      - "/etc/tellobeep/swears_list.txt:/app/TelloBeep/database/swears_list.txt"
-      - "/etc/tellobeep/token.txt:/app/TelloBeep/config/token.txt"
-      - "/etc/tellobeep/imgs:/app/TelloBeep/imgs"
+      - "/etc/tellobeep/config.json:/etc/tellobeep/config.json"
+      - "/etc/tellobeep/instagram_sesison.json:/etc/tellobeep/config/instagram_sesison.json"
+      - "/etc/tellobeep/db.sqlite:/etc/tellobeep/db.sqlite"
+      - "/etc/tellobeep/swears_list.txt:/etc/tellobeep/swears_list.txt"
+      - "/etc/tellobeep/token.txt:/etc/tellobeep/token.txt"
+      - "/etc/tellobeep/imgs:/etc/tellobeep/imgs"
+      - "/etc/tellobeep/temp.png:/etc/tellobeep/temp.png"
+      - "/etc/tellobeep/thumbnails:/etc/tellobeep/thumbnails"
+      - "/etc/tellobeep/fonts:/etc/tellobeep/fonts"
+      - "/etc/tellobeep/logs:/etc/tellobeep/logs"
     environment:
-      - TZ="Europe/Warsaw"
+      - TZ=Europe/Warsaw

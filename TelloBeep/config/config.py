@@ -20,15 +20,12 @@ def make_absolute_path(filepath):
 
 
 if os.name == "posix":
-	if os.path.exists(f"{os.path.dirname(__file__)}/config.json"):
-
-		with open(f"{os.path.dirname(__file__)}/config.json", "r") as f:
+	if os.path.exists(f"/etc/tellobeep/config.json"):	
+		with open(f"/etc/tellobeep/config.json", "r") as f:
 			config = f.read()
 			conf = json.loads(config)
-
-	elif os.path.exists(f"/etc/tellobeep/config.json"):
-
-		with open(f"/etc/tellobeep/config.json", "r") as f:
+	elif os.path.exists(f"{os.path.dirname(__file__)}/config.json"):
+		with open(f"{os.path.dirname(__file__)}/config.json", "r") as f:
 			config = f.read()
 			conf = json.loads(config)
 	else:
@@ -38,16 +35,16 @@ if os.name == "posix":
 elif os.name == "nt":
 	APPDATA = os.getenv('APPDATA')
 
-	if os.path.exists(f"{os.path.dirname(__file__)}\\config.json"):
-		with open(f"{os.path.dirname(__file__)}\\config.json", "r") as f:
 
+	if os.path.exists(f"{APPDATA}\\tellobeep\\config.json"):
+		with open(f"{APPDATA}\\tellobeep\\config.json", "r") as f:
 			config = f.read()
 			config = config.replace("/etc/tellobeep/", f"{APPDATA}/tellobeep")
 			config = config.replace("/", "\\")
 			conf = json.loads(config)
 
-	elif os.path.exists(f"{APPDATA}\\tellobeep\\config.json"):
-		with open(f"{APPDATA}\\tellobeep\\config.json", "r") as f:
+	elif os.path.exists(f"{os.path.dirname(__file__)}\\config.json"):
+		with open(f"{os.path.dirname(__file__)}\\config.json", "r") as f:
 			
 			config = f.read()
 			config = config.replace("/etc/tellobeep/", f"{APPDATA}/tellobeep/")
@@ -81,6 +78,11 @@ conf['image_path'] = make_absolute_path(conf['image_path'])
 conf['out_image_path_BACKUP'] = make_absolute_path(conf['out_image_path_BACKUP'])
 conf['out_image_name'] = make_absolute_path(conf['out_image_name'])
 conf['logger'] = None
+
+print(conf.get("db_name"))
+print(conf.get("db_name"))
+print(conf.get("db_name"))
+print(conf.get("db_name"))
 
 
 # for elem in conf:

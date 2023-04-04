@@ -74,8 +74,17 @@ def load_user(user_id):
 
 def setup():
     print("create")
-    db.create_all()
+    
+    try:
+        db.create_all()
+        print("ok")
+    except:
+        app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///db.sqlite"
+        db.create_all()
+        print("ok2")
+
     print(sys.argv)
+
     try:
         login = sys.argv[sys.argv.index("-l")+1]
         passwd = sys.argv[sys.argv.index("-p")+1]
