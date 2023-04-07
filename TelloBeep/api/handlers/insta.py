@@ -2,11 +2,15 @@ from queue import Queue
 import time, random, json, os, sys
 
 from TelloBeep.api import Instagram_api
+from TelloBeep.email.bypass import Bypass_email
+
 
 from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError, PhotoNotUpload
 from TelloBeep.config import conf
 from TelloBeep.notify import Notify
 from TelloBeep.logs.logger import logger
+
+
 
 
 #_____________________________________________________________
@@ -16,8 +20,8 @@ from TelloBeep.logs.logger import logger
 
 class Insta_api():
 	def __init__(self, q_list):
-		self.logger = logger(name=__name__)
 		
+		self.logger = logger(name=__name__)
 		print("instaapi")
 
 		"this is only a makeshift"
@@ -43,7 +47,8 @@ class Insta_api():
 				# time.sleep(delay)
 
 			except Exception as e:
-				Notify(q_list=self.q_list, error=f"INSTAGRAM_ERROR {e}")
+				print(e)
+				Notify(q_list=self.q_list, error="INSTAGRAM_ERROR")
 			
 			time.sleep(delay)
 			delay += 2 * delay
@@ -84,15 +89,26 @@ class Insta_api():
 
 			except PhotoNotUpload as e:
 				self.logger.warning(f"cannot upload photo: PhotoNotUpload")
+				self.logger.warning(f"error {e}")
 				self.logger.warning(f"go to sleep for: {sleep}")
+				if "<Response [302]>" in str(e):
+					self.logger.warning(f"302 found")
+					# sl = 5
+					
+					is_auth = False
+					while is_auth == False:
+							
+						is_auth = Bypass_email().check_process()
+						self.logger.warning(f"is_auth: {is_auth}")
+						self.insta.bot.load_settings(conf["INSTAGRAM_SESSION"])
+
+
 				# self.logger.info(f"cannot upload photo: {e}")
 				Notify(q_list=self.q_list, error="PhotoNotUpload error")
 				time.sleep(sleep)
 				sleep = sleep * 2
 
 				self.insta.login()
-			except Exception as e:
-				print(f"---------> {e}  ")
 
 
 

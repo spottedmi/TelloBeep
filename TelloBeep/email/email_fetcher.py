@@ -1,6 +1,6 @@
 from TelloBeep.config import conf
 from TelloBeep.logs.logger import logger
-import poplib, email, re, time
+import poplib, email, re, time, subprocess
 
 poplib._MAXLINE=20480
 
@@ -38,6 +38,8 @@ class Mail_fetcher():
 		try:
 			self.pop_conn.user(self.username)
 			self.pop_conn.pass_(self.password)
+			self.logger.info(f"poplib logged")
+
 		except Exception as e:
 			self.logger.error(f"poplib login error: {e}")
 			return False
@@ -48,6 +50,7 @@ class Mail_fetcher():
 
 	def fetch_mails(self):
 		num_emails = len(self.pop_conn.list()[1])
+		self.logger.info(f"found: {len(num_emails)} emails")
 		for i in range(num_emails, 0, -1):
 			# Fetch the email at the current index
 			resp, data, octets = self.pop_conn.retr(i)
