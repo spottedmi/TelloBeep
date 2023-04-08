@@ -91,7 +91,8 @@ class Insta_api():
 				self.logger.warning(f"cannot upload photo: PhotoNotUpload")
 				self.logger.warning(f"error {e}")
 				self.logger.warning(f"go to sleep for: {sleep}")
-				if "<Response [302]>" in str(e):
+
+				if "<Response [302]>" in str(e) or "login_required" in str(e):
 					self.logger.warning(f"302 found")
 					# sl = 5
 					
