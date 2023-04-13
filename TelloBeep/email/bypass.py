@@ -33,8 +33,8 @@ print(f"logged to the instagram account: "+ str(i))\n
 
 		self.run_process()
 		self.logger.warning("process runned 2")
-
-		while True:
+		it = 0
+		while i<100:
 			self.logger.info("while loop")
 			output = ""
 			while len(output) < 5:
@@ -61,5 +61,7 @@ print(f"logged to the instagram account: "+ str(i))\n
 				self.process.stdin.flush()  
 				output, error = self.process.communicate()
 
+			i+=1
 			time.sleep(1)
+		return False
 
