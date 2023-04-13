@@ -2,7 +2,7 @@ import os, sys
 import shutil
 import logging
 import time
-from TelloBeep.config import conf
+# from TelloBeep.config import conf
 
 
 class CustomFormatter(logging.Formatter):
@@ -31,16 +31,7 @@ class CustomFormatter(logging.Formatter):
 
 def logger(name=__name__):
    
-    # created = os.path.getctime(conf.get("LOG_FILE"))
-    # year,month,day,hour,minute,second=time.localtime(created)[:-3]
-
-
-    # new_filename = "%02d%02d%d%02d%02d%02dtellobeep.log"%(second, minute, hour, day, month,year)
-    # new_filename = conf["LOG_FILE"].replace("tellobeep.log", new_filename)
-    # shutil.move(conf["LOG_FILE"], new_filename)
-
     logger = logging.getLogger(name)
-    # fh = logging.FileHandler(conf['LOG_FILE'])
     fh = logging.StreamHandler(sys.stdout)
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(CustomFormatter())
