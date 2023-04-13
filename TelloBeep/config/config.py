@@ -1,6 +1,8 @@
 import json
 import os, sys
+from TelloBeep.logs.logger import logger
 
+logger = logger(name="config_setup")
 
 def make_absolute_path(filepath):
 	
@@ -79,10 +81,10 @@ conf['out_image_path_BACKUP'] = make_absolute_path(conf['out_image_path_BACKUP']
 conf['out_image_name'] = make_absolute_path(conf['out_image_name'])
 conf['logger'] = None
 
-print(conf.get("db_name"))
-print(conf.get("db_name"))
-print(conf.get("db_name"))
-print(conf.get("db_name"))
+env = dict(os.environ)
+for elem in env:
+	logger.info(f"use variable from environmental variables:  {elem}")
+	conf[elem] = env[elem]
 
 
 # for elem in conf:
