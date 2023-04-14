@@ -33,7 +33,7 @@ print(f"logged to the instagram account: "+ str(i))\n
 
 		self.run_process()
 		self.logger.warning("process runned 2")
-		it = 0
+		i = 0
 		while i<100:
 			self.logger.info("while loop")
 			output = ""
