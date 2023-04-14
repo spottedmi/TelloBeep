@@ -19,8 +19,7 @@ from wtforms.validators import InputRequired, Length, ValidationError
 # from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from TelloBeep.logs.logger import logger
-
+from TelloBeep.logs.logger import logger 
 
 import sys, datetime, json, base64
 
@@ -32,6 +31,8 @@ path = f"{path}/.."
 
 sys.path.insert(0,path)
 from TelloBeep.config import conf, dump_json
+
+print(conf)
 
 #_____________________________________________________________
 #
@@ -45,7 +46,18 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../database/db.sqlite"
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{conf['db_name']}"
+try:
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{conf['db_name']}"
+except:
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///db.sqlite"
+
+
+print(app.config["SQLALCHEMY_DATABASE_URI"])
+print(app.config["SQLALCHEMY_DATABASE_URI"])
+print(app.config["SQLALCHEMY_DATABASE_URI"])
+print(app.config["SQLALCHEMY_DATABASE_URI"])
+print(app.config["SQLALCHEMY_DATABASE_URI"])
+
 
 app.config["SECRET_KEY"] = "SECRET"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -71,6 +83,7 @@ def load_user(user_id):
 
 #CREATE DATABASE
 
+logger = logger(name="backend_server")
 
 def setup():
     print("create")
@@ -421,10 +434,14 @@ def json_parser(headers, txt)-> dict:
 
 
 #function executed in thread
-def back_server(q_list, host="0.0.0.0", port=5002):
+def back_server(q_list, host="0.0.0.0", port=5002, conf=None):
     global queue_list
     queue_list = q_list
-
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{conf['db_name']}"
+    
+    if conf.get("BACKEND_PORT"):
+        port = conf.get("BACKEND_PORT")
+    logger.critical(f"port ------------- {port}")
     app.run(host=host, port=port)
 
 
