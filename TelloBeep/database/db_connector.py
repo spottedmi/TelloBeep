@@ -10,7 +10,9 @@ from TelloBeep.logs.logger import logger
 
 
 class Db_connector():
-	def __init__(self):
+	def __init__(self, conf=None):
+		if conf:
+			self.conf = conf
 		self.logger = logger(name=__name__)
 
 	def db_add_img(self):
@@ -19,8 +21,8 @@ class Db_connector():
 			post = Posts()
 			
 			post.content = txt
-			post.title = conf['out_image_name']
-			if conf['AUTORUN'] and not self.censor_flag:
+			post.title = self.conf['out_image_name']
+			if self.conf['AUTORUN'] and not self.censor_flag:
 				post.approved = True
 				post.approved_by = 0
 			else:
@@ -45,7 +47,7 @@ class Db_connector():
 
 	def db_set_approved(self, state=True):
 
-		post = Posts.query.filter_by(title=conf['out_image_name'])
+		post = Posts.query.filter_by(title=self.conf['out_image_name'])
 		try:
 			post = post.one()
 		except:
@@ -67,7 +69,7 @@ class Db_connector():
 
 	def if_logged(self,user=None, db_name=None, password=""):
 
-		con = connect({conf['db_name']})
+		con = connect({self.conf['db_name']})
 
 		curs = con.cursor()
 		curs.execute(""" 

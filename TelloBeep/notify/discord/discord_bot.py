@@ -28,8 +28,9 @@ async def timer():
 
 
 class Discord_bot():
-	def __init__(self, q_list):
-		
+	def __init__(self, q_list, conf=None):
+		if conf:
+			self.conf = conf		
 		self.logger = logger(name=__name__)
 
 		print("INIT: DISCORD")
@@ -39,7 +40,7 @@ class Discord_bot():
 		self.bot = commands.Bot(command_prefix='!')
 
 		self.bot.loop.create_task(self.load_from_thread())
-		self.bot.run(conf['DISCORD_TOKEN'])
+		self.bot.run(self.conf['DISCORD_TOKEN'])
 
 
 	async def load_from_thread(self):
@@ -56,18 +57,18 @@ class Discord_bot():
 			if res.get("filename"):
 				self.logger.info(f"discord post has filename {res.get('filename')}")
 				try:
-					x = f"{conf['out_image_path']}/{res.get('filename')}"
+					x = f"{self.conf['out_image_path']}/{res.get('filename')}"
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
 					self.logger.info(f"picture read propertly")
 				except:
 					self.logger.info(f"couldn't find picture in first location, searching for backup")
-					x = f"{conf['out_image_path_BACKUP']}/{res.get('filename')}"
+					x = f"{self.conf['out_image_path_BACKUP']}/{res.get('filename')}"
 					with open(x, 'rb') as f:
 						picture = discord.File(f)
 
 				# await channel.send(f"{res.get('bot_comment')[0:1000]}", file=picture)
-				# self.logger.info(f"discord post send with picture, {res.get('bot_comment')}, {conf['out_image_path']}/{res.get('filename')}")
+				# self.logger.info(f"discord post send with picture, {res.get('bot_comment')}, {self.conf['out_image_path']}/{res.get('filename')}")
 				await  self.send_msg(msg, picture=picture)
 
 			else:
@@ -94,7 +95,7 @@ class Discord_bot():
 
 
 	async def send_message_core(self, msg, picture=None) -> bool :
-		channel = self.bot.get_channel(int(conf['DISCORD_CHANNEL_ID']))
+		channel = self.bot.get_channel(int(self.conf['DISCORD_CHANNEL_ID']))
 		if picture:
 			await channel.send(f"{msg}", file=picture)
 			self.logger.info(f"discord post send with picture, {msg}, {picture}")	

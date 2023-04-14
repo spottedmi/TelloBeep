@@ -6,27 +6,30 @@ poplib._MAXLINE=20480
 
 
 class Mail_fetcher():
-	def __init__(self):
+	def __init__(self, conf=None):
+		if conf:
+			self.conf = conf
+			
 		self.logger = logger(name=__name__)
 
 		self.server = 'pop3.poczta.onet.pl'
 		
 		
-		if conf.get("EMAIL_SERVER"):
-			self.server = conf["EMAIL_SERVER"]
+		if self.conf.get("EMAIL_SERVER"):
+			self.server = self.conf["EMAIL_SERVER"]
 		else:
 			self.server = False
 			self.logger.critical("email fetcher has no server defined (EMAIL_SERVER)")
 
-		if "@" in conf["LOGIN_INSTAGRAM"]:
-			self.username = conf["LOGIN_INSTAGRAM"]
-		elif conf.get("EMAIL_LOGIN"):
-			self.username = conf["EMAIL_LOGIN"]
+		if "@" in self.conf["LOGIN_INSTAGRAM"]:
+			self.username = self.conf["LOGIN_INSTAGRAM"]
+		elif self.conf.get("EMAIL_LOGIN"):
+			self.username = self.conf["EMAIL_LOGIN"]
 		else:
 			self.logger.critical("email fetcher no credentails (Email login)")
 		
-		if conf.get("EMAIL_PASSWORD"):
-			self.password = conf["EMAIL_PASSWORD"]
+		if self.conf.get("EMAIL_PASSWORD"):
+			self.password = self.conf["EMAIL_PASSWORD"]
 		else:
 			self.password = False
 			self.logger.critical("email fetcher no credentails (Email login)")

@@ -17,7 +17,10 @@ from TelloBeep.exceptions import TokenInvalidQuestionmi, ConnectionTimeout, Capt
 
 class Questionmi_api():
 	q_list = None
-	def __init__(self, q_list=None):
+	def __init__(self, q_list=None, conf=None):
+		if conf:
+			self.conf = conf
+			
 		self.logger = logger(name=__name__)	
 
 		if q_list != None:
@@ -224,7 +227,7 @@ class Questionmi_api():
 			# cen = Censorship()
 			# cen.TEXT = x["tell"]
 			# FLAG = cen.flag_word()
-			tell = Questionmi_tell(x)
+			tell = Questionmi_tell(x, conf=self.conf)
 			# tell.flag = FLAG
 			# print(f"parsed tell: {tell}")
 			

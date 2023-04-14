@@ -118,7 +118,7 @@ class Tells_Utills():
 
 
 class Questionmi_tell(Tells_Utills):
-	def __init__(self, tellJSON):
+	def __init__(self, tellJSON, conf=None):
 		super().__init__(tellJSON)
 
 		self.tell = tellJSON["text"]
@@ -131,7 +131,7 @@ class Questionmi_tell(Tells_Utills):
 
 		
 
-		self.cen = Censorship()
+		self.cen = Censorship(conf=conf)
 		self.cen.TEXT = self.tell
 		self.flag  = self.cen.flag_word()
 
@@ -140,7 +140,7 @@ class Questionmi_tell(Tells_Utills):
 
 
 class Tellonym_tell(Tells_Utills):
-	def __init__(self, tellJSON):
+	def __init__(self, tellJSON, conf=None):
 		super().__init__(tellJSON)
 
 		self.tell = tellJSON["tell"]
@@ -154,7 +154,7 @@ class Tellonym_tell(Tells_Utills):
 		self.title = self.get_title(self.created_at)
 
 		
-		self.cen = Censorship()
+		self.cen = Censorship(conf=conf)
 		self.cen.TEXT = self.tell
 		self.flag  = self.cen.flag_word()
 

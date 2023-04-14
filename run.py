@@ -18,7 +18,6 @@ from TelloBeep.logs.logger import logger
 
 class StartUp():
 	def __init__(self):
-		global conf
 		# Logger()
 		self.logger = logger(__name__)
 		pid = os.getpid()
@@ -29,44 +28,40 @@ class StartUp():
 		self.logger.critical("_____Tellobeep INIT___________________________________")
 		self.logger.info("prlimit set")
 
-class Start():
+class TelloBeep():
 
 	def __init__(self):	
 		# Config()
+		self.conf = conf
 		self.logger = logger(__name__)
 
-		manager = multiprocessing.Manager()
+		self.manager = multiprocessing.Manager()
 
-		q_list = {
-			"2gen": manager.Queue(),
-			"2flask": manager.Queue(),
-			"2tello": manager.Queue(),
-			"2insta": manager.Queue(),
-			"2main_thread": manager.Queue(),
+		self.q_list = {
+			"2gen": self.manager.Queue(),
+			"2flask": self.manager.Queue(),
+			"2tello": self.manager.Queue(),
+			"2insta": self.manager.Queue(),
+			"2main_thread": self.manager.Queue(),
 		}
 		
 		
-
-		print(self.logger)
-		print("---------------AFTER")
 		start = StartUp()
-		print(self.logger)
 
+	def run(self):
 		processes = {}
 		apps = [Make_img, back_server, Insta_api, Fetching_api, Discord_bot]
 
 		n = 0
 		for app in apps:
 			self.logger.info(f"__init process__ {app}")
-			p = multiprocessing.Process(target = app, kwargs={"q_list": q_list})
+			p = multiprocessing.Process(target = app, kwargs={"q_list": self.q_list})
 			p.daemon = True
 			p.start()
 
 			processes[n] = (p, app) # Keep the process and the app to monitor or restart
 			n += 1
 			self.logger.info(f"process run, status ok")
-
-
 
 
 		while 1 :
@@ -80,7 +75,7 @@ class Start():
 
 						self.logger.warning(f"process {a} raised an error {p.exitcode}, restarting...")
 
-						p = multiprocessing.Process(target = a, kwargs={"q_list": q_list})
+						p = multiprocessing.Process(target = a, kwargs={"q_list": self.q_list})
 						p.daemon = True 
 						p.start()
 						
@@ -90,4 +85,5 @@ class Start():
 
 
 if __name__ == "__main__":
-	Start()
+	tellobeep = TelloBeep()
+	tellobeep.run()

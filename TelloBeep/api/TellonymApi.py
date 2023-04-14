@@ -16,10 +16,13 @@ from TelloBeep.logs.logger import logger
 
 class Tellonym_api():
 	q_list = None
-	def __init__(self, q_list=None):
+	def __init__(self, q_list=None,conf=None):
+
 		# if self.logger == None:
 		self.logger = logger(name=__name__)
 
+		if conf:
+			self.conf = conf
 
 		self.user = None
 		self.tells = list()
@@ -89,15 +92,15 @@ class Tellonym_api():
 		Notify(q_list=self.q_list, error="TELLO_RELOGIN")
 		self.logger.error(f"tellonym relogin")
 
-		if not conf['LOGIN_TELLONYM'] and not conf['PASSWORD_TELLONYM']:
-			conf['LOGIN_TELLONYM'] = input("login: ")
-			conf['PASSWORD_TELLONYM'] = input("password: ")
+		if not self.conf['LOGIN_TELLONYM'] and not self.conf['PASSWORD_TELLONYM']:
+			self.conf['LOGIN_TELLONYM'] = input("login: ")
+			self.conf['PASSWORD_TELLONYM'] = input("password: ")
 
 
 	def load_token(self, file=None):
 		# use pre-defined file location
 		"load token from file"
-		file = conf['token_file_tellonym']
+		file = self.conf['token_file_tellonym']
 		try:
 			with open(file, "r") as f:
 				res = f.read()
@@ -105,7 +108,7 @@ class Tellonym_api():
 			self.user = Tellonym_user(res)
 
 		except Exception as e:
-			# return conf['ERRORS'].get("load_token")
+			# return self.conf['ERRORS'].get("load_token")
 			# raise TokenInvalidTellonym(q_list=self.q_list)
 			self.get_token()
 
@@ -114,7 +117,7 @@ class Tellonym_api():
 	def save_token(self, file=None, data=""):
 		"save token to a file"
 
-		file = file if file  else conf['token_file_tellonym']
+		file = file if file  else self.conf['token_file_tellonym']
 		with open(file, "w+") as f:
 			f.write(json.dumps(data))
 
@@ -128,12 +131,12 @@ class Tellonym_api():
 			"deviceType": "web",
 			"lang": "en",
 			"captcha": "",#m3gon
-			"email": conf['LOGIN_TELLONYM'],
-			"password": conf['PASSWORD_TELLONYM'],
+			"email": self.conf['LOGIN_TELLONYM'],
+			"password": self.conf['PASSWORD_TELLONYM'],
 			"limit": "25"
 		}
 
-		conf['headers']["Content-Length"] = f"{len(str(data_login))}"
+		self.conf['headers']["Content-Length"] = f"{len(str(data_login))}"
 		headers =  {
 	        "Accept-Language": "pl,en-US;q=0.7,en;q=0.3",
 	        "content-type": "application/json;charset=utf-8",
@@ -155,10 +158,10 @@ class Tellonym_api():
 
 		close = False
 
-		if data.get("code") == conf['ERRORS'].get("captcha"):
+		if data.get("code") == self.conf['ERRORS'].get("captcha"):
 			raise CaptchaRequired(q_list=self.q_list)
 			# Notify(q_list=self.q_list, error="CAPTCHA_REQUIRED")
-			# return conf['ERRORS'].get("captcha")
+			# return self.conf['ERRORS'].get("captcha")
 		else: 
 			self.user = Tellonym_user(data)
 			self.save_token(data=data)
@@ -232,17 +235,17 @@ class Tellonym_api():
 			x = response.json()["err"]
 			x = x["code"]
 
-			if x == conf['ERRORS'].get("token"):
+			if x == self.conf['ERRORS'].get("token"):
 				self.logger.warning("invalid token")
 				raise TokenInvalidTellonym
 
 			return x
 
 		for x in data["tells"]:		
-			cen = Censorship()
+			cen = Censorship(conf=self.conf)
 			cen.TEXT = x["tell"]
 			FLAG = cen.flag_word()
-			tell = Tellonym_tell(x)
+			tell = Tellonym_tell(x, conf=self.conf)
 			tell.flag = FLAG
 			
 			

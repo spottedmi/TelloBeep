@@ -19,7 +19,9 @@ from TelloBeep.logs.logger import logger
 #_____________________________________________________________
 
 class Insta_api():
-	def __init__(self, q_list):
+	def __init__(self, q_list, conf=None):
+		if conf:
+			self.conf = conf
 		
 		self.logger = logger(name=__name__)
 		print("instaapi")
@@ -28,7 +30,7 @@ class Insta_api():
 		"fetching api function's going to replace this"
 
 		self.q_list = q_list
-		self.insta = Instagram_api(q_list=self.q_list)
+		self.insta = Instagram_api(q_list=self.q_list, conf=self.conf)
 
 		delay = 10
 		while True:
@@ -62,15 +64,15 @@ class Insta_api():
 			content = q.get()
 			# print(f"INSTAGRAM {content['title']}")
 
-			path = f"{conf['out_image_path']}/{content['filename']}"
+			path = f"{self.conf['out_image_path']}/{content['filename']}"
 
-			if conf['CAPTION'] != "":
+			if self.conf['CAPTION'] != "":
 				pass
-				self.send_post(path, caption=conf["CAPTION"])
-				# self.insta.upload_post(path, caption=conf['CAPTION'])
+				self.send_post(path, caption=self.conf["CAPTION"])
+				# self.insta.upload_post(path, caption=self.conf['CAPTION'])
 			else:
 				pass
-				self.send_post(path, caption=conf["CAPTION"])
+				self.send_post(path, caption=self.conf["CAPTION"])
 				# self.insta.upload_post(path)
 			# print("instagram sent")
 
@@ -101,7 +103,7 @@ class Insta_api():
 							
 						is_auth = Bypass_email().check_process()
 						self.logger.warning(f"is_auth: {is_auth}")
-						self.insta.bot.load_settings(conf["INSTAGRAM_SESSION"])
+						self.insta.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
 
 
 				# self.logger.info(f"cannot upload photo: {e}")

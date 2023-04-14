@@ -2,7 +2,6 @@ from queue import Queue
 import time, random, json, os, sys
 
 from TelloBeep.api import Tellonym_api
-from TelloBeep.config import conf
 from TelloBeep.notify import Notify
 
 from TelloBeep.logs.logger import logger
@@ -39,13 +38,11 @@ class Tello_api():
 			delay = 10
 			while 1:
 				try:
-					self.tello = self.fetch_class(q_list=self.q_list)
+					self.tello = self.fetch_class(q_list=self.q_list, conf=self.conf)
 					
 					content = self.tello.run()
 					
-					# print(f"content {content}")
-					self.logger.info(f"new fetch: {content}")
-					# print(f"new fetch {content}")
+					# self.logger.info(f"new fetch: {content}")
 					break
 
 				except Exception as e:

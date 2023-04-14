@@ -2,7 +2,7 @@ from instagrapi import Client
 from TelloBeep.notify import Notify
 
 
-from TelloBeep.config import conf
+# from TelloBeep.config import conf
 from TelloBeep.logs.logger import logger
 
 from TelloBeep.email.email_fetcher import Mail_fetcher
@@ -13,8 +13,12 @@ import time, subprocess
 class Instagram_api():
 	bot = None
 	q_list=None
-	def __init__(self, q_list=None):
+	def __init__(self, q_list=None, conf=None):
 		self.logger = logger(name=__name__)
+		
+		if conf:
+			self.conf = conf
+			
 		
 		if q_list != None:
 			self.q_list = q_list
@@ -24,7 +28,7 @@ class Instagram_api():
 	def login(self):
 		self.bot = Client()
 		try:
-			self.bot.load_settings(conf["INSTAGRAM_SESSION"])
+			self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
 			
 			self.logger.info(f"logged from file, soft login")
 			Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
@@ -37,14 +41,14 @@ class Instagram_api():
 
 		
 
-		if conf['LOGIN_INSTAGRAM'] != "" and conf['PASSWORD_INSTAGRAM'] != "":
+		if self.conf['LOGIN_INSTAGRAM'] != "" and self.conf['PASSWORD_INSTAGRAM'] != "":
 			sl = 5
 			while 1:
 				is_auth = False
 				try:                    
-					is_auth = self.bot.login(conf['LOGIN_INSTAGRAM'], conf['PASSWORD_INSTAGRAM'])
+					is_auth = self.bot.login(self.conf['LOGIN_INSTAGRAM'], self.conf['PASSWORD_INSTAGRAM'])
 					self.logger.info(f"instagram logged")
-					self.bot.dump_settings(conf["INSTAGRAM_SESSION"])
+					self.bot.dump_settings(self.conf["INSTAGRAM_SESSION"])
 					self.logger.info(f"session dumped")
 					break
 				
@@ -53,10 +57,10 @@ class Instagram_api():
 					if str(e) == "EOF when reading a line":
 						# e = Mail_fetcher()
 						# code = e.get_code()
-						# is_auth = self.bot.login(conf['LOGIN_INSTAGRAM'], conf['PASSWORD_INSTAGRAM'], verification_code=code)
+						# is_auth = self.bot.login(self.conf['LOGIN_INSTAGRAM'], self.conf['PASSWORD_INSTAGRAM'], verification_code=code)
 						
 						is_auth = Bypass_email().check_process()
-						self.bot.load_settings(conf["INSTAGRAM_SESSION"])
+						self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
 
 					if is_auth  == True:
 						break

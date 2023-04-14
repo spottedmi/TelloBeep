@@ -8,15 +8,18 @@ from TelloBeep.logs.logger import logger
 import sys
 
 class Fetching_api(Tello_api):
-	def __init__(self, q_list):
+	def __init__(self, q_list, conf=None):
+
+		if conf:
+			self.conf = conf
 
 		self.logger = logger(__name__)
 
 		#questionmi has priority
-		if conf.get("token_questionmi") != ""  or conf.get("questionmi_api_base_url") != "":
+		if self.conf.get("token_questionmi") != ""  or self.conf.get("questionmi_api_base_url") != "":
 			fetch_class = Questionmi_api
 
-		elif conf.get("LOGIN_TELLONYM") != "" or conf.get("PASSWORD_TELLONYM") != "":
+		elif self.conf.get("LOGIN_TELLONYM") != "" or self.conf.get("PASSWORD_TELLONYM") != "":
 			fetch_class = Tellonym_api
 		else:
 			self.logger.critical(f"fetching class is not specified, shutting down")
