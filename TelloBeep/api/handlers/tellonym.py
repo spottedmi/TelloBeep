@@ -14,8 +14,11 @@ from TelloBeep.logs.logger import logger
 
 class Tello_api():
 	"send txt to generating thread"
-	def __init__(self, q_list, fetch_class):
-		self.logger = logger(name=__name__)
+	def __init__(self, q_list, fetch_class, conf=None):
+		if conf:
+			self.conf = conf
+			
+		self.logger = logger(name=f"{self.conf.get('instance')}_{__name__}")
 		
 		"fetching api function's going to replace this"
 		self.logger.info(f"Tello_api init, fetch_class: {fetch_class}")
@@ -42,7 +45,7 @@ class Tello_api():
 					
 					content = self.tello.run()
 					
-					# self.logger.info(f"new fetch: {content}")
+					self.logger.info(f"new fetch: {content}")
 					break
 
 				except Exception as e:

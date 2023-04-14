@@ -31,7 +31,7 @@ class Discord_bot():
 	def __init__(self, q_list, conf=None):
 		if conf:
 			self.conf = conf		
-		self.logger = logger(name=__name__)
+		self.logger = logger(name=f"{self.conf.get('instance')}_{__name__}")
 
 		print("INIT: DISCORD")
 		self.q_list = q_list

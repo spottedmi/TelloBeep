@@ -3,7 +3,6 @@ from  base64  import b64encode
 from TelloBeep.backend.server import User, Posts, db
 from sqlalchemy import exc
 
-from TelloBeep.config import conf
 from datetime import datetime
 
 from TelloBeep.logs.logger import logger
@@ -13,7 +12,7 @@ class Db_connector():
 	def __init__(self, conf=None):
 		if conf:
 			self.conf = conf
-		self.logger = logger(name=__name__)
+		self.logger = logger(name=f"{self.conf.get('instance')}_{__name__}")
 
 	def db_add_img(self):
 		txt = self.TEXT		

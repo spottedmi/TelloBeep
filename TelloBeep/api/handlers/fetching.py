@@ -9,7 +9,7 @@ import sys
 
 class Fetching_api(Tello_api):
 	def __init__(self, q_list, conf=None):
-
+		
 		if conf:
 			self.conf = conf
 
@@ -28,4 +28,4 @@ class Fetching_api(Tello_api):
 
 		self.logger.info(f"fetching class is specified: {fetch_class}")
 
-		super().__init__(q_list, fetch_class=fetch_class)
+		super().__init__(q_list, fetch_class=fetch_class, conf=self.conf)

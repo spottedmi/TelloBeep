@@ -14,7 +14,7 @@ class Censorship():
 		if conf:
 			self.conf = conf 
 			
-		self.logger = logger(name=__name__)
+		self.logger = logger(name=f"{conf.get('instance')}_{__name__}")
 		
 		
 		if q_list != None:

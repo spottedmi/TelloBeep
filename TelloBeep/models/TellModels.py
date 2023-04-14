@@ -65,8 +65,7 @@ class Tells_Utills():
 			
 			# print(f"line6.2 {pytz.timezone(f'{offset}')}")
 			# print(f"line6.3 {pytz.timezone(f'{LOCAL_TIMEZONE}')}")
-			self.logger.critical(LOCAL_TIMEZONE)
-			self.logger.critical(LOCAL_TIMEZONE)
+			
 			if str(LOCAL_TIMEZONE) == "CEST" or str(LOCAL_TIMEZONE) == "Central European Daylight Time":
 				t = self.time_to_tz_naive(t, pytz.timezone(f"{offset}"), pytz.timezone(f"CET"), index=0)
 			else:
@@ -106,7 +105,6 @@ class Tells_Utills():
 			if len(s) == 1: s = f"0{s}"
 	
 			if h == 24:
-				self.logger.info(f"24 hour detected")
 				h = "00"
 
 			title = f"{y}{M}{d}{h}{m}{s}_{self.id}"

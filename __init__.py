@@ -1,1 +1,1 @@
-from TelloBeep import *
+from TelloBeep.run import TelloBeep

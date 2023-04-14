@@ -22,13 +22,13 @@ class Make_img(Censorship, Db_connector):
 	def __init__(self, q_list=None, conf=None):
 		if conf:
 			self.conf = conf
-		print(f"-----> {len(self.conf)}")
-
-		super().__init__(q_list=q_list, conf=self.conf)
-		self.logger = logger(name=__name__)
 		
 
-		print("init")
+		super().__init__(q_list=q_list, conf=self.conf)
+		self.logger = logger(name=f"{conf.get('instance')}_{__name__}")
+		
+
+		
 
 		self.FIRST_POST = None
 		self.HOURS_PASSED = 0
@@ -55,9 +55,10 @@ class Make_img(Censorship, Db_connector):
 			self.logger.error(f"fonts imported")
 
 		except Exception as e:
-			print(e)
+			
 			# Notify(q_list=self.q_list, error="FONT_NOT_FOUfND")
-			self.logger.error(f"font not found")
+			self.logger.error(f"font not found error: {e}")
+			
 
 			sys.exit(1)
 

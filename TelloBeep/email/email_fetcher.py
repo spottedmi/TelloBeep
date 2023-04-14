@@ -10,7 +10,7 @@ class Mail_fetcher():
 		if conf:
 			self.conf = conf
 			
-		self.logger = logger(name=__name__)
+		self.logger = logger(name=f"{conf.get('instance')}_{__name__}")
 
 		self.server = 'pop3.poczta.onet.pl'
 		

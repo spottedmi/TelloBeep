@@ -1,3 +1,4 @@
+
 from instagrapi import Client
 from TelloBeep.notify import Notify
 
@@ -14,10 +15,10 @@ class Instagram_api():
 	bot = None
 	q_list=None
 	def __init__(self, q_list=None, conf=None):
-		self.logger = logger(name=__name__)
-		
 		if conf:
 			self.conf = conf
+		
+		self.logger = logger(name=f"{self.conf.get('instance')}_{__name__}")
 			
 		
 		if q_list != None:
@@ -59,7 +60,7 @@ class Instagram_api():
 						# code = e.get_code()
 						# is_auth = self.bot.login(self.conf['LOGIN_INSTAGRAM'], self.conf['PASSWORD_INSTAGRAM'], verification_code=code)
 						
-						is_auth = Bypass_email().check_process()
+						is_auth = Bypass_email(conf=self.conf).check_process()
 						self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
 
 					if is_auth  == True:

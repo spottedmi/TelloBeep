@@ -7,15 +7,20 @@ from TelloBeep.config import conf
 import subprocess, time
 
 class Bypass_email():
-	def __init__(self):
-		self.logger = logger(name = __name__)
+	def __init__(self, conf=None):
+		if conf:
+			self.conf = conf
+		
+
+		self.logger = logger(name=f"{self.conf.get('instance')}_{__name__}")
+		
 		self.logger.warning("bypass init")
 
 		self.comm = f'''
 from instagrapi import Client\n
 cl = Client()\n
-i = cl.login("{conf['LOGIN_INSTAGRAM']}","{conf['PASSWORD_INSTAGRAM']}")\n
-cl.dump_settings("{conf['INSTAGRAM_SESSION']}")\n
+i = cl.login("{self.conf['LOGIN_INSTAGRAM']}","{self.conf['PASSWORD_INSTAGRAM']}")\n
+cl.dump_settings("{self.conf['INSTAGRAM_SESSION']}")\n
 print(f"logged to the instagram account: "+ str(i))\n
 '''
 

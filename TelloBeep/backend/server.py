@@ -434,13 +434,14 @@ def json_parser(headers, txt)-> dict:
 
 
 #function executed in thread
-def back_server(q_list, host="0.0.0.0", port=5002, conf=None):
+def back_server(q_list, host="0.0.0.0", port=6666, conf=None):
     global queue_list
     queue_list = q_list
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{conf['db_name']}"
-    
     if conf.get("BACKEND_PORT"):
         port = conf.get("BACKEND_PORT")
+    
+    
     logger.critical(f"port ------------- {port}")
     app.run(host=host, port=port)
 

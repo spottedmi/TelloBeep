@@ -17,12 +17,12 @@ from TelloBeep.logs.logger import logger
 class Tellonym_api():
 	q_list = None
 	def __init__(self, q_list=None,conf=None):
-
-		# if self.logger == None:
-		self.logger = logger(name=__name__)
-
 		if conf:
 			self.conf = conf
+
+		# if self.logger == None:
+		self.logger = logger(name=f"{conf.get('instance')}_{__name__}")
+
 
 		self.user = None
 		self.tells = list()

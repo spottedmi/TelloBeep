@@ -23,7 +23,7 @@ class Insta_api():
 		if conf:
 			self.conf = conf
 		
-		self.logger = logger(name=__name__)
+		self.logger = logger(name=f"{self.conf.get('instance')}_{__name__}")
 		print("instaapi")
 
 		"this is only a makeshift"
@@ -101,7 +101,7 @@ class Insta_api():
 					is_auth = False
 					while is_auth == False:
 							
-						is_auth = Bypass_email().check_process()
+						is_auth = Bypass_email(conf=self.conf).check_process()
 						self.logger.warning(f"is_auth: {is_auth}")
 						self.insta.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
 
