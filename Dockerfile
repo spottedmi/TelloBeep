@@ -28,6 +28,6 @@ RUN apt-get update && \
 # RUN pip install -r requirements.txt
 
 
-RUN python3 init.py -l $user -p $password
+RUN python3 init.py -l $user -p $password -d testingDB.sqlite
 
 CMD ["python3", "run.py"]
