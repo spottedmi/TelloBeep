@@ -30,9 +30,12 @@ pipeline{
 					// }
 						
 					 sshagent(credentials: ['ssh_server']) {
-					sh '''
-						docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart
-					'''
+						sh '''
+							whoami &&
+							pwd &&
+							ls -all &&
+							docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart
+						'''
 					}
 					currentBuild.result = 'SUCCESS'
 					return
