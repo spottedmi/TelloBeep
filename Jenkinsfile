@@ -155,9 +155,16 @@ pipeline{
 		stage("deploy"){
 			steps{	
 				script {
-					echo "---------------deploying---------------";
+					command = "docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart"
+					withCredentials([string(credentialsId: 'prod_server_address', variable: 'ADDRESS}')]) {
+						withCredentials([sshUserPrivateKey(credentialsId: 'ssh_server', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: 'PASS', usernameVariable: 'SSH_USER')]) {
+							sshagent() {
+								sshCommand remote: '$ADDRESS', user: "$SSH_USER", command: "$command", password: "$PASS"
+							}
+						}
 
-				}
+					}
+	
 			}
 		}
 		
