@@ -28,7 +28,7 @@ async def timer():
 
 
 class Discord_bot():
-	def __init__(self, q_list, conf=None):
+	def __init__(self, q_list, conf=None, config_class=None):
 		if conf:
 			self.conf = conf		
 		self.logger = logger(name=f"{self.conf.get('instance')}_{__name__}")

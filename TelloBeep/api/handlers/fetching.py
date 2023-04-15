@@ -8,7 +8,7 @@ from TelloBeep.logs.logger import logger
 import sys
 
 class Fetching_api(Tello_api):
-	def __init__(self, q_list, conf=None):
+	def __init__(self, q_list, conf=None, config_class=None):
 		
 		if conf:
 			self.conf = conf

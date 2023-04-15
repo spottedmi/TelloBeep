@@ -38,8 +38,8 @@ class TelloBeep():
 		print("init")
 		
 
-		config_class = Config(config_file=config)
-		self.conf = config_class.get_conf()
+		self.config_class = Config(config_file=config)
+		self.conf = self.config_class.get_conf()
 		print(len(self.conf))
 
 		# Make_img(conf=self.conf)
@@ -77,7 +77,7 @@ class TelloBeep():
 		n = 0
 		for app in apps:
 			self.logger.info(f"__init process__ {app}")
-			p = multiprocessing.Process(target = app, kwargs={"q_list": self.q_list, "conf":self.conf})
+			p = multiprocessing.Process(target = app, kwargs={"q_list": self.q_list, "conf":self.conf, "config_class":self.config_class})
 			p.daemon = True
 			p.start()
 
@@ -97,7 +97,7 @@ class TelloBeep():
 
 						self.logger.warning(f"process {a} raised an error {p.exitcode}, restarting...")
 
-						p = multiprocessing.Process(target = a, kwargs={"q_list": self.q_list, "conf":self.conf})
+						p = multiprocessing.Process(target = a, kwargs={"q_list": self.q_list, "conf":self.conf, "config_class":self.config_class})
 						p.daemon = True 
 						p.start()
 						

@@ -8,7 +8,7 @@ from TelloBeep.logs.logger import logger
 from TelloBeep.email.email_fetcher import Mail_fetcher
 from TelloBeep.email.bypass import Bypass_email
 
-import time, subprocess
+import time, subprocess, sys
 
 
 
@@ -16,25 +16,31 @@ import time, subprocess
 class Instagram_api():
 	bot = None
 	q_list=None
-	def __init__(self, q_list=None, conf=None):
+	def __init__(self, q_list=None, conf=None, config_class=None):
 		if conf:
 			self.conf = conf
+		if config_class:
+			self.config_class = config_class
 		
 		self.logger = logger(name=f"{self.conf.get('instance')}_{__name__}")
 			
+		self.config_class.print_xD()
 		
+
 		if q_list != None:
 			self.q_list = q_list
 
 
 	def change_password_handler(username):
-	    # Simple way to generate a random string
-	    chars = list("abcdefghijklmnopqrstuvwxyz1234567890!&£@#")
-	    password = "".join(random.sample(chars, 15))
-	    self.logger.warning(f"password changing, new password: {password[0]}****{password[-1]}")
+		# Simple way to generate a random string
+		chars = list("abcdefghijklmnopqrstuvwxyz1234567890!&£@#")
+		password = "".join(random.sample(chars, 15))
+		self.logger.warning(f"password changing, new password: {password[0]}****{password[-1]}")
 		Notify(q_list=self.q_list, error=f"password changing, new password: {password[0]}****{password[-1]}")
+		self.conf["LOGIN_INSTAGRAM"] = password
+		self.config_class.dump_json()
 
-	    return password
+		return password
 
 	def challenge_code_handler(username, choice):
 		if choice == ChallengeChoice.SMS:

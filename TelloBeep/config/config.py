@@ -127,6 +127,7 @@ def dump_json(self):
 	f.close()
 
 class Config():
+
 	def __init__(self, config_file=None, conf=None):
 		self.logger = logger(name=__name__)
 
@@ -142,9 +143,16 @@ class Config():
 		self.load_env()
 
 		self.parse_paths()
+	def __dict__(self):
+		return self.conf
 
-	def dump_json(self):
+	def print_xD(self):
+		print("xD")
+		return True
+
+	def dump_json(self, config=None):
 		f = open("config.json", "w+")
+		
 		json.dump(self.conf, fp=f, indent=4)
 		f.close()
 

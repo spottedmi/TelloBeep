@@ -19,9 +19,12 @@ from TelloBeep.logs.logger import logger
 #_____________________________________________________________
 
 class Insta_api():
-	def __init__(self, q_list, conf=None):
+	def __init__(self, q_list, conf=None, config_class=None):
 		if conf:
 			self.conf = conf
+		
+		if config_class:
+			self.config_class = config_class
 		
 		self.logger = logger(name=f"{self.conf.get('instance')}_{__name__}")
 		print("instaapi")
@@ -30,7 +33,8 @@ class Insta_api():
 		"fetching api function's going to replace this"
 
 		self.q_list = q_list
-		self.insta = Instagram_api(q_list=self.q_list, conf=self.conf)
+		
+		self.insta = Instagram_api(q_list=self.q_list, conf=self.conf, config_class=self.config_class)
 
 		delay = 10
 		while True:

@@ -19,7 +19,7 @@ from TelloBeep.logs.logger import logger
 
 
 class Make_img(Censorship, Db_connector):
-	def __init__(self, q_list=None, conf=None):
+	def __init__(self, q_list=None, conf=None, config_class=None):
 		if conf:
 			self.conf = conf
 		
