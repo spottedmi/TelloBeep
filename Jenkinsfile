@@ -5,6 +5,8 @@ pipeline{
 	
 	environment {
 		
+		REMOTE_ADDRESS = credentials('remote_address_secret')
+
 		// TAG_NAME = 'latest';
 		REPO_USER = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/')[-2].toLowerCase()}";
 		REPO_NAME = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0].toLowerCase()}";
@@ -30,12 +32,12 @@ pipeline{
 					// 		}
 					// 	}
 					// }
-					withCredentials([string(credentialsId: 'prod_server_address', variable: 'ssh_address}')]) {
+					
 						
-						sshagent(credentials: ['ssh_server']) {
-							sh "ssh jenkins_minion@${ssh_address}  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'"
-						}
+					sshagent(credentials: ['ssh_server']) {
+						sh "ssh jenkins_minion@${REMOTE_ADDRESS}  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'"
 					}
+					
 					currentBuild.result = 'SUCCESS'
 					return
 				}
