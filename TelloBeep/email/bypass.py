@@ -45,8 +45,8 @@ print(f"logged to the instagram account: "+ str(i))\n
 			while len(output) < 5:
 				output = self.process.stdout.readline()
 				output = output.decode("utf-8")
-				self.logger.info(output)
-				time.sleep(1)
+				# self.logger.info(output)
+				time.sleep(2)
 
 			
 			self.logger.debug(f"process output: {output}")
