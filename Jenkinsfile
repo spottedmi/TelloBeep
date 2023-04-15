@@ -28,14 +28,12 @@ pipeline{
 					// 		}
 					// 	}
 					// }
-						
-					 sshagent(credentials: ['ssh_server']) {
-						sh '''
-							whoami &&
-							pwd &&
-							ls -all &&
-							docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart
-						'''
+					withCredentials([string(credentialsId: 'prod_server_address', variable: 'ADDRESS}')]) {
+						sshagent(credentials: ['ssh_server']) {
+							sh """
+								ssh jenkins_minion@$ADDRESS  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'
+							"""
+						}
 					}
 					currentBuild.result = 'SUCCESS'
 					return
