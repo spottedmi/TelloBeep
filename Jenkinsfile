@@ -28,8 +28,8 @@ pipeline{
 							}
 						}
 					}
-					currentBuild.result = 'SUCCESS'
-					return
+						currentBuild.result = 'SUCCESS'
+						return
 				}
 			}
 		}
@@ -171,4 +171,5 @@ pipeline{
 			} 
 		}
 
+	}
 }
