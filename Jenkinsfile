@@ -34,9 +34,10 @@ pipeline{
 					// }
 					
 					sshagent(credentials: ['ssh_server']) {
-						sh "ssh jenkins_minion@${REMOTE_ADDRESS}  'ls -all'";
-						sh "ssh jenkins_minion@${REMOTE_ADDRESS}  'whomai'";
-						sh "ssh jenkins_minion@${REMOTE_ADDRESS}  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'";
+						sh 'ssh -o StrictHostKeyChecking=no jenkins_minion@${REMOTE_ADDRESS} uptime'
+						sh "ssh -v jenkins_minion@${REMOTE_ADDRESS}  'ls -all'";
+						sh "ssh -v jenkins_minion@${REMOTE_ADDRESS}  'whomai'";
+						sh "ssh -v jenkins_minion@${REMOTE_ADDRESS}  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'";
 					}
 					
 					currentBuild.result = 'SUCCESS'
