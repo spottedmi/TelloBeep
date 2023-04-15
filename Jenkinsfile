@@ -131,25 +131,25 @@ pipeline{
 				}
 			}
 		}
-				stage('Docker Push') {
-			      steps {
-				      script{
-						echo "---------------pushing to docker hub---------------";
+		stage('Docker Push') {
+			steps {
+				script{
+					echo "---------------pushing to docker hub---------------";
 
-					      withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-							echo "deploying: $IMG:latest";
-							IMG.push(TAG_NAME);
-							// sh "docker rmi $IMG.id"
-						      
-						}
-						withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-							echo "deploying: $IMG:$VERSION";
-							IMG.push(VERSION);
-							sh "docker rmi $IMG.id"
-						      
-						}
+					withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+					echo "deploying: $IMG:latest";
+					IMG.push(TAG_NAME);
+					// sh "docker rmi $IMG.id"
+						
 					}
-			    } 
+					withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+						echo "deploying: $IMG:$VERSION";
+						IMG.push(VERSION);
+						sh "docker rmi $IMG.id"
+							
+					}
+				}
+			} 
 		}
 
 		stage("deploy"){
@@ -162,11 +162,9 @@ pipeline{
 								sshCommand remote: '$ADDRESS', user: "$SSH_USER", command: "$command", password: "$PASS"
 							}
 						}
-
 					}
-	
+				}
 			}
 		}
-		
 	}
 }
