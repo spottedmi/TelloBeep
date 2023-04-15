@@ -5,7 +5,7 @@ pipeline{
 	
 	environment {
 		
-		REMOTE_ADDRESS = credentials('remote_address_secret')
+		REMOTE_ADDRESS = credentials('prod_server_address')
 
 		// TAG_NAME = 'latest';
 		REPO_USER = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/')[-2].toLowerCase()}";
@@ -33,7 +33,6 @@ pipeline{
 					// 	}
 					// }
 					
-						
 					sshagent(credentials: ['ssh_server']) {
 						sh "ssh jenkins_minion@${REMOTE_ADDRESS}  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'"
 					}
