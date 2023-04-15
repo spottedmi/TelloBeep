@@ -30,8 +30,8 @@ pipeline{
 					// 		}
 					// 	}
 					// }
-					withCredentials([string(credentialsId: 'prod_server_address', variable: 'ADDRESS}')]) {
-						address = "$ADDRESS";
+					withCredentials([string(credentialsId: 'prod_server_address', variable: 'adr}')]) {
+						address = "$adr";
 						sshagent(credentials: ['ssh_server']) {
 							sh """
 								ssh jenkins_minion@$address  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'
