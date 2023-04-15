@@ -29,7 +29,7 @@ pipeline{
 					// 	}
 					// }
 						
-					 sshagent(credentials: ['prod_server_address']) {
+					 sshagent(credentials: ['ssh_server']) {
 					sh '''
 						docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart
 					'''
