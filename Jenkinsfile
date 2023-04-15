@@ -30,12 +30,10 @@ pipeline{
 					// 		}
 					// 	}
 					// }
-					withCredentials([string(credentialsId: 'prod_server_address', variable: 'ADDRESS}')]) {
-						ADDRESS = ADDRESS
+					withCredentials([string(credentialsId: 'prod_server_address', variable: 'ssh_address}')]) {
+						
 						sshagent(credentials: ['ssh_server']) {
-							sh """
-								ssh jenkins_minion@$ADDRESS  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'
-							"""
+							sh "ssh jenkins_minion@${ssh_address}  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'"
 						}
 					}
 					currentBuild.result = 'SUCCESS'
