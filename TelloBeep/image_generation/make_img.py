@@ -11,7 +11,7 @@ import _thread, random
 from TelloBeep.censorship.censorship import Censorship
 from TelloBeep.database.db_connector import Db_connector
 
-from TelloBeep.config import conf
+
 
 from TelloBeep.notify import Notify
 

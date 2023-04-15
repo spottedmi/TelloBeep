@@ -1,5 +1,5 @@
 from TelloBeep.censorship import Censorship
-from TelloBeep.config import conf
+
 
 import time
 from datetime import datetime, time, timezone

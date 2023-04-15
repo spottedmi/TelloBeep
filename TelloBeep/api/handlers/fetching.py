@@ -1,4 +1,4 @@
-from TelloBeep.config import conf
+
 
 from TelloBeep.api import Questionmi_api
 from TelloBeep.api import Tellonym_api

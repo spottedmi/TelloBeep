@@ -3,7 +3,7 @@ from queue import Queue
 from threading import Thread
 import importlib
 from TelloBeep.models.TellModels import Tellonym_user, Tellonym_tell
-from TelloBeep.config import conf
+
 from TelloBeep.censorship.censorship import Censorship
 
 from TelloBeep.notify import Notify

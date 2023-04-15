@@ -3,7 +3,7 @@ from instagrapi import Client
 from TelloBeep.notify import Notify
 
 
-# from TelloBeep.config import conf
+# 
 from TelloBeep.logs.logger import logger
 
 from TelloBeep.email.email_fetcher import Mail_fetcher

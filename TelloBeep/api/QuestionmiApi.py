@@ -3,7 +3,7 @@ from queue import Queue
 import importlib
 from TelloBeep.models.TellModels import Questionmi_user, Questionmi_tell
 
-from TelloBeep.config import conf
+
 from TelloBeep.notify import Notify
 
 from TelloBeep.logs.logger import logger

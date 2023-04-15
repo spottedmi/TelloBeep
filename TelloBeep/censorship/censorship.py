@@ -1,4 +1,4 @@
-from TelloBeep.config import conf
+
 
 from TelloBeep.notify import Notify
 

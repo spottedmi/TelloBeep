@@ -1,4 +1,4 @@
-from TelloBeep.config import conf
+
 from TelloBeep.logs.logger import logger
 import poplib, email, re, time, subprocess
 

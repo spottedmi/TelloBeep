@@ -11,8 +11,8 @@ from TelloBeep.api.handlers.insta import Insta_api
 from TelloBeep.api.handlers.tellonym import Tello_api
 from TelloBeep.api.handlers.fetching import Fetching_api
 
-# from TelloBeep.config import conf
-from TelloBeep.config import Config, conf
+# 
+from TelloBeep.config import Config
 from TelloBeep.logs.logger import logger
 
 from importlib import import_module

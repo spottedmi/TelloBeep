@@ -194,7 +194,7 @@ class Config():
 		print(f"filepath {filepath}")
 
 		if filepath:
-			with open(os.getenv("CONFIG_FILE"), "r") as f:
+			with open(filepath, "r") as f:
 				config = f.read()
 				self.conf = json.loads(config)
 				self.logger.info(f"load config file by passed argument {filepath}")

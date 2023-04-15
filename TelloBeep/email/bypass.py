@@ -2,7 +2,7 @@
 from TelloBeep.email.email_fetcher import Mail_fetcher
 from TelloBeep.logs.logger import logger
 
-from TelloBeep.config import conf
+
 
 import subprocess, time
 

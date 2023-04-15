@@ -7,7 +7,7 @@ import time as tm
 
 time = datetime.datetime.now
 
-from TelloBeep.config import conf
+
 from TelloBeep.logs.logger import logger
 
 

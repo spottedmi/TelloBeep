@@ -6,7 +6,7 @@ from TelloBeep.email.bypass import Bypass_email
 
 
 from instagrapi.exceptions import PleaseWaitFewMinutes, RateLimitError, PhotoNotUpload
-from TelloBeep.config import conf
+
 from TelloBeep.notify import Notify
 from TelloBeep.logs.logger import logger
 

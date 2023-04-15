@@ -2,7 +2,7 @@ import os, sys
 import shutil
 import logging
 import time
-# from TelloBeep.config import conf
+# 
 
 
 class CustomFormatter(logging.Formatter):
