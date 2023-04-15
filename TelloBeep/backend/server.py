@@ -30,9 +30,9 @@ path = os.path.dirname(absolute_path) + "/"
 path = f"{path}/.."
 
 sys.path.insert(0,path)
-from TelloBeep.config import conf, dump_json
+from TelloBeep.config import Config, dump_json
 
-print(conf)
+
 
 #_____________________________________________________________
 #
@@ -85,22 +85,13 @@ def load_user(user_id):
 
 logger = logger(name="backend_server")
 
-def setup():
+def setup(database=None):
     print("create")
     
     try:
-        db.create_all()
-        print("ok")
-    except:
-        app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///db.sqlite"
-        db.create_all()
-        print("ok2")
-
-    print(sys.argv)
-
-    try:
         login = sys.argv[sys.argv.index("-l")+1]
         passwd = sys.argv[sys.argv.index("-p")+1]
+        database = sys.argv[sys.argv.index("-d")+1]
     except:
         sys.argv.append("-h")
 
@@ -108,10 +99,19 @@ def setup():
     if "-h" in sys.argv or "--help" in sys.argv:
         print("-l   login")
         print("-p   password")
+        print("-d   database")
         print("-h   help msg")
         sys.exit(0)
 
     print(f" l: {login} p: {passwd}")
+    
+    
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{database}"
+    db.create_all()
+    print("ok2")
+
+    print(sys.argv)
+
 
     # hashed_pass = bcrypt.generate_password_hash(passwd)
     hashed_pass = generate_password_hash(passwd)
@@ -436,6 +436,8 @@ def json_parser(headers, txt)-> dict:
 #function executed in thread
 def back_server(q_list, host="0.0.0.0", port=6666, conf=None):
     global queue_list
+    if not conf:
+        conf = Config()
     queue_list = q_list
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{conf['db_name']}"
     if conf.get("BACKEND_PORT"):
