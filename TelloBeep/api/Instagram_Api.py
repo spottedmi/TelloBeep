@@ -1,15 +1,17 @@
 
 from instagrapi import Client
+from instagrapi.mixins.challenge import ChallengeChoice
 from TelloBeep.notify import Notify
 
-
-# 
 from TelloBeep.logs.logger import logger
 
 from TelloBeep.email.email_fetcher import Mail_fetcher
 from TelloBeep.email.bypass import Bypass_email
 
 import time, subprocess
+
+
+
 
 class Instagram_api():
 	bot = None
@@ -25,9 +27,38 @@ class Instagram_api():
 			self.q_list = q_list
 
 
+	def change_password_handler(username):
+	    # Simple way to generate a random string
+	    chars = list("abcdefghijklmnopqrstuvwxyz1234567890!&£@#")
+	    password = "".join(random.sample(chars, 15))
+	    self.logger.warning(f"password changing, new password: {password[0]}****{password[-1]}")
+		Notify(q_list=self.q_list, error=f"password changing, new password: {password[0]}****{password[-1]}")
+
+	    return password
+
+	def challenge_code_handler(username, choice):
+		if choice == ChallengeChoice.SMS:
+			self.logger.warning(f"challange code handler, sms called")
+			Notify(q_list=self.q_list, error=f"challange code handler, sms called")			
+			
+			return False
+
+		elif choice == ChallengeChoice.EMAIL:
+			code = Mail_fetcher().get_code()
+			
+			self.logger.warning(f"challange code handler, email code: {code[0]}****{code[-1]}")
+			Notify(q_list=self.q_list, error=f"challange code handler, email code: {code[0]}****{code[-1]}")			
+			
+			return code
+		
+		return False
+
 
 	def login(self):
 		self.bot = Client()
+		self.bot.challenge_code_handler = self.challenge_code_handler
+		self.bot.change_password_handler = self.change_password_handler
+
 		try:
 			self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
 			
@@ -55,16 +86,16 @@ class Instagram_api():
 				
 				except Exception as e:
 					self.logger.warning(f"instagram login error: {e}")
-					if str(e) == "EOF when reading a line":
-						# e = Mail_fetcher()
-						# code = e.get_code()
-						# is_auth = self.bot.login(self.conf['LOGIN_INSTAGRAM'], self.conf['PASSWORD_INSTAGRAM'], verification_code=code)
+					# if str(e) == "EOF when reading a line":
+					# 	# e = Mail_fetcher()
+					# 	# code = e.get_code()
+					# 	# is_auth = self.bot.login(self.conf['LOGIN_INSTAGRAM'], self.conf['PASSWORD_INSTAGRAM'], verification_code=code)
 						
-						is_auth = Bypass_email(conf=self.conf).check_process()
-						self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
+					# 	is_auth = Bypass_email(conf=self.conf).check_process()
+					# 	self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
 
-					if is_auth  == True:
-						break
+					# if is_auth  == True:
+					# 	break
 				
 				self.logger.info(f"putting instagram to sleep: {sl} seconds")
 				time.sleep(sl)
