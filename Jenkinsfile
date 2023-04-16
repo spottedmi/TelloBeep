@@ -19,32 +19,6 @@ pipeline{
 	}
 
 	stages{
-
-		
-		stage("deploy"){
-			steps{	
-				script {
-					command = "docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart"
-					// withCredentials([string(credentialsId: 'prod_server_address', variable: 'ADDRESS}')]) {
-					// 	withCredentials([sshUserPrivateKey(credentialsId: 'ssh_server', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: 'PASS', usernameVariable: 'SSH_USER')]) {
-					// 		sshagent() {
-					// 			sshCommand remote: '$ADDRESS', user: "$SSH_USER", command: "$command", password: "$PASS"
-					// 		}
-					// 	}
-					// }
-					
-					sshagent(credentials: ['ssh_server']) {
-						sh 'ssh -o StrictHostKeyChecking=no jenkins_minion@${REMOTE_ADDRESS} uptime'
-						sh "ssh -v jenkins_minion@${REMOTE_ADDRESS}  'ls -all'";
-						sh "ssh -v jenkins_minion@${REMOTE_ADDRESS}  'whomai'";
-						sh "ssh -v jenkins_minion@${REMOTE_ADDRESS}  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'";
-					}
-					
-					currentBuild.result = 'SUCCESS'
-					return
-				}
-			}
-		}
 	
 		stage("Preparing"){
 			steps{
@@ -182,6 +156,27 @@ pipeline{
 				}
 			} 
 		}
-
+		stage("deploy"){
+			steps{	
+				script {
+					command = "docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart"
+					// withCredentials([string(credentialsId: 'prod_server_address', variable: 'ADDRESS}')]) {
+					// 	withCredentials([sshUserPrivateKey(credentialsId: 'ssh_server', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: 'PASS', usernameVariable: 'SSH_USER')]) {
+					// 		sshagent() {
+					// 			sshCommand remote: '$ADDRESS', user: "$SSH_USER", command: "$command", password: "$PASS"
+					// 		}
+					// 	}
+					// }
+					
+					sshagent(credentials: ['ssh_server']) {
+						sh 'ssh -o StrictHostKeyChecking=no jenkins_minion@${REMOTE_ADDRESS} uptime'
+						sh "ssh -v jenkins_minion@${REMOTE_ADDRESS}  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'";
+					}
+					
+					currentBuild.result = 'SUCCESS'
+					return
+				}
+			}
+		}
 	}
 }
