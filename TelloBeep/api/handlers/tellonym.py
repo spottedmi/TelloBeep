@@ -45,9 +45,9 @@ class Tello_api():
 					self.tello = self.fetch_class(q_list=self.q_list, conf=self.conf)
 					
 					content = self.tello.run()
-					fetch +=1
-					if fetch % 10 == 0:
-						fetch = 0
+					fetchs +=1
+					if fetchs % 10 == 0:
+						fetchs = 0
 						self.logger.info(f"new fetch: {content}")
 					break
 
