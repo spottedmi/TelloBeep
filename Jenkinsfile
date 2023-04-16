@@ -1,8 +1,12 @@
 pipeline{
 	agent any
+
+
 	
 	environment {
 		
+		REMOTE_ADDRESS = credentials('prod_server_address')
+
 		// TAG_NAME = 'latest';
 		REPO_USER = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/')[-2].toLowerCase()}";
 		REPO_NAME = "${scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0].toLowerCase()}";
@@ -15,6 +19,7 @@ pipeline{
 	}
 
 	stages{
+	
 		stage("Preparing"){
 			steps{
 
@@ -131,35 +136,47 @@ pipeline{
 				}
 			}
 		}
-				stage('Docker Push') {
-			      steps {
-				      script{
-						echo "---------------pushing to docker hub---------------";
+		stage('Docker Push') {
+			steps {
+				script{
+					echo "---------------pushing to docker hub---------------";
 
-					      withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-							echo "deploying: $IMG:latest";
-							IMG.push(TAG_NAME);
-							// sh "docker rmi $IMG.id"
-						      
-						}
-						withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-							echo "deploying: $IMG:$VERSION";
-							IMG.push(VERSION);
-							sh "docker rmi $IMG.id"
-						      
-						}
+					withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+					echo "deploying: $IMG:latest";
+					IMG.push(TAG_NAME);
+					// sh "docker rmi $IMG.id"
+						
 					}
-			    } 
+					withCredentials([usernamePassword(credentialsId: "docker_token", passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+						echo "deploying: $IMG:$VERSION";
+						IMG.push(VERSION);
+						sh "docker rmi $IMG.id"
+							
+					}
+				}
+			} 
 		}
-
 		stage("deploy"){
 			steps{	
 				script {
-					echo "---------------deploying---------------";
-
+					command = "docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart"
+					// withCredentials([string(credentialsId: 'prod_server_address', variable: 'ADDRESS}')]) {
+					// 	withCredentials([sshUserPrivateKey(credentialsId: 'ssh_server', keyFileVariable: 'SSH_KEY_PATH', passphraseVariable: 'PASS', usernameVariable: 'SSH_USER')]) {
+					// 		sshagent() {
+					// 			sshCommand remote: '$ADDRESS', user: "$SSH_USER", command: "$command", password: "$PASS"
+					// 		}
+					// 	}
+					// }
+					
+					sshagent(credentials: ['ssh_server']) {
+						sh 'ssh -o StrictHostKeyChecking=no jenkins_minion@${REMOTE_ADDRESS} uptime'
+						sh "ssh -v jenkins_minion@${REMOTE_ADDRESS}  'docker compose  -f /home/randomguy90/Desktop/spotted/tellobeep/docker-compose.yml restart'";
+					}
+					
+					currentBuild.result = 'SUCCESS'
+					return
 				}
 			}
 		}
-		
 	}
 }
