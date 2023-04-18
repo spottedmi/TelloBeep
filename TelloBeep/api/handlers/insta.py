@@ -97,17 +97,19 @@ class Insta_api():
 				self.logger.warning(f"cannot upload photo: PhotoNotUpload")
 				self.logger.warning(f"error {e}")
 				self.logger.warning(f"go to sleep for: {sleep}")
+				self.insta.login(hard_login=True)
+				
 
-				if "<Response [302]>" in str(e) or "login_required" in str(e):
-					self.logger.warning(f"302 found")
-					# sl = 5
+				# if "<Response [302]>" in str(e) or "login_required" in str(e):
+				# 	self.logger.warning(f"302 found")
+				# 	# sl = 5
 					
-					is_auth = False
-					while is_auth == False:
+				# 	is_auth = False
+				# 	while is_auth == False:
 							
-						is_auth = Bypass_email(conf=self.conf).check_process()
-						self.logger.warning(f"is_auth: {is_auth}")
-						self.insta.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
+				# 		# is_auth = Bypass_email(conf=self.conf).check_process()
+				# 		self.logger.warning(f"is_auth: {is_auth}")
+				# 		self.insta.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
 
 
 				# self.logger.info(f"cannot upload photo: {e}")

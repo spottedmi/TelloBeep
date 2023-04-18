@@ -60,22 +60,23 @@ class Instagram_api():
 		return False
 
 
-	def login(self):
+	def login(self, hard_login=False):
 		self.bot = Client()
 		self.bot.challenge_code_handler = self.challenge_code_handler
 		self.bot.change_password_handler = self.change_password_handler
 
-		try:
-			self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
-			
-			self.logger.info(f"logged from file, soft login")
-			Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
+		if hard_login == False:	
+			try:
+				self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
+				
+				self.logger.info(f"logged from file, soft login")
+				Notify(q_list=self.q_list, error="INSTAGRAM_LOGGED")
 
-			return self.bot
+				return self.bot
 
-		except :
-			self.logger.warning(f"could not log from file, hard login")
-			pass
+			except :
+				self.logger.warning(f"could not log from file, hard login")
+				pass
 
 		
 
