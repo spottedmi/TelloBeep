@@ -1,0 +1,22 @@
+version: "3"
+services:
+  tellobeep:
+    restart: unless-stopped
+    image: randomguy090/tellobeep:develop
+    # build: .
+    container_name: "tellobeep2"
+    ports:
+      - "5002:5002"
+    volumes:
+      - "/etc/tellobeep/config.json:/etc/tellobeep/config.json"
+      - "/etc/tellobeep/instagram_sesison.json:/etc/tellobeep/config/instagram_sesison.json"
+      - "/etc/tellobeep/db.sqlite:/etc/tellobeep/db.sqlite"
+      - "/etc/tellobeep/swears_list.txt:/etc/tellobeep/swears_list.txt"
+      - "/etc/tellobeep/token.txt:/etc/tellobeep/token.txt"
+      - "/etc/tellobeep/imgs:/etc/tellobeep/imgs"
+      - "/etc/tellobeep/temp.png:/etc/tellobeep/temp.png"
+      - "/etc/tellobeep/thumbnails:/etc/tellobeep/thumbnails"
+      - "/etc/tellobeep/fonts:/etc/tellobeep/fonts"
+      - "/etc/tellobeep/logs:/etc/tellobeep/logs"
+    environment:
+      - TZ=Europe/Warsaw

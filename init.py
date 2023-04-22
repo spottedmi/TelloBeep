@@ -1,8 +1,17 @@
 #! /usr/bin/python3
-from backend.server import setup
+from TelloBeep.backend.server import setup
 
 import os
-
-os.mkdir("imgs")
-os.mkdir("backend/static/thumbnails")
+try:
+	os.mkdir("TelloBeep/imgs")
+except Exception as e:
+	print(e)
+try:
+	os.mkdir("TelloBeep/backend/static/thumbnails")
+except Exception as e:
+	print(e)
+try:
+	os.remove("TelloBeep/database/db.sqlite")
+except:
+	pass
 setup()
