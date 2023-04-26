@@ -62,8 +62,8 @@ class Instagram_api():
 
 	def login(self, hard_login=False):
 		self.bot = Client()
-		self.bot.challenge_code_handler = self.challenge_code_handler
-		self.bot.change_password_handler = self.change_password_handler
+		# self.bot.challenge_code_handler = self.challenge_code_handler
+		# self.bot.change_password_handler = self.change_password_handler
 
 		if hard_login == False:	
 			try:
@@ -93,16 +93,18 @@ class Instagram_api():
 				
 				except Exception as e:
 					self.logger.warning(f"instagram login error: {e}")
-					# if str(e) == "EOF when reading a line":
-					# 	# e = Mail_fetcher()
-					# 	# code = e.get_code()
-					# 	# is_auth = self.bot.login(self.conf['LOGIN_INSTAGRAM'], self.conf['PASSWORD_INSTAGRAM'], verification_code=code)
+					# self.logger.warning(f"challange resolver: {self.bot.challenge_code_handler}")
+					print(e)
+					if str(e) == "EOF when reading a line" or "ChallengeResolve" in str(e):
+						# e = Mail_fetcher()
+						# code = e.get_code()
+						# is_auth = self.bot.login(self.conf['LOGIN_INSTAGRAM'], self.conf['PASSWORD_INSTAGRAM'], verification_code=code)
 						
-					# 	is_auth = Bypass_email(conf=self.conf).check_process()
-					# 	self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
+						is_auth = Bypass_email(conf=self.conf).check_process()
+						self.bot.load_settings(self.conf["INSTAGRAM_SESSION"])
 
-					# if is_auth  == True:
-					# 	break
+					if is_auth  == True:
+						break
 				
 				self.logger.info(f"putting instagram to sleep: {sl} seconds")
 				time.sleep(sl)

@@ -89,6 +89,10 @@ class Mail_fetcher():
 		time.sleep(delay)
 		self.login()
 		code = self.fetch_mails()
+		print(code)
+		print(code)
+		print(code)
+		print(code)
 
 		self.logout()
 
